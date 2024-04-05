@@ -34,16 +34,6 @@
 #include <mcheck.h>
 #endif
 
-#ifdef HAVE_LIBSIGSEGV
-#include <sigsegv.h>
-#else
-typedef void *stackoverflow_context_t;
-/* the argument to this macro is purposely not used */
-#define sigsegv_install_handler(catchsegv) signal(SIGSEGV, catchsig)
-/* define as 0 rather than empty so that (void) cast on it works */
-#define stackoverflow_install_handler(catchstackoverflow, extra_stack, STACK_SIZE) 0
-#endif
-
 #define DEFAULT_PROFILE		"awkprof.out"	/* where to put profile */
 #define DEFAULT_VARFILE		"awkvars.out"	/* where to put vars */
 #define DEFAULT_PREC		53
@@ -60,10 +50,6 @@ static void init_vars(void);
 static NODE *load_environ(void);
 static NODE *load_procinfo(void);
 static void catchsig(int sig);
-#ifdef HAVE_LIBSIGSEGV
-static int catchsegv(void *fault_address, int serious);
-static void catchstackoverflow(int emergency, stackoverflow_context_t scp);
-#endif
 static void nostalgia(void) ATTRIBUTE_NORETURN;
 static void version(void) ATTRIBUTE_NORETURN;
 static void init_fds(void);
@@ -185,6 +171,7 @@ static const struct option optab[] = {
 	{ "bignum",		no_argument,		NULL,	'M' },
 	{ "characters-as-bytes", no_argument,		& do_binary,	 'b' },
 	{ "copyright",		no_argument,		NULL,	'C' },
+	{ "csv",		no_argument,		NULL,	'k' },
 	{ "debug",		optional_argument,	NULL,	'D' },
 	{ "dump-variables",	optional_argument,	NULL,	'd' },
 	{ "exec",		required_argument,	NULL,	'E' },
@@ -226,7 +213,6 @@ int
 main(int argc, char **argv)
 {
 	int i;
-	char *extra_stack;
 	bool have_srcfile = false;
 	SRCFILE *s;
 	char *cp;
@@ -291,6 +277,7 @@ main(int argc, char **argv)
 #endif
 	set_locale_stuff();
 
+	(void) signal(SIGSEGV, catchsig);
 	(void) signal(SIGFPE, catchsig);
 #ifdef SIGBUS
 	(void) signal(SIGBUS, catchsig);
@@ -310,12 +297,6 @@ main(int argc, char **argv)
 	 * it did not do so in the past and people would complain.
 	 */
 	ignore_sigpipe();
-
-	(void) sigsegv_install_handler(catchsegv);
-#define STACK_SIZE (16*1024)
-	emalloc(extra_stack, char *, STACK_SIZE, "main");
-	(void) stackoverflow_install_handler(catchstackoverflow, extra_stack, STACK_SIZE);
-#undef STACK_SIZE
 
 	/* initialize the null string */
 	Nnull_string = make_string("", 0);
@@ -395,6 +376,9 @@ main(int argc, char **argv)
 		}
 	}
 
+	if (do_csv && do_posix)
+		fatal(_("`--posix' and `--csv' conflict"));
+
 	if (do_lint) {
 		if (os_is_setuid())
 			lintwarn(_("running %s setuid root may be a security problem"), myname);
@@ -434,6 +418,10 @@ main(int argc, char **argv)
 
 	/* Set up the special variables */
 	init_vars();
+
+	/* set up CSV */
+	init_csv_records();
+	init_csv_fields();
 
 	/* Set up the field variables */
 	init_fields();
@@ -577,10 +565,6 @@ main(int argc, char **argv)
 	if (do_tidy_mem)
 		release_all_vars();
 
-	/* keep valgrind happier */
-	if (extra_stack)
-		efree(extra_stack);
-
 	final_exit(exit_val);
 	return exit_val;	/* to suppress warnings */
 }
@@ -648,6 +632,7 @@ usage(int exitval, FILE *fp)
 	fputs(_("\t-h\t\t\t--help\n"), fp);
 	fputs(_("\t-i includefile\t\t--include=includefile\n"), fp);
 	fputs(_("\t-I\t\t\t--trace\n"), fp);
+	fputs(_("\t-k\t\t\t--csv\n"), fp);
 	fputs(_("\t-l library\t\t--load=library\n"), fp);
 	/*
 	 * TRANSLATORS: the "fatal", "invalid" and "no-ext" here are literal
@@ -1129,6 +1114,9 @@ load_procinfo()
 	update_PROCINFO_str("pma", get_pma_version());
 #endif /* USE_PERSISTENT_MALLOC */
 
+	if (do_csv)
+		update_PROCINFO_num("CSV", 1);
+
 	load_procinfo_argv();
 	return PROCINFO_node;
 }
@@ -1288,7 +1276,7 @@ arg_assign(char *arg, bool initing)
 		 * This makes sense, so we do it too.
 		 * In addition, remove \-<newline> as in scanning.
 		 */
-		it = make_str_node(cp, strlen(cp), SCAN | ELIDE_BACK_NL);
+		it = make_str_node(cp, strlen(cp), SCAN);
 		it->flags |= USER_INPUT;
 #ifdef LC_NUMERIC
 		/*
@@ -1357,37 +1345,6 @@ catchsig(int sig)
 		cant_happen("unexpected signal, number %d (%s)", sig, strsignal(sig));
 	/* NOTREACHED */
 }
-
-#ifdef HAVE_LIBSIGSEGV
-/* catchsegv --- for use with libsigsegv */
-
-static int
-catchsegv(void *fault_address, int serious)
-{
-	if (errcount > 0)	// assume a syntax error corrupted our data structures
-		exit(EXIT_FATAL);
-
-	set_loc(__FILE__, __LINE__);
-	msg(_("fatal error: internal error: segfault"));
-	fflush(NULL);
-	abort();
-	/*NOTREACHED*/
-	return 0;
-}
-
-/* catchstackoverflow --- for use with libsigsegv */
-
-static void
-catchstackoverflow(int emergency, stackoverflow_context_t scp)
-{
-	set_loc(__FILE__, __LINE__);
-	msg(_("fatal error: internal error: stack overflow"));
-	fflush(NULL);
-	abort();
-	/*NOTREACHED*/
-	return;
-}
-#endif /* HAVE_LIBSIGSEGV */
 
 /* nostalgia --- print the famous error message and die */
 
@@ -1624,7 +1581,7 @@ parse_args(int argc, char **argv)
 	/*
 	 * The + on the front tells GNU getopt not to rearrange argv.
 	 */
-	const char *optlist = "+F:f:v:W;bcCd::D::e:E:ghi:Il:L::nNo::Op::MPrSstVYZ:";
+	const char *optlist = "+F:f:v:W;bcCd::D::e:E:ghi:kIl:L::nNo::Op::MPrSstVYZ:";
 	int old_optind;
 	int c;
 	char *scan;
@@ -1723,6 +1680,10 @@ parse_args(int argc, char **argv)
 			do_itrace = true;
 			break;
 
+		case 'k':	// k is for "comma". it's a stretch, I know
+			do_flags |= DO_CSV;
+			break;
+
 		case 'l':
 			(void) add_srcfile(SRC_EXTLIB, optarg, srcfiles, NULL, NULL);
 			break;
@@ -1765,7 +1726,7 @@ parse_args(int argc, char **argv)
 			break;
 
 		case 'p':
-			if (do_pretty_print)
+			if (do_pretty_print && ! do_profile)
 				warning(_("`--profile' overrides `--pretty-print'"));
 			do_flags |= DO_PROFILE;
 			/* fall through */

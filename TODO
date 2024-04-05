@@ -1,4 +1,4 @@
-Thu Aug 20 12:18:22 IDT 2020
+Mon 16 Oct 2023 16:48:39 IDT
 ============================
 
 There were too many files tracking different thoughts and ideas for
@@ -14,6 +14,19 @@ TODO
 
 Minor Cleanups and Code Improvements
 ------------------------------------
+
+	Tzvetelin Katchov <katchov@gnu.org> points out the following:
+
+	- Clean up file and directory permissions to 0644 and 0755
+	across the board.
+
+	- Use consistent #! lines in awk scripts in the test suite.
+
+	- Double check uses of xxx:: targets in the test suite Makefile,
+	maybe only one colon is needed.
+
+	- The commas, mbstr1 and mbstr2 tests should probably be moved
+	into the locale tests.
 
 	API:
 		??? #if !defined(GAWK) && !defined(GAWK_OMIT_CONVENIENCE_MACROS)
@@ -31,6 +44,12 @@ Minor Cleanups and Code Improvements
 	about genuine errors.
 
 	Go through the FIXMEs in the manual and fix as many as possible.
+
+	In the test suite, don't run locale tests if the locale aren't
+	available.
+
+	In the test suite, use grep -E if no egrep or egrep produces
+	a warning.
 
 Minor New Features
 ------------------
