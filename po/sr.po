@@ -1,13 +1,14 @@
 # Serbian translation of gawk.
 # Copyright © 2020 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gawk package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2020–2022.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2020–2023.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: gawk 5.1.65\n"
+"Project-Id-Version: gawk-5.2.0a\n"
 "Report-Msgid-Bugs-To: bug-gawk@gnu.org\n"
-"POT-Creation-Date: 2022-11-17 19:56+0200\n"
-"PO-Revision-Date: 2022-09-19 18:39+0200\n"
+"POT-Creation-Date: 2023-05-07 21:31+0300\n"
+"PO-Revision-Date: 2023-02-20 21:39+0100\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
@@ -38,8 +39,8 @@ msgid "attempt to use scalar `%s' as an array"
 msgstr "покушава да користи скалар „%s“ као низ"
 
 #: array.c:407 array.c:574 builtin.c:88 builtin.c:1746 builtin.c:1794
-#: builtin.c:1807 builtin.c:2323 builtin.c:2350 eval.c:1155 eval.c:1159
-#: eval.c:1553
+#: builtin.c:1807 builtin.c:2323 builtin.c:2350 eval.c:1156 eval.c:1161
+#: eval.c:1555
 #, c-format
 msgid "attempt to use array `%s' in a scalar context"
 msgstr "покушава да користи низ „%s“ у контексту скалара"
@@ -54,32 +55,32 @@ msgstr "обриши: индекс „%.*s“ није у низу „%s“"
 msgid "attempt to use scalar `%s[\"%.*s\"]' as an array"
 msgstr "покушава да користи скалар „%s[\"%.*s\"]“ као низ"
 
-#: array.c:789 array.c:839
+#: array.c:808 array.c:858
 #, c-format
 msgid "%s: first argument is not an array"
 msgstr "%s: први аргумент није низ"
 
-#: array.c:831
+#: array.c:850
 #, c-format
 msgid "%s: second argument is not an array"
 msgstr "%s: други аргумент није низ"
 
-#: array.c:834 field.c:1006 field.c:1100
+#: array.c:853 field.c:1006 field.c:1100
 #, c-format
 msgid "%s: cannot use %s as second argument"
 msgstr "%s: не могу да користим „%s“ као други аргумент"
 
-#: array.c:842
+#: array.c:861
 #, c-format
 msgid "%s: first argument cannot be SYMTAB without a second argument"
 msgstr "%s: први аргумент не може бити „SYMTAB“ без другог аргумента"
 
-#: array.c:844
+#: array.c:863
 #, c-format
 msgid "%s: first argument cannot be FUNCTAB without a second argument"
 msgstr "%s: први аргумент не може бити „FUNCTAB“ без другог аргумента"
 
-#: array.c:851
+#: array.c:870
 msgid ""
 "asort/asorti: using the same array as source and destination without a third "
 "argument is silly."
@@ -87,22 +88,22 @@ msgstr ""
 "asort/asorti: коришћење истог низа као извор и одредиште без трећег "
 "аргумента је глупо."
 
-#: array.c:856
+#: array.c:875
 #, c-format
 msgid "%s: cannot use a subarray of first argument for second argument"
 msgstr "%s: не могу да користим подниз првог аргумента за други аргумент"
 
-#: array.c:861
+#: array.c:880
 #, c-format
 msgid "%s: cannot use a subarray of second argument for first argument"
 msgstr "%s: не могу да користим подниз другог аргумента за први аргумент"
 
-#: array.c:1377
+#: array.c:1410
 #, c-format
 msgid "`%s' is invalid as a function name"
 msgstr "„%s“ је неисправно као назив функције"
 
-#: array.c:1381
+#: array.c:1414
 #, c-format
 msgid "sort comparison function `%s' is not defined"
 msgstr "функција поређења ређања „%s“ није дефинисана"
@@ -143,11 +144,11 @@ msgstr "удвостручене вредности слова у телу пр�
 msgid "duplicate `default' detected in switch body"
 msgstr "удвостручено „default“ је откривено у телу прекидача"
 
-#: awkgram.y:1052 awkgram.y:4483
+#: awkgram.y:1052 awkgram.y:4484
 msgid "`break' is not allowed outside a loop or switch"
 msgstr "„break“ није допуштено ван петље или прекидача"
 
-#: awkgram.y:1062 awkgram.y:4475
+#: awkgram.y:1062 awkgram.y:4476
 msgid "`continue' is not allowed outside a loop"
 msgstr "„continue“ није допуштено ван петље"
 
@@ -263,7 +264,7 @@ msgstr ""
 "или правила"
 
 #: awkgram.y:2881 awkgram.y:2959 awkgram.y:3197 debug.c:545 debug.c:561
-#: debug.c:2845 debug.c:5215
+#: debug.c:2844 debug.c:5213
 #, c-format
 msgid "cannot open source file `%s' for reading: %s"
 msgstr "не могу да отворим изворну датотеку „%s“ ради читања: %s"
@@ -273,7 +274,7 @@ msgstr "не могу да отворим изворну датотеку „%s�
 msgid "cannot open shared library `%s' for reading: %s"
 msgstr "не могу да отворим дељену библиотеку „%s“ ради читања: %s"
 
-#: awkgram.y:2884 awkgram.y:2960 awkgram.y:3020 builtin.c:136 debug.c:5366
+#: awkgram.y:2884 awkgram.y:2960 awkgram.y:3020 builtin.c:136 debug.c:5364
 msgid "reason unknown"
 msgstr "разлог није познат"
 
@@ -362,161 +363,161 @@ msgstr "употреба настављања реда „\\ #...“ није п
 msgid "backslash not last character on line"
 msgstr "контра оса црта није последњи знак у реду"
 
-#: awkgram.y:3879 awkgram.y:3881
+#: awkgram.y:3880 awkgram.y:3882
 msgid "multidimensional arrays are a gawk extension"
 msgstr "вишедимензионални низови су проширења „gawk“-а"
 
-#: awkgram.y:3906 awkgram.y:3917
+#: awkgram.y:3907 awkgram.y:3918
 #, c-format
 msgid "POSIX does not allow operator `%s'"
 msgstr "„POSIX“ не допушта оператора „%s“"
 
-#: awkgram.y:3908 awkgram.y:3919 awkgram.y:3954 awkgram.y:3962
+#: awkgram.y:3909 awkgram.y:3920 awkgram.y:3955 awkgram.y:3963
 #, c-format
 msgid "operator `%s' is not supported in old awk"
 msgstr "оператор „%s“ није подржан у старом „awk“-у"
 
-#: awkgram.y:4059 awkgram.y:4081 command.y:1188
+#: awkgram.y:4060 awkgram.y:4082 command.y:1188
 msgid "unterminated string"
 msgstr "неокончана ниска"
 
-#: awkgram.y:4069 main.c:1251
+#: awkgram.y:4070 main.c:1284
 msgid "POSIX does not allow physical newlines in string values"
 msgstr "„POSIX“ не допушта физичке нове редове у вредностима ниске"
 
-#: awkgram.y:4071 node.c:460
+#: awkgram.y:4072 node.c:460
 msgid "backslash string continuation is not portable"
 msgstr "настављање ниске контра косом цртом није преносиво"
 
-#: awkgram.y:4312
+#: awkgram.y:4313
 #, c-format
 msgid "invalid char '%c' in expression"
 msgstr "неисправни знак „%c“ у изразу"
 
-#: awkgram.y:4407
+#: awkgram.y:4408
 #, c-format
 msgid "`%s' is a gawk extension"
 msgstr "„%s“ је проширење „gawk“-а"
 
-#: awkgram.y:4412
+#: awkgram.y:4413
 #, c-format
 msgid "POSIX does not allow `%s'"
 msgstr "„POSIX“ не допушта „%s“"
 
-#: awkgram.y:4420
+#: awkgram.y:4421
 #, c-format
 msgid "`%s' is not supported in old awk"
 msgstr "„%s“ није подржано у старом „awk“-у"
 
-#: awkgram.y:4520
+#: awkgram.y:4521
 msgid "`goto' considered harmful!"
 msgstr "„goto“ се сматра опасним!"
 
-#: awkgram.y:4589
+#: awkgram.y:4590
 #, c-format
 msgid "%d is invalid as number of arguments for %s"
 msgstr "%d није исправно као број аргумената за „%s“"
 
-#: awkgram.y:4624
+#: awkgram.y:4625
 #, c-format
 msgid "%s: string literal as last argument of substitute has no effect"
 msgstr "%s: дословност ниске као последњи аргумент заменика нема дејства"
 
-#: awkgram.y:4629
+#: awkgram.y:4630
 #, c-format
 msgid "%s third parameter is not a changeable object"
 msgstr "„%s“ трећи параметар није променљиви објекат"
 
-#: awkgram.y:4733 awkgram.y:4736
+#: awkgram.y:4734 awkgram.y:4737
 msgid "match: third argument is a gawk extension"
 msgstr "упореди: трећи аргумент је проширење „gawk“-а"
 
-#: awkgram.y:4790 awkgram.y:4793
+#: awkgram.y:4791 awkgram.y:4794
 msgid "close: second argument is a gawk extension"
 msgstr "затвори: други аргумент је проширење „gawk“-а"
 
-#: awkgram.y:4805
+#: awkgram.y:4806
 msgid "use of dcgettext(_\"...\") is incorrect: remove leading underscore"
 msgstr "коришћење „dcgettext(_\"...\") је нетачно: уклоните водећу подвлаку"
 
-#: awkgram.y:4820
+#: awkgram.y:4821
 msgid "use of dcngettext(_\"...\") is incorrect: remove leading underscore"
 msgstr "коришћење „dcngettext(_\"...\") је нетачно: уклоните водећу подвлаку"
 
-#: awkgram.y:4839
+#: awkgram.y:4840
 msgid "index: regexp constant as second argument is not allowed"
 msgstr "индекс: константа регуларног израза као други аргумент није допуштена"
 
-#: awkgram.y:4892
+#: awkgram.y:4893
 #, c-format
 msgid "function `%s': parameter `%s' shadows global variable"
 msgstr "функција „%s“: параметар %s“ засенчује општу променљиву"
 
-#: awkgram.y:4941 debug.c:4199 debug.c:4242 debug.c:5364 profile.c:110
+#: awkgram.y:4942 debug.c:4197 debug.c:4240 debug.c:5362 profile.c:110
 #, c-format
 msgid "could not open `%s' for writing: %s"
 msgstr "не могу да отворим „%s“ за упис: %s"
 
-#: awkgram.y:4942
+#: awkgram.y:4943
 msgid "sending variable list to standard error"
 msgstr "шаљем списак променљиве на стандардну грешку"
 
-#: awkgram.y:4950
+#: awkgram.y:4951
 #, c-format
 msgid "%s: close failed: %s"
 msgstr "%s: затварање није успело: %s"
 
-#: awkgram.y:4975
+#: awkgram.y:4976
 msgid "shadow_funcs() called twice!"
 msgstr "„shadow_funcs()“ је позвана два пута!"
 
-#: awkgram.y:4983
+#: awkgram.y:4984
 msgid "there were shadowed variables"
 msgstr "било је засенчених променљивих"
 
-#: awkgram.y:5060
+#: awkgram.y:5061
 #, c-format
 msgid "function name `%s' previously defined"
 msgstr "назив функције „%s“ је претходно дефинисан"
 
-#: awkgram.y:5111
+#: awkgram.y:5112
 #, c-format
 msgid "function `%s': cannot use function name as parameter name"
 msgstr "функција „%s“: не могу да користим назив функције као назив параметра"
 
-#: awkgram.y:5114
+#: awkgram.y:5115
 #, c-format
 msgid "function `%s': cannot use special variable `%s' as a function parameter"
 msgstr ""
 "функција „%s“: не могу да користим нарочиту променљиву „%s“ као параметар "
 "функције"
 
-#: awkgram.y:5118
+#: awkgram.y:5119
 #, c-format
 msgid "function `%s': parameter `%s' cannot contain a namespace"
 msgstr "функција „%s“: параметар „%s“ не може садржати називни простор"
 
-#: awkgram.y:5125
+#: awkgram.y:5126
 #, c-format
 msgid "function `%s': parameter #%d, `%s', duplicates parameter #%d"
 msgstr "функција „%s“: параметар #%d, „%s“, удвостручени параметар #%d"
 
-#: awkgram.y:5214
+#: awkgram.y:5215
 #, c-format
 msgid "function `%s' called but never defined"
 msgstr "функција „%s“ је позвана али није никада дефинисана"
 
-#: awkgram.y:5218
+#: awkgram.y:5219
 #, c-format
 msgid "function `%s' defined but never called directly"
 msgstr "функција „%s“ је дефинисана али никада није позвана директно"
 
-#: awkgram.y:5250
+#: awkgram.y:5251
 #, c-format
 msgid "regexp constant for parameter #%d yields boolean value"
 msgstr "константа регуларног израза за параметар #%d даје логичку вредност"
 
-#: awkgram.y:5265
+#: awkgram.y:5266
 #, c-format
 msgid ""
 "function `%s' called with space between name and `(',\n"
@@ -525,47 +526,47 @@ msgstr ""
 "функција „%s“ је позвана са простором између назива и (,\n"
 "или је коришћена као променљива или низ"
 
-#: awkgram.y:5488 awkgram.y:5541 mpfr.c:1589 mpfr.c:1624
+#: awkgram.y:5489 awkgram.y:5542 mpfr.c:1589 mpfr.c:1624
 msgid "division by zero attempted"
 msgstr "покушано је дељње нулом"
 
-#: awkgram.y:5497 awkgram.y:5550 mpfr.c:1634
+#: awkgram.y:5498 awkgram.y:5551 mpfr.c:1634
 #, c-format
 msgid "division by zero attempted in `%%'"
 msgstr "покушано је дељње нулом у „%%“"
 
-#: awkgram.y:5854
+#: awkgram.y:5871
 msgid ""
 "cannot assign a value to the result of a field post-increment expression"
 msgstr "не могу да доделим вредност резултату пост-повећавајућем изразу поља"
 
-#: awkgram.y:5857
+#: awkgram.y:5874
 #, c-format
 msgid "invalid target of assignment (opcode %s)"
 msgstr "неисправна мета додељивања (опкод %s)"
 
-#: awkgram.y:6241
+#: awkgram.y:6254
 msgid "statement has no effect"
 msgstr "изјава нема дејства"
 
-#: awkgram.y:6756
+#: awkgram.y:6769
 #, c-format
 msgid "identifier %s: qualified names not allowed in traditional / POSIX mode"
 msgstr ""
 "одредник „%s“: квалификовани називи нису допуштени у традиционалном „/ "
 "POSIX“ режиму"
 
-#: awkgram.y:6761
+#: awkgram.y:6774
 #, c-format
 msgid "identifier %s: namespace separator is two colons, not one"
 msgstr "одредник „%s“: раздвојник називног простора су две двотачке, не једна"
 
-#: awkgram.y:6767
+#: awkgram.y:6780
 #, c-format
 msgid "qualified identifier `%s' is badly formed"
 msgstr "квалификовани одредник „%s“ је лоше обликован"
 
-#: awkgram.y:6774
+#: awkgram.y:6787
 #, c-format
 msgid ""
 "identifier `%s': namespace separator can only appear once in a qualified name"
@@ -573,13 +574,13 @@ msgstr ""
 "одре „%s“: раздвојник називног простора може се појавити само једном у "
 "квалификованом називу"
 
-#: awkgram.y:6823 awkgram.y:6874
+#: awkgram.y:6836 awkgram.y:6887
 #, c-format
 msgid "using reserved identifier `%s' as a namespace is not allowed"
 msgstr ""
 "коришћење резервисаног одредника „%s“ као називни простор није допуштено"
 
-#: awkgram.y:6830 awkgram.y:6840
+#: awkgram.y:6843 awkgram.y:6853
 #, c-format
 msgid ""
 "using reserved identifier `%s' as second component of a qualified name is "
@@ -588,11 +589,11 @@ msgstr ""
 "коришћење резервисаног одредника „%s“ као другог састојка квалификованог "
 "назива није допуштено"
 
-#: awkgram.y:6858
+#: awkgram.y:6871
 msgid "@namespace is a gawk extension"
 msgstr "„@namespace“ је проширење „gawk“-а"
 
-#: awkgram.y:6865
+#: awkgram.y:6878
 #, c-format
 msgid "namespace name `%s' must meet identifier naming rules"
 msgstr ""
@@ -1019,7 +1020,7 @@ msgstr "intdiv: покушано је дељење нулом"
 msgid "typeof: second argument is not an array"
 msgstr "typeof: други аргумент није низ"
 
-#: builtin.c:4352
+#: builtin.c:4367
 #, c-format
 msgid ""
 "typeof detected invalid flags combination `%s'; please file a bug report"
@@ -1027,12 +1028,7 @@ msgstr ""
 "„typeof“ открива неисправну комбинацију заставица „%s“; будите љубазни "
 "попуните извештај о грешци"
 
-#: builtin.c:4394
-#, c-format
-msgid "typeof: invalid argument type `%s'"
-msgstr "typeof: неисправна врста аргумента „%s“"
-
-#: builtin.c:4398
+#: builtin.c:4405
 #, c-format
 msgid "typeof: unknown argument type `%s'"
 msgstr "typeof: непозната врста аргумента „%s“"
@@ -1591,17 +1587,17 @@ msgstr "подскрипта „%.*s“ није у низу „%s“\n"
 msgid "`%s[\"%.*s\"]' is not an array\n"
 msgstr "„%s[\"%.*s\"]“ није у низу\n"
 
-#: debug.c:1262 debug.c:5124
+#: debug.c:1262 debug.c:5122
 #, c-format
 msgid "`%s' is not a scalar variable"
 msgstr "„%s“ није променљива скалара"
 
-#: debug.c:1285 debug.c:5154
+#: debug.c:1285 debug.c:5152
 #, c-format
 msgid "attempt to use array `%s[\"%.*s\"]' in a scalar context"
 msgstr "покушах да користим низ „%s[\"%.*s\"]“ у контексту скалара"
 
-#: debug.c:1308 debug.c:5165
+#: debug.c:1308 debug.c:5163
 #, c-format
 msgid "attempt to use scalar `%s[\"%.*s\"]' as array"
 msgstr "покушах да користим скалар „%s[\"%.*s\"]“ као низ"
@@ -1728,230 +1724,229 @@ msgstr "не могу да поставим тачку прекида у фун�
 msgid "breakpoint %d set at file `%s', line %d is unconditional\n"
 msgstr "тачка прекида %d је постављена у датотеци „%s“, ред %d је безусловна\n"
 
-#: debug.c:2525 debug.c:3383
+#: debug.c:2524 debug.c:3381
 #, c-format
 msgid "line number %d in file `%s' out of range"
 msgstr "број реда %d у датотеци „%s“ је ван опсега"
 
-#: debug.c:2541 debug.c:2563
+#: debug.c:2540 debug.c:2562
 #, c-format
 msgid "Deleted breakpoint %d"
 msgstr "Обрисах тачку прекида %d"
 
-#: debug.c:2547
+#: debug.c:2546
 #, c-format
 msgid "No breakpoint(s) at entry to function `%s'\n"
 msgstr "Нема тачке прекида у уносу за функцију „%s“\n"
 
-#: debug.c:2574
+#: debug.c:2573
 #, c-format
 msgid "No breakpoint at file `%s', line #%d\n"
 msgstr "Нема тачке прекида у датотеци „%s“, ред #%d\n"
 
-#: debug.c:2629 debug.c:2670 debug.c:2690 debug.c:2733
+#: debug.c:2628 debug.c:2669 debug.c:2689 debug.c:2732
 msgid "invalid breakpoint number"
 msgstr "неисправан број тачке прекида"
 
-#: debug.c:2645
+#: debug.c:2644
 msgid "Delete all breakpoints? (y or n) "
 msgstr "Да обришем све тачке прекида? (д или н) "
 
-#: debug.c:2646 debug.c:2956 debug.c:3009
+#: debug.c:2645 debug.c:2955 debug.c:3008
 msgid "y"
 msgstr "д"
 
-#: debug.c:2695
+#: debug.c:2694
 #, c-format
 msgid "Will ignore next %ld crossing(s) of breakpoint %d.\n"
 msgstr "Занемарићу следећа %ld укрштања тачке прекида %d.\n"
 
-#: debug.c:2699
+#: debug.c:2698
 #, c-format
 msgid "Will stop next time breakpoint %d is reached.\n"
 msgstr "Зауставићу се када се следећи пут достигне тачка прекида %d.\n"
 
-#: debug.c:2816
+#: debug.c:2815
 #, c-format
 msgid "Can only debug programs provided with the `-f' option.\n"
 msgstr "Могу да прочистим само програме достављене опцијом „-f“.\n"
 
-#: debug.c:2836
+#: debug.c:2835
 #, c-format
 msgid "Restarting ...\n"
 msgstr "Поново покрећем ...\n"
 
-#: debug.c:2941
+#: debug.c:2940
 #, c-format
 msgid "Failed to restart debugger"
 msgstr "Нисам успео поново да покренем прочишћавача"
 
-#: debug.c:2955
+#: debug.c:2954
 msgid "Program already running. Restart from beginning (y/n)? "
 msgstr "Програм је већ покренут. Да покренем поново од почетка (д/н)? "
 
-#: debug.c:2959
+#: debug.c:2958
 #, c-format
 msgid "Program not restarted\n"
 msgstr "Програм није поново покренут\n"
 
-#: debug.c:2969
+#: debug.c:2968
 #, c-format
 msgid "error: cannot restart, operation not allowed\n"
 msgstr "грешка: не могу поново да покренем, операција није допуштена\n"
 
-#: debug.c:2975
+#: debug.c:2974
 #, c-format
 msgid "error (%s): cannot restart, ignoring rest of the commands\n"
 msgstr "грешка (%s): не могу поново да покренем, занемарујем остатак наредбе\n"
 
-#: debug.c:2983
+#: debug.c:2982
 #, c-format
 msgid "Starting program:\n"
 msgstr "Покрећем програм:\n"
 
-#: debug.c:2993
+#: debug.c:2992
 #, c-format
 msgid "Program exited abnormally with exit value: %d\n"
 msgstr "Програм је изашао ненормално са вредношћу излаза: %d\n"
 
-#: debug.c:2994
+#: debug.c:2993
 #, c-format
 msgid "Program exited normally with exit value: %d\n"
 msgstr "Програм је изашао нормално са вредношћу излаза: %d\n"
 
-#: debug.c:3008
+#: debug.c:3007
 msgid "The program is running. Exit anyway (y/n)? "
 msgstr "Програм ради. Да ипак изађем (д/н)? "
 
-#: debug.c:3043
+#: debug.c:3042
 #, c-format
 msgid "Not stopped at any breakpoint; argument ignored.\n"
 msgstr "Није заустављен ни на једној тачки прекида; аргумент је занемарен.\n"
 
-#: debug.c:3048
+#: debug.c:3047
 #, c-format
 msgid "invalid breakpoint number %d"
 msgstr "неисправан број тачке прекида %d"
 
-#: debug.c:3053
+#: debug.c:3052
 #, c-format
 msgid "Will ignore next %ld crossings of breakpoint %d.\n"
 msgstr "Занемарићу следећа %ld укрштања тачке прекида %d.\n"
 
-#: debug.c:3240
+#: debug.c:3239
 #, c-format
 msgid "'finish' not meaningful in the outermost frame main()\n"
 msgstr "„finish“ није значајно у најудаљенијој оквирној „main()“\n"
 
-#: debug.c:3245
+#: debug.c:3244
 #, c-format
 msgid "Run until return from "
 msgstr "Ради до повратка из "
 
-#: debug.c:3288
+#: debug.c:3287
 #, c-format
 msgid "'return' not meaningful in the outermost frame main()\n"
 msgstr "„return“ није значајно у најудаљенијој оквирној „main()“\n"
 
-#: debug.c:3402
+#: debug.c:3400
 #, c-format
 msgid "cannot find specified location in function `%s'\n"
 msgstr "не могу да нађем наведену локацију у функцији „%s“\n"
 
-#: debug.c:3410
+#: debug.c:3408
 #, c-format
 msgid "invalid source line %d in file `%s'"
 msgstr "неисправан изворни ред %d у датотеци „%s“"
 
-#: debug.c:3425
+#: debug.c:3423
 #, c-format
 msgid "cannot find specified location %d in file `%s'\n"
 msgstr "не могу да нађем наведену локацију %d у датотеци „%s“\n"
 
-#: debug.c:3457
+#: debug.c:3455
 #, c-format
 msgid "element not in array\n"
 msgstr "елемент није у низу\n"
 
-#: debug.c:3457
+#: debug.c:3455
 #, c-format
 msgid "untyped variable\n"
 msgstr "безврсна променљива\n"
 
-#: debug.c:3499
+#: debug.c:3497
 #, c-format
 msgid "Stopping in %s ...\n"
 msgstr "Стајем у „%s“ ...\n"
 
-#: debug.c:3576
+#: debug.c:3574
 #, c-format
 msgid "'finish' not meaningful with non-local jump '%s'\n"
 msgstr "„finish“ није од значаја са не-локалним скоком „%s“\n"
 
-#: debug.c:3583
+#: debug.c:3581
 #, c-format
 msgid "'until' not meaningful with non-local jump '%s'\n"
 msgstr "„until“ није од значаја са не-локалним скоком „%s“\n"
 
 #. TRANSLATORS: don't translate the 'q' inside the brackets.
-#: debug.c:4344
+#: debug.c:4342
 msgid "\t------[Enter] to continue or [q] + [Enter] to quit------"
 msgstr "\t------[Унеси] за наставак или [q] + [Унеси] за прекид------"
 
-#: debug.c:5161
+#: debug.c:5159
 #, c-format
 msgid "[\"%.*s\"] not in array `%s'"
 msgstr "[\"%.*s\"] није у низу „%s“"
 
-#: debug.c:5367
+#: debug.c:5365
 #, c-format
 msgid "sending output to stdout\n"
 msgstr "шаљем излаз на стандардни излаз\n"
 
-#: debug.c:5407
+#: debug.c:5405
 msgid "invalid number"
 msgstr "неисправан број"
 
-#: debug.c:5541
+#: debug.c:5539
 #, c-format
 msgid "`%s' not allowed in current context; statement ignored"
 msgstr "„%s“ није допуштено у текућем контексту; исказ је занемарен"
 
-#: debug.c:5549
+#: debug.c:5547
 msgid "`return' not allowed in current context; statement ignored"
 msgstr "„return“ није допуштено у текућем контексту; исказ је занемарен"
 
-#: debug.c:5597
-#, fuzzy, c-format
-#| msgid "fatal error: internal error"
+#: debug.c:5595
+#, c-format
 msgid "fatal error during eval, need to restart.\n"
-msgstr "кобна грешка: унутрашња грешка"
+msgstr "кобна грешка за време процене, потребно је поновно покреање.\n"
 
-#: debug.c:5787
+#: debug.c:5785
 #, c-format
 msgid "no symbol `%s' in current context"
 msgstr "нема симбола „%s“ у текућем контексту"
 
-#: eval.c:404
+#: eval.c:405
 #, c-format
 msgid "unknown nodetype %d"
 msgstr "непозната врста чвора %d"
 
-#: eval.c:415 eval.c:431
+#: eval.c:416 eval.c:432
 #, c-format
 msgid "unknown opcode %d"
 msgstr "непознат опкод %d"
 
-#: eval.c:428
+#: eval.c:429
 #, c-format
 msgid "opcode %s not an operator or keyword"
 msgstr "опкод „“ није оператер или кључна реч%s"
 
-#: eval.c:487
+#: eval.c:488
 msgid "buffer overflow in genflags2str"
 msgstr "прекорачење међумеморије у „genflags2str“"
 
-#: eval.c:689
+#: eval.c:690
 #, c-format
 msgid ""
 "\n"
@@ -1962,71 +1957,71 @@ msgstr ""
 "\t# Функција Позив Спремник:\n"
 "\n"
 
-#: eval.c:715
+#: eval.c:716
 msgid "`IGNORECASE' is a gawk extension"
 msgstr "„IGNORECASE“ је проширење „gawk“-а"
 
-#: eval.c:736
+#: eval.c:737
 msgid "`BINMODE' is a gawk extension"
 msgstr "„BINMODE“ је проширење „gawk“-а"
 
-#: eval.c:793
+#: eval.c:794
 #, c-format
 msgid "BINMODE value `%s' is invalid, treated as 3"
 msgstr "„BINMODE“ вредност „%s“ је неисправна, сматра се 3"
 
-#: eval.c:916
+#: eval.c:917
 #, c-format
 msgid "bad `%sFMT' specification `%s'"
 msgstr "лоша „%sFMT“ одредба „%s“"
 
-#: eval.c:986
+#: eval.c:987
 msgid "turning off `--lint' due to assignment to `LINT'"
 msgstr "искључујем „--lint“ услед додељивања „LINT“-у"
 
-#: eval.c:1188
+#: eval.c:1190
 #, c-format
 msgid "reference to uninitialized argument `%s'"
 msgstr "упута на незапочети аргумент „%s“"
 
-#: eval.c:1189
+#: eval.c:1191
 #, c-format
 msgid "reference to uninitialized variable `%s'"
 msgstr "упута на незапочету променљиву „%s“"
 
-#: eval.c:1207
+#: eval.c:1209
 msgid "attempt to field reference from non-numeric value"
 msgstr "покушај до упуте поља из не-бројевне вредности"
 
-#: eval.c:1209
+#: eval.c:1211
 msgid "attempt to field reference from null string"
 msgstr "покушај до упуте поља из ништавне ниске"
 
-#: eval.c:1217
+#: eval.c:1219
 #, c-format
 msgid "attempt to access field %ld"
 msgstr "покушај приступа пољу %ld"
 
-#: eval.c:1226
+#: eval.c:1228
 #, c-format
 msgid "reference to uninitialized field `$%ld'"
 msgstr "упута на незапочето поље „$%ld“"
 
-#: eval.c:1290
+#: eval.c:1292
 #, c-format
 msgid "function `%s' called with more arguments than declared"
 msgstr "функција „%s“ је позвана са више аргумената него што је објављено"
 
-#: eval.c:1495
+#: eval.c:1497
 #, c-format
 msgid "unwind_stack: unexpected type `%s'"
 msgstr "unwind_stack: неочекивана врста „%s“"
 
-#: eval.c:1670
+#: eval.c:1672
 msgid "division by zero attempted in `/='"
 msgstr "покушано је дељње нулом у „/=“"
 
-#: eval.c:1677
+#: eval.c:1679
 #, c-format
 msgid "division by zero attempted in `%%='"
 msgstr "покушано је дељње нулом у „%%=“"
@@ -2324,7 +2319,7 @@ msgstr "ord: први аргумент није ниска"
 msgid "chr: first argument is not a number"
 msgstr "chr: први аргумент није ниска"
 
-#: extension/readdir.c:277
+#: extension/readdir.c:280
 #, c-format
 msgid "dir_take_control_of: opendir/fdopendir failed: %s"
 msgstr "dir_take_control_of: „opendir/fdopendir“ није успело: %s"
@@ -2382,10 +2377,9 @@ msgid "cannot free value with unhandled type %d"
 msgstr "не могу да ослободим вредност са непознатом врстом %d"
 
 #: extension/rwarray.c:481
-#, fuzzy, c-format
-#| msgid "readall: unable to set %s"
+#, c-format
 msgid "readall: unable to set %s::%s"
-msgstr "readall: не могу да поставим „%s“"
+msgstr "readall: не могу да поставим „%s::%s“"
 
 #: extension/rwarray.c:483
 #, c-format
@@ -2417,29 +2411,39 @@ msgstr ""
 "„rwarray“ проширење: „GMP/MPFR“ вредност у датотеци али преведена без „GMP/"
 "MPFR“ подршке."
 
-#: extension/time.c:107
-msgid ""
-"The time extension is obsolete. Use the timex extension from gawkextlib "
-"instead."
-msgstr ""
-"Временско проширење је застарело. С тога користите „timex“ проширење из "
-"„gawkextlib“."
-
-#: extension/time.c:153
+#: extension/time.c:142
 msgid "gettimeofday: not supported on this platform"
 msgstr "gettimeofday: није подржано на овој платформи"
 
-#: extension/time.c:174
+#: extension/time.c:163
 msgid "sleep: missing required numeric argument"
 msgstr "sleep: недостаје затражен бројевни аргумент"
 
-#: extension/time.c:180
+#: extension/time.c:169
 msgid "sleep: argument is negative"
 msgstr "sleep: аргумент је негативан"
 
-#: extension/time.c:214
+#: extension/time.c:203
 msgid "sleep: not supported on this platform"
 msgstr "sleep: није подржано на овој платформи"
+
+#: extension/time.c:225
+#, fuzzy
+#| msgid "%s: called with %d arguments"
+msgid "strptime: called with no arguments"
+msgstr "%s: позвано са %d аргумента"
+
+#: extension/time.c:233
+#, fuzzy, c-format
+#| msgid "do_writea: argument 0 is not a string"
+msgid "do_strptime: argument 1 is not a string\n"
+msgstr "do_writea: аргумент 0 није ниска"
+
+#: extension/time.c:238
+#, fuzzy, c-format
+#| msgid "do_writea: argument 0 is not a string"
+msgid "do_strptime: argument 2 is not a string\n"
+msgstr "do_writea: аргумент 0 није ниска"
 
 #: field.c:287
 msgid "input record too large"
@@ -2629,103 +2633,103 @@ msgstr "аргумент линије наредби „%s“ је директ�
 msgid "cannot open file `%s' for reading: %s"
 msgstr "не могу да отворим датотеку „%s“ за читање: %s"
 
-#: io.c:652
+#: io.c:650
 #, c-format
 msgid "close of fd %d (`%s') failed: %s"
 msgstr "затварање „fd“ %d (%s)“ није успело: %s"
 
-#: io.c:724
+#: io.c:722
 #, c-format
 msgid "`%.*s' used for input file and for output file"
 msgstr "„%.*s“ је коришћено за улазну датотеку и излазну датотеку"
 
-#: io.c:726
+#: io.c:724
 #, c-format
 msgid "`%.*s' used for input file and input pipe"
 msgstr "„%.*s“ је коришћено за улазну датотеку и улазну спојку"
 
-#: io.c:728
+#: io.c:726
 #, c-format
 msgid "`%.*s' used for input file and two-way pipe"
 msgstr "„%.*s“ је коришћено за улазну датотеку и двосмерну спојку"
 
-#: io.c:730
+#: io.c:728
 #, c-format
 msgid "`%.*s' used for input file and output pipe"
 msgstr "„%.*s“ је коришћено за улазну датотеку и излазну спојку"
 
-#: io.c:732
+#: io.c:730
 #, c-format
 msgid "unnecessary mixing of `>' and `>>' for file `%.*s'"
 msgstr "непотребно мешање > и >> за датотеку „%.*s“"
 
-#: io.c:734
+#: io.c:732
 #, c-format
 msgid "`%.*s' used for input pipe and output file"
 msgstr "„%.*s“ је коришћено за улазну спојку и излазну датотеку"
 
-#: io.c:736
+#: io.c:734
 #, c-format
 msgid "`%.*s' used for output file and output pipe"
 msgstr "„%.*s“ је коришћено за излазну датотеку и излазну спојку"
 
-#: io.c:738
+#: io.c:736
 #, c-format
 msgid "`%.*s' used for output file and two-way pipe"
 msgstr "„%.*s“ је коришћено за излазну датотеку и двосмерну спојку"
 
-#: io.c:740
+#: io.c:738
 #, c-format
 msgid "`%.*s' used for input pipe and output pipe"
 msgstr "„%.*s“ је коришћено за улазну спојку и излазну спојку"
 
-#: io.c:742
+#: io.c:740
 #, c-format
 msgid "`%.*s' used for input pipe and two-way pipe"
 msgstr "„%.*s“ је коришћено за улазну спојку и двосмерну спојку"
 
-#: io.c:744
+#: io.c:742
 #, c-format
 msgid "`%.*s' used for output pipe and two-way pipe"
 msgstr "„%.*s“ је коришћено за излазну спојку и двосмерну спојку"
 
-#: io.c:793
+#: io.c:791
 msgid "redirection not allowed in sandbox mode"
 msgstr "преусмерење није допуштено у режиму изолованог окружења"
 
-#: io.c:827
+#: io.c:825
 #, c-format
 msgid "expression in `%s' redirection is a number"
 msgstr "израз у „%s“ преусмерењу је број"
 
-#: io.c:831
+#: io.c:829
 #, c-format
 msgid "expression for `%s' redirection has null string value"
 msgstr "израз за „%s“ преусмерење има ништавну вредност ниске"
 
-#: io.c:836
+#: io.c:834
 #, c-format
 msgid ""
 "filename `%.*s' for `%s' redirection may be result of logical expression"
 msgstr ""
 "назив датотеке „%.*s“ за „%s“ преусмерење може бити резултат логичког израза"
 
-#: io.c:933 io.c:958
+#: io.c:931 io.c:956
 #, c-format
 msgid "get_file cannot create pipe `%s' with fd %d"
 msgstr "„get_file“ не може направити спојку „%s“ са „fd“-ом %d"
 
-#: io.c:948
+#: io.c:946
 #, c-format
 msgid "cannot open pipe `%s' for output: %s"
 msgstr "не могу да отворим спојку „%s“ за излаз: %s"
 
-#: io.c:963
+#: io.c:961
 #, c-format
 msgid "cannot open pipe `%s' for input: %s"
 msgstr "не могу да отворим спојку „%s“ за улаз: %s"
 
-#: io.c:987
+#: io.c:985
 #, c-format
 msgid ""
 "get_file socket creation not supported on this platform for `%s' with fd %d"
@@ -2733,254 +2737,254 @@ msgstr ""
 "стварање прикључнице „get_file“ није подржано на овој платформи за „%s“ са "
 "описником датотеке %d"
 
-#: io.c:998
+#: io.c:996
 #, c-format
 msgid "cannot open two way pipe `%s' for input/output: %s"
 msgstr "не могу да отворим двосмерну спојку „%s“ за улаз/излаз: %s"
 
-#: io.c:1085
+#: io.c:1083
 #, c-format
 msgid "cannot redirect from `%s': %s"
 msgstr "не могу да преусмерим са „%s“: %s"
 
-#: io.c:1088
+#: io.c:1086
 #, c-format
 msgid "cannot redirect to `%s': %s"
 msgstr "не могу да преусмерим ка „%s“: %s"
 
-#: io.c:1190
+#: io.c:1188
 msgid ""
 "reached system limit for open files: starting to multiplex file descriptors"
 msgstr ""
 "достигнуто је ограничење система за отворене датотеке: почињем са "
 "мултиплексирањем описника датотека"
 
-#: io.c:1206
+#: io.c:1204
 #, c-format
 msgid "close of `%s' failed: %s"
 msgstr "затварање „%s“ није успело: %s"
 
-#: io.c:1214
+#: io.c:1212
 msgid "too many pipes or input files open"
 msgstr "превише спојки или отворених улазних датотека"
 
-#: io.c:1240
+#: io.c:1238
 msgid "close: second argument must be `to' or `from'"
 msgstr "close: други аргумент мора бити „to“ или „from“"
 
-#: io.c:1258
+#: io.c:1256
 #, c-format
 msgid "close: `%.*s' is not an open file, pipe or co-process"
 msgstr "close: „%.*s“ није отворена датотека, спојка или ко-процесс"
 
-#: io.c:1263
+#: io.c:1261
 msgid "close of redirection that was never opened"
 msgstr "затварање преусмерења које никада није отворено"
 
-#: io.c:1365
+#: io.c:1363
 #, c-format
 msgid "close: redirection `%s' not opened with `|&', second argument ignored"
 msgstr ""
 "close: преусмерење „%s“ није отворено са |&, други аргумент је занемарен"
 
-#: io.c:1382
+#: io.c:1380
 #, c-format
 msgid "failure status (%d) on pipe close of `%s': %s"
 msgstr "стање неуспеха (%d) при затварању спојке од „%s“: %s"
 
-#: io.c:1385
+#: io.c:1383
 #, c-format
 msgid "failure status (%d) on two-way pipe close of `%s': %s"
 msgstr "стање неуспеха (%d) при затварању двосмерне спојке од „%s“: %s"
 
-#: io.c:1388
+#: io.c:1386
 #, c-format
 msgid "failure status (%d) on file close of `%s': %s"
 msgstr "стање неуспеха (%d) при затварању датотеке од „%s“: %s"
 
-#: io.c:1408
+#: io.c:1406
 #, c-format
 msgid "no explicit close of socket `%s' provided"
 msgstr "није обезбеђено изричито затварање прикључнице „%s“"
 
-#: io.c:1411
+#: io.c:1409
 #, c-format
 msgid "no explicit close of co-process `%s' provided"
 msgstr "није обезбеђено изричито затварање ко-процеса „%s“"
 
-#: io.c:1414
+#: io.c:1412
 #, c-format
 msgid "no explicit close of pipe `%s' provided"
 msgstr "није обезбеђено изричито затварање спојке „%s“"
 
-#: io.c:1417
+#: io.c:1415
 #, c-format
 msgid "no explicit close of file `%s' provided"
 msgstr "није обезбеђено изричито затварање датотеке „%s“"
 
-#: io.c:1452
+#: io.c:1450
 #, c-format
 msgid "fflush: cannot flush standard output: %s"
 msgstr "fflush: не могу да исперем стандардни излаз: %s"
 
-#: io.c:1453
+#: io.c:1451
 #, c-format
 msgid "fflush: cannot flush standard error: %s"
 msgstr "fflush: не могу да исперем стандардну грешку: %s"
 
-#: io.c:1458 io.c:1547 main.c:691 main.c:736
+#: io.c:1456 io.c:1545 main.c:719 main.c:764
 #, c-format
 msgid "error writing standard output: %s"
 msgstr "грешка писања стандардног излаза: %s"
 
-#: io.c:1459 io.c:1558 main.c:693
+#: io.c:1457 io.c:1556 main.c:721
 #, c-format
 msgid "error writing standard error: %s"
 msgstr "грешка писања стандардне грешке: %s"
 
-#: io.c:1498
+#: io.c:1496
 #, c-format
 msgid "pipe flush of `%s' failed: %s"
 msgstr "испирање спојке „%s“ није успело: %s"
 
-#: io.c:1501
+#: io.c:1499
 #, c-format
 msgid "co-process flush of pipe to `%s' failed: %s"
 msgstr "испирање спојке ко-процеса у „%s“ није успело: %s"
 
-#: io.c:1504
+#: io.c:1502
 #, c-format
 msgid "file flush of `%s' failed: %s"
 msgstr "испирање датотеке „%s“ није успело: %s"
 
-#: io.c:1647
+#: io.c:1645
 #, c-format
 msgid "local port %s invalid in `/inet': %s"
 msgstr "локални прикључник „%s“ је неисправан у „/inet“: %s"
 
-#: io.c:1650
+#: io.c:1648
 #, c-format
 msgid "local port %s invalid in `/inet'"
 msgstr "локални прикључник „%s“ је неисправан у „/inet“"
 
-#: io.c:1673
+#: io.c:1671
 #, c-format
 msgid "remote host and port information (%s, %s) invalid: %s"
 msgstr "удаљени домаћин и информације прикључника (%s, %s) су неисправни: %s"
 
-#: io.c:1676
+#: io.c:1674
 #, c-format
 msgid "remote host and port information (%s, %s) invalid"
 msgstr "удаљени домаћин и информације прикључника (%s, %s) су неисправни"
 
-#: io.c:1918
+#: io.c:1916
 msgid "TCP/IP communications are not supported"
 msgstr "„TCP/IP“ комуникације нису подржане"
 
-#: io.c:2046 io.c:2089
+#: io.c:2044 io.c:2087
 #, c-format
 msgid "could not open `%s', mode `%s'"
 msgstr "не могу да отворим „%s“, режим „%s“"
 
-#: io.c:2054 io.c:2106
+#: io.c:2052 io.c:2104
 #, c-format
 msgid "close of master pty failed: %s"
 msgstr "затарање главног „pty“ није успело: %s"
 
-#: io.c:2056 io.c:2108 io.c:2449 io.c:2687
+#: io.c:2054 io.c:2106 io.c:2447 io.c:2685
 #, c-format
 msgid "close of stdout in child failed: %s"
 msgstr "затварање стандардног излаза у породу није успело: %s"
 
-#: io.c:2059 io.c:2111
+#: io.c:2057 io.c:2109
 #, c-format
 msgid "moving slave pty to stdout in child failed (dup: %s)"
 msgstr ""
 "премештање подређеног „pty“ на стандардни излаз у породу није успело (dup: "
 "%s)"
 
-#: io.c:2061 io.c:2113 io.c:2454
+#: io.c:2059 io.c:2111 io.c:2452
 #, c-format
 msgid "close of stdin in child failed: %s"
 msgstr "затварање стандардног улаза у породу није успело: %s"
 
-#: io.c:2064 io.c:2116
+#: io.c:2062 io.c:2114
 #, c-format
 msgid "moving slave pty to stdin in child failed (dup: %s)"
 msgstr ""
 "премештање подређеног „pty“ на стандардни улаз у породу није успело (dup: %s)"
 
-#: io.c:2066 io.c:2118 io.c:2140
+#: io.c:2064 io.c:2116 io.c:2138
 #, c-format
 msgid "close of slave pty failed: %s"
 msgstr "затарање помоћног „pty“ није успело: %s"
 
-#: io.c:2302
+#: io.c:2300
 msgid "could not create child process or open pty"
 msgstr "не могу да направим породни процес или да отворим „pty“"
 
-#: io.c:2388 io.c:2452 io.c:2662 io.c:2690
+#: io.c:2386 io.c:2450 io.c:2660 io.c:2688
 #, c-format
 msgid "moving pipe to stdout in child failed (dup: %s)"
 msgstr "премештање спојке на стандардни излаз у породу није успело (dup: %s)"
 
-#: io.c:2395 io.c:2457
+#: io.c:2393 io.c:2455
 #, c-format
 msgid "moving pipe to stdin in child failed (dup: %s)"
 msgstr "премештање спојке на стандардни улаз у породу није успело (dup: %s)"
 
-#: io.c:2417 io.c:2680
+#: io.c:2415 io.c:2678
 msgid "restoring stdout in parent process failed"
 msgstr "повраћај стандардног излаза у родитељском процесу није успело"
 
-#: io.c:2425
+#: io.c:2423
 msgid "restoring stdin in parent process failed"
 msgstr "повраћај стандардног улаза у родитељском процесу није успело"
 
-#: io.c:2460 io.c:2692 io.c:2707
+#: io.c:2458 io.c:2690 io.c:2705
 #, c-format
 msgid "close of pipe failed: %s"
 msgstr "затварање спојке није успело: %s"
 
-#: io.c:2519
+#: io.c:2517
 msgid "`|&' not supported"
 msgstr "„|&“ није подржано"
 
-#: io.c:2647
+#: io.c:2645
 #, c-format
 msgid "cannot open pipe `%s': %s"
 msgstr "не могу да отворим спојку „%s“: %s"
 
-#: io.c:2701
+#: io.c:2699
 #, c-format
 msgid "cannot create child process for `%s' (fork: %s)"
 msgstr "не могу да направим процес порода за „%s“ (fork: %s)"
 
-#: io.c:2839
+#: io.c:2838
 msgid "getline: attempt to read from closed read end of two-way pipe"
 msgstr "getline: покушах да читам из затвореног краја читања двосмерне спојке"
 
-#: io.c:3158
+#: io.c:3162
 msgid "register_input_parser: received NULL pointer"
 msgstr "register_input_parser: примих НИШТАВНИ показивач"
 
-#: io.c:3186
+#: io.c:3190
 #, c-format
 msgid "input parser `%s' conflicts with previously installed input parser `%s'"
 msgstr ""
 "обрађивач улаза „%s“ се сукобљава са претходно инсталираним обрађивачем "
 "улаза „%s“"
 
-#: io.c:3193
+#: io.c:3197
 #, c-format
 msgid "input parser `%s' failed to open `%s'"
 msgstr "обрађивач улаза „%s“ није успео да се отвори „%s“"
 
-#: io.c:3213
+#: io.c:3217
 msgid "register_output_wrapper: received NULL pointer"
 msgstr "register_output_wrapper: примих НИШТАВНИ показивач"
 
-#: io.c:3241
+#: io.c:3245
 #, c-format
 msgid ""
 "output wrapper `%s' conflicts with previously installed output wrapper `%s'"
@@ -2988,16 +2992,16 @@ msgstr ""
 "умотавач излаза „%s“ се сукобљава са претходно инсталираним употавачем "
 "излаза „%s“"
 
-#: io.c:3248
+#: io.c:3252
 #, c-format
 msgid "output wrapper `%s' failed to open `%s'"
 msgstr "умотавач излаза „%s“ није успео да се отвори „%s“"
 
-#: io.c:3269
+#: io.c:3273
 msgid "register_output_processor: received NULL pointer"
 msgstr "register_output_processor: примих НИШТАВНИ показивач"
 
-#: io.c:3298
+#: io.c:3302
 #, c-format
 msgid ""
 "two-way processor `%s' conflicts with previously installed two-way processor "
@@ -3006,29 +3010,29 @@ msgstr ""
 "двосмерни процесор „%s“ се сукобљава претходно инсталираним двосмерним "
 "процесором „%s“"
 
-#: io.c:3307
+#: io.c:3311
 #, c-format
 msgid "two way processor `%s' failed to open `%s'"
 msgstr "двосмерни процесор „%s“ није успео да се отвори „%s“"
 
-#: io.c:3431
+#: io.c:3442
 #, c-format
 msgid "data file `%s' is empty"
 msgstr "датотека података „%s“ је празна"
 
-#: io.c:3473 io.c:3481
+#: io.c:3484 io.c:3492
 msgid "could not allocate more input memory"
 msgstr "не могу да доделим још меморије улаза"
 
-#: io.c:4099
+#: io.c:4113
 msgid "multicharacter value of `RS' is a gawk extension"
 msgstr "вредност мултизнака „RS“ је проширење „gawk“-а"
 
-#: io.c:4253
+#: io.c:4267
 msgid "IPv6 communication is not supported"
 msgstr "„IPv6“ комуникација није подржана"
 
-#: main.c:240
+#: main.c:245
 #, c-format
 msgid ""
 "%s: fatal: persistent memory allocator failed to initialize: return value "
@@ -3037,206 +3041,206 @@ msgstr ""
 "%s: кобно: додељивач трајне меморије није успео да се покрене: резултна "
 "вредност %d, „pma.c“ ред: %d.\n"
 
-#: main.c:248
+#: main.c:253
 msgid "persistent memory is not supported"
 msgstr "трајна меморија није подржана"
 
-#: main.c:360
+#: main.c:366
 msgid "environment variable `POSIXLY_CORRECT' set: turning on `--posix'"
 msgstr ""
 "променљива окружења „POSIXLY_CORRECT“ је постављена: укључујем „--posix“"
 
-#: main.c:367
+#: main.c:373
 msgid "`--posix' overrides `--traditional'"
 msgstr "„--posix“ превазилази „--traditional“"
 
-#: main.c:378
+#: main.c:384
 msgid "`--posix'/`--traditional' overrides `--non-decimal-data'"
 msgstr "„--posix“/„--traditional“ превазилази „--non-decimal-data“"
 
-#: main.c:383
+#: main.c:389
 msgid "`--posix' overrides `--characters-as-bytes'"
 msgstr "„--posix“ превазилази „--characters-as-bytes“"
 
-#: main.c:394
+#: main.c:400
 #, c-format
 msgid "running %s setuid root may be a security problem"
 msgstr "покретање „%s setuid root“ може бити безбедносни проблем"
 
-#: main.c:396
+#: main.c:402
 msgid "The -r/--re-interval options no longer have any effect"
 msgstr "Опције „-r/--re-interval“ немају више никакво дејство"
 
-#: main.c:450
+#: main.c:456
 #, c-format
 msgid "cannot set binary mode on stdin: %s"
 msgstr "не могу да поставим бинарни режим на стандардни улаз: %s"
 
-#: main.c:453
+#: main.c:459
 #, c-format
 msgid "cannot set binary mode on stdout: %s"
 msgstr "не могу да поставим бинарни режим на стандардни излаз: %s"
 
-#: main.c:455
+#: main.c:461
 #, c-format
 msgid "cannot set binary mode on stderr: %s"
 msgstr "не могу да поставим бинарни режим на стандардну грешку: %s"
 
-#: main.c:517
+#: main.c:526
 msgid "no program text at all!"
 msgstr "уопште нема текста програма!"
 
-#: main.c:611
+#: main.c:628
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"
 msgstr ""
 "Употреба: %s [опције „POSIX“ или Гну стила] -f датотека_програма [--] "
 "датотека ...\n"
 
-#: main.c:613
+#: main.c:630
 #, c-format
 msgid "Usage: %s [POSIX or GNU style options] [--] %cprogram%c file ...\n"
 msgstr ""
 "Употреба: %s [опције „POSIX“ или Гну стила] [--] %cпрограм%c датотека ...\n"
 
-#: main.c:618
+#: main.c:635
 msgid "POSIX options:\t\tGNU long options: (standard)\n"
 msgstr "„POSIX“ опције:\t\tДуге Гну опције: (стандард)\n"
 
-#: main.c:619
+#: main.c:636
 msgid "\t-f progfile\t\t--file=progfile\n"
 msgstr "\t-f дттка програма\t--file=датотека програма\n"
 
-#: main.c:620
+#: main.c:637
 msgid "\t-F fs\t\t\t--field-separator=fs\n"
 msgstr "\t-F рп\t\t\t--field-separator=рп\n"
 
-#: main.c:621
+#: main.c:638
 msgid "\t-v var=val\t\t--assign=var=val\n"
 msgstr "\t-v пром=вред\t\t--assign=пром=вред\n"
 
-#: main.c:622
+#: main.c:639
 msgid "Short options:\t\tGNU long options: (extensions)\n"
 msgstr "Кратке опције:\t\tДуге Гну опције: (проширења)\n"
 
-#: main.c:623
+#: main.c:640
 msgid "\t-b\t\t\t--characters-as-bytes\n"
 msgstr "\t-b\t\t\t--characters-as-bytes\n"
 
-#: main.c:624
+#: main.c:641
 msgid "\t-c\t\t\t--traditional\n"
 msgstr "\t-c\t\t\t--traditional\n"
 
-#: main.c:625
+#: main.c:642
 msgid "\t-C\t\t\t--copyright\n"
 msgstr "\t-C\t\t\t--copyright\n"
 
-#: main.c:626
+#: main.c:643
 msgid "\t-d[file]\t\t--dump-variables[=file]\n"
 msgstr "\t-d[дттка]\t\t--dump-variables[=датотека]\n"
 
-#: main.c:627
+#: main.c:644
 msgid "\t-D[file]\t\t--debug[=file]\n"
 msgstr "\t-D[дттка]\t\t--debug[=датотека]\n"
 
-#: main.c:628
+#: main.c:645
 msgid "\t-e 'program-text'\t--source='program-text'\n"
 msgstr "\t-e 'текст-програма'\t--source='текст програма'\n"
 
-#: main.c:629
+#: main.c:646
 msgid "\t-E file\t\t\t--exec=file\n"
 msgstr "\t-E дттка\t\t--exec=датотека\n"
 
-#: main.c:630
+#: main.c:647
 msgid "\t-g\t\t\t--gen-pot\n"
 msgstr "\t-g\t\t\t--gen-pot\n"
 
-#: main.c:631
+#: main.c:648
 msgid "\t-h\t\t\t--help\n"
 msgstr "\t-h\t\t\t--help\n"
 
-#: main.c:632
+#: main.c:649
 msgid "\t-i includefile\t\t--include=includefile\n"
 msgstr "\t-i укључи_дттку\t\t--include=укључи_датотеку\n"
 
-#: main.c:633
+#: main.c:650
 msgid "\t-I\t\t\t--trace\n"
 msgstr "\t-I\t\t\t--trace\n"
 
-#: main.c:634
+#: main.c:651
 msgid "\t-l library\t\t--load=library\n"
 msgstr "\t-l библиотека\t\t--load=библиотека\n"
 
 #. TRANSLATORS: the "fatal", "invalid" and "no-ext" here are literal
 #. values, they should not be translated. Thanks.
 #.
-#: main.c:639
+#: main.c:656
 msgid "\t-L[fatal|invalid|no-ext]\t--lint[=fatal|invalid|no-ext]\n"
 msgstr "\t-L[fatal|invalid|no-ext]\t--lint[=fatal|invalid|no-ext]\n"
 
-#: main.c:640
+#: main.c:657
 msgid "\t-M\t\t\t--bignum\n"
 msgstr "\t-M\t\t\t--bignum\n"
 
-#: main.c:641
+#: main.c:658
 msgid "\t-N\t\t\t--use-lc-numeric\n"
 msgstr "\t-N\t\t\t--use-lc-numeric\n"
 
-#: main.c:642
+#: main.c:659
 msgid "\t-n\t\t\t--non-decimal-data\n"
 msgstr "\t-n\t\t\t--non-decimal-data\n"
 
-#: main.c:643
+#: main.c:660
 msgid "\t-o[file]\t\t--pretty-print[=file]\n"
 msgstr "\t-o[дттка]\t\t--pretty-print[=датотека]\n"
 
-#: main.c:644
+#: main.c:661
 msgid "\t-O\t\t\t--optimize\n"
 msgstr "\t-O\t\t\t--optimize\n"
 
-#: main.c:645
+#: main.c:662
 msgid "\t-p[file]\t\t--profile[=file]\n"
 msgstr "\t-p[дттка]\t\t--profile[=датотека]\n"
 
-#: main.c:646
+#: main.c:663
 msgid "\t-P\t\t\t--posix\n"
 msgstr "\t-P\t\t\t--posix\n"
 
-#: main.c:647
+#: main.c:664
 msgid "\t-r\t\t\t--re-interval\n"
 msgstr "\t-r\t\t\t--re-interval\n"
 
-#: main.c:648
+#: main.c:665
 msgid "\t-s\t\t\t--no-optimize\n"
 msgstr "\t-s\t\t\t--no-optimize\n"
 
-#: main.c:649
+#: main.c:666
 msgid "\t-S\t\t\t--sandbox\n"
 msgstr "\t-S\t\t\t--sandbox\n"
 
-#: main.c:650
+#: main.c:667
 msgid "\t-t\t\t\t--lint-old\n"
 msgstr "\t-t\t\t\t--lint-old\n"
 
-#: main.c:651
+#: main.c:668
 msgid "\t-V\t\t\t--version\n"
 msgstr "\t-V\t\t\t--version\n"
 
-#: main.c:653
+#: main.c:670
 msgid "\t-W nostalgia\t\t--nostalgia\n"
 msgstr "\t-W nostalgia\t\t--nostalgia\n"
 
-#: main.c:656
+#: main.c:673
 msgid "\t-Y\t\t\t--parsedebug\n"
 msgstr "\t-Y\t\t\t--parsedebug\n"
 
-#: main.c:659
+#: main.c:676
 msgid "\t-Z locale-name\t\t--locale=locale-name\n"
 msgstr "\t-Z језик\t\t--locale=језик\n"
 
 #. TRANSLATORS: --help output (end)
 #. no-wrap
-#: main.c:665
+#: main.c:682
 msgid ""
 "\n"
 "To report bugs, use the `gawkbug' program.\n"
@@ -3258,7 +3262,15 @@ msgstr ""
 "или користећи веб форум као што је „Stack Overflow“.\n"
 "\n"
 
-#: main.c:674
+#: main.c:698
+#, c-format
+msgid ""
+"Source code for gawk may be obtained from\n"
+"%s/gawk-%s.tar.gz\n"
+"\n"
+msgstr ""
+
+#: main.c:702
 msgid ""
 "gawk is a pattern scanning and processing language.\n"
 "By default it reads standard input and writes standard output.\n"
@@ -3268,7 +3280,7 @@ msgstr ""
 "У основи чита стандардни улаз и исписује стандардни излаз.\n"
 "\n"
 
-#: main.c:678
+#: main.c:706
 #, c-format
 msgid ""
 "Examples:\n"
@@ -3279,7 +3291,7 @@ msgstr ""
 "\t%s '{ sum += $1 }; END { print sum }' file\n"
 "\t%s -F: '{ print $1 }' /etc/passwd\n"
 
-#: main.c:708
+#: main.c:736
 #, c-format
 msgid ""
 "Copyright (C) 1989, 1991-%d Free Software Foundation.\n"
@@ -3298,7 +3310,7 @@ msgstr ""
 "верзије.\n"
 "\n"
 
-#: main.c:716
+#: main.c:744
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -3312,7 +3324,7 @@ msgstr ""
 "Погледајте Гнуову Општу јавну лиценцу за више детаља.\n"
 "\n"
 
-#: main.c:722
+#: main.c:750
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program. If not, see http://www.gnu.org/licenses/.\n"
@@ -3320,11 +3332,11 @@ msgstr ""
 "Требали сте да примите примерак Гнуове Опште јавне лиценце\n"
 "уз овај програм. Ако нисте, видите: „http://www.gnu.org/licenses/“.\n"
 
-#: main.c:761
+#: main.c:789
 msgid "-Ft does not set FS to tab in POSIX awk"
 msgstr "„-Ft“ не поставља „FS“ на табулатор у „POSIX awk“-у"
 
-#: main.c:1181
+#: main.c:1214
 #, c-format
 msgid ""
 "%s: `%s' argument to `-v' not in `var=value' form\n"
@@ -3333,82 +3345,98 @@ msgstr ""
 "%s: „%s“ аргумент за „-v“ није у облику „var=вредност“\n"
 "\n"
 
-#: main.c:1207
+#: main.c:1240
 #, c-format
 msgid "`%s' is not a legal variable name"
 msgstr "„%s“ није исправан назив променљиве"
 
-#: main.c:1210
+#: main.c:1243
 #, c-format
 msgid "`%s' is not a variable name, looking for file `%s=%s'"
 msgstr "„%s“ није назив променљиве, тражим датотеку „%s=%s“"
 
-#: main.c:1224
+#: main.c:1257
 #, c-format
 msgid "cannot use gawk builtin `%s' as variable name"
 msgstr "не могу да користим „gawk“ уграђеност „%s“ као назив променљиве"
 
-#: main.c:1229
+#: main.c:1262
 #, c-format
 msgid "cannot use function `%s' as variable name"
 msgstr "не могу да користим функцију „%s“ као назив променљиве"
 
-#: main.c:1308
+#: main.c:1341
 msgid "floating point exception"
 msgstr "изузетак покретног зареза"
 
-#: main.c:1318
+#: main.c:1351
 msgid "fatal error: internal error"
 msgstr "кобна грешка: унутрашња грешка"
 
-#: main.c:1338
+#: main.c:1371
 msgid "fatal error: internal error: segfault"
 msgstr "кобна грешка: унутрашња грешка: неуспех сегментације"
 
-#: main.c:1351
+#: main.c:1384
 msgid "fatal error: internal error: stack overflow"
 msgstr "кобна грешка: унутрашња грешка: прекорачење спремника"
 
-#: main.c:1450
+#: main.c:1483
 #, c-format
 msgid "no pre-opened fd %d"
 msgstr "нема унапред отвореног описника датотеке %d"
 
-#: main.c:1457
+#: main.c:1490
 #, c-format
 msgid "could not pre-open /dev/null for fd %d"
 msgstr "не могу унапред да отворим „/dev/null“ за описника датотеке %d"
 
-#: main.c:1671
+#: main.c:1704
 msgid "empty argument to `-e/--source' ignored"
 msgstr "празан аргумент за „-e/--source“ је занемарен"
 
-#: main.c:1736 main.c:1741
+#: main.c:1769 main.c:1774
 msgid "`--profile' overrides `--pretty-print'"
 msgstr "„--profile“ превазилази „--pretty-print“"
 
-#: main.c:1753
+#: main.c:1786
 msgid "-M ignored: MPFR/GMP support not compiled in"
 msgstr "„-M“ је занемарено: „MPFR/GMP“ подршка није преведена"
 
-#: main.c:1779
+#: main.c:1812
 #, c-format
 msgid "Use `GAWK_PERSIST_FILE=%s gawk ...' instead of --persist."
 msgstr "Користите „GAWK_PERSIST_FILE=%s gawk ...“ уместо „--persist“."
 
-#: main.c:1781
+#: main.c:1814
 msgid "Persistent memory is not supported."
 msgstr "Трајна меморија није подржана."
 
-#: main.c:1790
+#: main.c:1823
 #, c-format
 msgid "%s: option `-W %s' unrecognized, ignored\n"
 msgstr "%s: опција „-W %s“ није препозната, занемарено\n"
 
-#: main.c:1843
+#: main.c:1876
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: опција захтева аргумент –– „%c“\n"
+
+#: main.c:1979
+#, c-format
+msgid "%s: fatal: cannot stat %s: %s\n"
+msgstr ""
+
+#: main.c:1983
+#, c-format
+msgid ""
+"%s: fatal: using persistent memory is not allowed when running as root.\n"
+msgstr ""
+
+#: main.c:1986
+#, c-format
+msgid "%s: warning: %s is not owned by euid %d.\n"
+msgstr ""
 
 #: mpfr.c:661
 #, c-format
@@ -3589,11 +3617,11 @@ msgstr ""
 msgid "internal error: %s with null vname"
 msgstr "унутрашња грешка: „%s“ са ништавним називом променљиве"
 
-#: profile.c:657
+#: profile.c:670
 msgid "internal error: builtin with null fname"
 msgstr "унутрашња грешка: уграђеност са ништавним називом датотеке"
 
-#: profile.c:1316
+#: profile.c:1328
 #, c-format
 msgid ""
 "%s# Loaded extensions (-l and/or @load)\n"
@@ -3602,7 +3630,7 @@ msgstr ""
 "%s# Учитана проширења („-l“ и/или „@load“)\n"
 "\n"
 
-#: profile.c:1347
+#: profile.c:1359
 #, c-format
 msgid ""
 "\n"
@@ -3613,12 +3641,12 @@ msgstr ""
 "# Обухваћене датотеке („-i“ и/или „@include“)\n"
 "\n"
 
-#: profile.c:1411
+#: profile.c:1423
 #, c-format
 msgid "\t# gawk profile, created %s\n"
 msgstr "\t# „gawk“ профил, направљено „%s“\n"
 
-#: profile.c:1979
+#: profile.c:1991
 #, c-format
 msgid ""
 "\n"
@@ -3627,7 +3655,7 @@ msgstr ""
 "\n"
 "\t# Функције, исписане азбучним редом\n"
 
-#: profile.c:2040
+#: profile.c:2052
 #, c-format
 msgid "redir2str: unknown redirection type %d"
 msgstr "redir2str: непозната врста преусмерења %d"
@@ -3661,72 +3689,72 @@ msgstr ""
 msgid "regexp component `%.*s' should probably be `[%.*s]'"
 msgstr "састојак регуларног израза „%.*s“ треба вероватно бити „[%.*s]“"
 
-#: support/dfa.c:894
+#: support/dfa.c:897
 msgid "unbalanced ["
 msgstr "неуравнотежена ["
 
-#: support/dfa.c:1015
+#: support/dfa.c:1018
 msgid "invalid character class"
 msgstr "неисправна класа знака"
 
-#: support/dfa.c:1143
+#: support/dfa.c:1146
 msgid "character class syntax is [[:space:]], not [:space:]"
 msgstr "синтакса класе знака је [[:space:]], а не [:space:]"
 
-#: support/dfa.c:1209
+#: support/dfa.c:1222
 msgid "unfinished \\ escape"
 msgstr "недовршена \\ промене реда"
 
-#: support/dfa.c:1319
+#: support/dfa.c:1332
 msgid "? at start of expression"
 msgstr "? на почетку израза"
 
-#: support/dfa.c:1331
+#: support/dfa.c:1344
 msgid "* at start of expression"
 msgstr "* на почетку израза"
 
-#: support/dfa.c:1345
+#: support/dfa.c:1358
 msgid "+ at start of expression"
 msgstr "+ на почетку израза"
 
-#: support/dfa.c:1400
+#: support/dfa.c:1413
 msgid "{...} at start of expression"
 msgstr "{...} на почетку израза"
 
-#: support/dfa.c:1403
+#: support/dfa.c:1416
 msgid "invalid content of \\{\\}"
 msgstr "неисправан садржај \\{\\}"
 
-#: support/dfa.c:1405
+#: support/dfa.c:1418
 msgid "regular expression too big"
 msgstr "регуларни израз је превелик"
 
-#: support/dfa.c:1555
+#: support/dfa.c:1568
 msgid "stray \\ before unprintable character"
 msgstr "залутала \\ пре неисписивог знака"
 
-#: support/dfa.c:1557
+#: support/dfa.c:1570
 msgid "stray \\ before white space"
 msgstr "залутала \\ пре празнине"
 
-#: support/dfa.c:1561
+#: support/dfa.c:1574
 #, c-format
 msgid "stray \\ before %lc"
 msgstr "залутала \\ пре „%lc“"
 
-#: support/dfa.c:1562
+#: support/dfa.c:1575
 msgid "stray \\"
 msgstr "залутала \\"
 
-#: support/dfa.c:1917
+#: support/dfa.c:1925
 msgid "unbalanced ("
 msgstr "неуравнотежена ("
 
-#: support/dfa.c:2034
+#: support/dfa.c:2042
 msgid "no syntax specified"
 msgstr "није наведена синтакса"
 
-#: support/dfa.c:2045
+#: support/dfa.c:2053
 msgid "unbalanced )"
 msgstr "неуравнотежена )"
 
@@ -3858,23 +3886,37 @@ msgstr "Не одговара ) или \\)"
 msgid "No previous regular expression"
 msgstr "Нема претходног регуларног израза"
 
-#: symbol.c:742
+#: symbol.c:137
+msgid ""
+"current setting of -M/--bignum does not match saved setting in PMA backing "
+"file"
+msgstr ""
+
+#: symbol.c:780
 #, c-format
 msgid "function `%s': cannot use function `%s' as a parameter name"
 msgstr "функција „%s“: не могу да користим функцију „%s“ као назив параметра"
 
-#: symbol.c:872
+#: symbol.c:910
 msgid "cannot pop main context"
 msgstr "не могу да прикажем главни контекст у првом плану"
+
+#, c-format
+#~ msgid "typeof: invalid argument type `%s'"
+#~ msgstr "typeof: неисправна врста аргумента „%s“"
+
+#~ msgid ""
+#~ "The time extension is obsolete. Use the timex extension from gawkextlib "
+#~ "instead."
+#~ msgstr ""
+#~ "Временско проширење је застарело. С тога користите „timex“ проширење из "
+#~ "„gawkextlib“."
 
 #~ msgid "do_writea: first argument is not a string"
 #~ msgstr "do_writea: први аргумент није ниска"
 
 #~ msgid "do_reada: first argument is not a string"
 #~ msgstr "do_reada: први аргумент није ниска"
-
-#~ msgid "do_writea: argument 0 is not a string"
-#~ msgstr "do_writea: аргумент 0 није ниска"
 
 #~ msgid "do_writea: argument 1 is not an array"
 #~ msgstr "do_writea: аргумент 1 није низ"

@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 2004, 2010-2013, 2016-2022 the Free Software Foundation, Inc.
+ * Copyright (C) 2004, 2010-2013, 2016-2023 the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -2517,8 +2517,7 @@ do_clear(CMDARG *arg, int cmd ATTRIBUTE_UNUSED)
 		src = s->src;
 		if (arg->type == D_func)
 			goto func;
-		/* else
-			fall through */
+		/* fall through */
 	case D_int:	/* clear lineno */
 		lineno = (int) arg->a_int;
 		if (lineno <= 0 || lineno > s->srclines) {
@@ -3375,8 +3374,7 @@ do_until(CMDARG *arg, int cmd)
 		src = s->src;
 		if (arg->type == D_func)
 			goto func;
-		/* else
-			fall through */
+		/* fall through */
 	case D_int:	/* until lineno */
 		lineno = arg->a_int;
 		if (lineno <= 0 || lineno > s->srclines) {

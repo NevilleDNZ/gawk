@@ -1,5 +1,5 @@
 /*
- * filefuncs.c - Builtin functions that provide initial minimal iterface
+ * filefuncs.c - Builtin functions that provide initial minimal interface
  *		 to the file system.
  *
  * Arnold Robbins, update for 3.1, Mon Nov 23 12:53:39 EST 1998
@@ -10,7 +10,7 @@
  */
 
 /*
- * Copyright (C) 2001, 2004, 2005, 2010-2021,
+ * Copyright (C) 2001, 2004, 2005, 2010-2021, 2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the

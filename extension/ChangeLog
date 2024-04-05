@@ -1,3 +1,54 @@
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+
+	* 5.2.2: Release tar ball made.
+
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* configure.ac: Update version.
+
+2023-04-14         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* filefuncs.c, readdir.c, readdir_test.c, time.c: Update
+	copyright year.
+
+2023-03-29         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* filefuncs.c: Fix a typo in a comment. Thanks to
+	zhou shvinq <zhoushuiqing321@outlook.com> for the report.
+
+2023-03-12         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* time.c: Include ../missing_d/strptime.c if the strptime()
+	isn't available natively. Adjust other ifdefs.
+	Thanks to Eli Zaretskii for the encouragement.
+
+2023-03-12  Eli Zaretskii  <eliz@gnu.org>
+
+	* readdir_test.c (dir_can_take_file): Adjust condition to changes
+	in io.c.
+
+2023-02-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir.c (dir_can_take_file): Test is more flexible, based on
+	change in gawk's iop.c:iop_alloc() function.
+
+2023-02-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir.c (dir_can_take_control_of): If ! HAVE_OPENDIR,
+	don't leak any open file descriptor. Thanks to
+	Eli Zaretskii <eliz@gnu.org> for the bug report.
+
+2023-01-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* configure.ac: Check also for strptime.
+	Update copyright year.
+	* time.3am: Update copyright. Undeprecate this extension.
+	Add strptime() doc.
+	* time.c (issue_warning): Removed function and use.
+	(do_strptime): Added.
+	(ext_version): Bump to 1.2.
+
 2022-11-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.1: Release tar ball made.

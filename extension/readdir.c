@@ -11,7 +11,7 @@
  */
 
 /*
- * Copyright (C) 2012-2014, 2018, 2019, 2021,
+ * Copyright (C) 2012-2014, 2018, 2019, 2021, 2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -249,7 +249,7 @@ dir_can_take_file(const awk_input_buf_t *iobuf)
 	if (iobuf == NULL)
 		return awk_false;
 
-	return (iobuf->fd != INVALID_HANDLE && S_ISDIR(iobuf->sbuf.st_mode));
+	return (iobuf->fd != INVALID_HANDLE || S_ISDIR(iobuf->sbuf.st_mode));
 }
 
 /*
@@ -270,8 +270,11 @@ dir_take_control_of(awk_input_buf_t *iobuf)
 	dp = fdopendir(iobuf->fd);
 #else
 	dp = opendir(iobuf->name);
-	if (dp != NULL)
+	if (dp != NULL) {
+		if (iobuf->fd != INVALID_HANDLE)
+			(void) close(iobuf->fd);
 		iobuf->fd = dirfd(dp);
+	}
 #endif
 	if (dp == NULL) {
 		warning(ext_id, _("dir_take_control_of: opendir/fdopendir failed: %s"),

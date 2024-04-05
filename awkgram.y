@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2022 the Free Software Foundation, Inc.
+ * Copyright (C) 1986, 1988, 1989, 1991-2023 the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -641,7 +641,7 @@ statement
 
 			merge_comments($2, NULL);
 			ip = list_create(instruction(Op_no_op));
-			$$ = list_append(ip, $2); 
+			$$ = list_append(ip, $2);
 		} else
 			$$ = NULL;
 	  }
@@ -3867,10 +3867,11 @@ retry:
 	case '{':
 		if (++in_braces == 1)
 			firstline = sourceline;
+		/* fall through */
 	case ';':
 	case ',':
 	case '[':
-			return lasttok = c;
+		return lasttok = c;
 	case ']':
 		c = nextc(true);
 		pushback();
@@ -5830,6 +5831,22 @@ append_rule(INSTRUCTION *pattern, INSTRUCTION *action)
 	return rule_block[rule];
 }
 
+/*
+ * 3/2023:
+ * mk_assignment() is called when an assignment statement is seen,
+ * as an expression.  optimize_assignment() is called when an expression
+ * is seen as statement (inside braces).
+ *
+ * When a field assignment is seen, it needs to be optizimed into
+ * Op_store_field_exp or Op_store_field to avoid memory management
+ * issues. Thus, the Op_field_spec_lhs -> Op_store_field_expr
+ * change is done in mk_assignment. (Consider foo && $0 = $1, the
+ * assignment is part of an expression.)
+ *
+ * If the assignment is in a statement, then optimize_assignment()
+ * turn Op_store_field_expr into Op_store_field.
+ */
+
 /* mk_assignment --- assignment bytecodes */
 
 static INSTRUCTION *
@@ -5866,7 +5883,8 @@ mk_assignment(INSTRUCTION *lhs, INSTRUCTION *rhs, INSTRUCTION *op)
 	else
 		ip = lhs;
 
-	(void) list_append(ip, op);
+	if (tp->opcode != Op_field_spec_lhs || op->opcode != Op_assign)
+		(void) list_append(ip, op);
 
 	if (tp->opcode == Op_push_lhs
 			&& tp->memory->type == Node_var
@@ -5878,9 +5896,14 @@ mk_assignment(INSTRUCTION *lhs, INSTRUCTION *rhs, INSTRUCTION *op)
 		(void) list_append(ip, instruction(Op_var_assign));
 		ip->lasti->assign_var = tp->memory->var_assign;
 	} else if (tp->opcode == Op_field_spec_lhs) {
-		(void) list_append(ip, instruction(Op_field_assign));
-		ip->lasti->field_assign = (Func_ptr) 0;
-		tp->target_assign = ip->lasti;
+		if (op->opcode == Op_assign) {
+			bcfree(op);
+			tp->opcode = Op_store_field_exp;
+		} else {
+			(void) list_append(ip, instruction(Op_field_assign));
+			ip->lasti->field_assign = (Func_ptr) 0;
+			tp->target_assign = ip->lasti;
+		}
 	} else if (tp->opcode == Op_subscript_lhs) {
 		(void) list_append(ip, instruction(Op_subscript_assign));
 	}
@@ -5926,6 +5949,11 @@ optimize_assignment(INSTRUCTION *exp)
 	i2 = NULL;
 	i1 = exp->lasti;
 
+	if (i1->opcode == Op_store_field_exp) {
+		i1->opcode = Op_store_field;
+		return exp;
+	}
+
 	if (   i1->opcode != Op_assign
 	    && i1->opcode != Op_field_assign)
 		return list_append(exp, instruction(Op_pop));
@@ -5969,21 +5997,6 @@ optimize_assignment(INSTRUCTION *exp)
 				i3->nexti = NULL;
 				bcfree(i1);          /* Op_assign */
 				exp->lasti = i3;     /* update Op_list */
-				return exp;
-			}
-			break;
-
-		case Op_field_spec_lhs:
-			if (i2->nexti->opcode == Op_assign
-					&& i2->nexti->nexti == i1
-					&& i1->opcode == Op_field_assign
-			) {
-				/* $n = .. */
-				i2->opcode = Op_store_field;
-				bcfree(i2->nexti);  /* Op_assign */
-				i2->nexti = NULL;
-				bcfree(i1);          /* Op_field_assign */
-				exp->lasti = i2;    /* update Op_list */
 				return exp;
 			}
 			break;

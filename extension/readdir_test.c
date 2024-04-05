@@ -11,7 +11,8 @@
  */
 
 /*
- * Copyright (C) 2012-2014, 2017, 2018, 2019 the Free Software Foundation, Inc.
+ * Copyright (C) 2012-2014, 2017, 2018, 2019, 2023,
+ * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -256,7 +257,7 @@ dir_can_take_file(const awk_input_buf_t *iobuf)
 	if (iobuf == NULL)
 		return awk_false;
 
-	return (iobuf->fd != INVALID_HANDLE && S_ISDIR(iobuf->sbuf.st_mode));
+	return (iobuf->fd != INVALID_HANDLE || S_ISDIR(iobuf->sbuf.st_mode));
 }
 
 /*

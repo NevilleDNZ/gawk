@@ -815,6 +815,8 @@ cos
 cosmogen
 cp
 cplusplus
+cpp
+cppawk
 cr
 csh
 cssun
@@ -882,6 +884,7 @@ dportein
 dps
 dresdnerbank
 drwxr
+du
 dumparray
 duncan
 dup
@@ -1128,10 +1131,12 @@ ifdef
 ifdocbook
 ifhtml
 ifinfo
+iflatex
 ifndef
 ifnotdocbook
 ifnothtml
 ifnotinfo
+ifnotlatex
 ifnotplaintext
 ifnottex
 ifnotxml
@@ -1208,6 +1213,7 @@ kilgrona
 kmem
 kpilot
 ksh
+kylheku
 labadie
 lan
 lanceolis
@@ -1502,6 +1508,7 @@ pkgdatadir
 pkgextensiondir
 pm
 pma
+pmafile
 pmode
 png
 po
@@ -1691,6 +1698,7 @@ strftime
 strlen
 strnum
 strnums
+strptime
 strtod
 strtonum
 struct
@@ -1749,6 +1757,7 @@ thisopt
 thispage
 thrudvang
 tid
+timeval
 timex
 titlepage
 tlines

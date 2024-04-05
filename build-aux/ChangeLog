@@ -1,3 +1,38 @@
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* 5.2.2: Release tar ball made.
+
+2023-04-14         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Sync from GNULIB.
+
+2023-03-29         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Sync from Texinfo.
+
+2023-03-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Sync from GNULIB.
+
+2023-02-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* ar-lib, compile, config.guess, config.rpath, config.sub,
+	depcomp: Update from GNULIB. Primarily updates to the copyright year.
+	* texinfo.tex: Update from GNULIB. Only change is to remove
+	trailing whitespace.
+
+2023-01-03         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Updated to latest version from ftp.gnu.org.
+
+2022-12-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Updated to latest version from GNULIB.
+
+2022-12-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Updated from texinfo 7.0.1 distribution.
+
 2022-11-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.1: Release tar ball made.

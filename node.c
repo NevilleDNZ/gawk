@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2001, 2003-2015, 2017-2019, 2021, 2022,
+ * Copyright (C) 1986, 1988, 1989, 1991-2001, 2003-2015, 2017-2019, 2021, 2022, 2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -495,7 +495,7 @@ make_typed_regex(const char *re, size_t len)
 	else
 #endif
 	n2->numbr = 0;
-	n2->flags |= NUMCUR|STRCUR|REGEX; 
+	n2->flags |= NUMCUR|STRCUR|REGEX;
 	n2->flags &= ~(STRING|NUMBER);
 
 	return n2;
