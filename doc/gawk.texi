@@ -1,8 +1,3 @@
-% ****************************************************
-% * DO NOT MODIFY THIS FILE!!!!                      *
-% * It was generated from gawktexi.in by sidebar.awk *
-% * Edit gawktexi.in instead.                        *
-% ****************************************************
 \input texinfo   @c -*-texinfo-*-
 @c vim: filetype=texinfo
 @c %**start of header (This is for running Texinfo on a region.)
@@ -59,9 +54,9 @@
 @c applies to and all the info about who's publishing this edition
 
 @c These apply across the board.
-@set UPDATE-MONTH April, 2023
-@set VERSION 5.2
-@set PATCHLEVEL 2
+@set UPDATE-MONTH October, 2023
+@set VERSION 5.3
+@set PATCHLEVEL 0
 
 @set GAWKINETTITLE TCP/IP Internetworking with @command{gawk}
 @set GAWKWORKFLOWTITLE Participating in @command{gawk} Development
@@ -73,7 +68,7 @@
 @set TITLE GAWK: Effective AWK Programming
 @end ifclear
 @set SUBTITLE A User's Guide for GNU Awk
-@set EDITION 5.2
+@set EDITION 5.3
 
 @iftex
 @set DOCUMENT book
@@ -589,6 +584,7 @@ particular records in a file and perform operations upon them.
 * Regexp Field Splitting::              Using regexps as the field separator.
 * Single Character Fields::             Making each character a separate
                                         field.
+* Comma Separated Fields::              Working with CSV files.
 * Command Line Field Separator::        Setting @code{FS} from the command
                                         line.
 * Full Line Fields::                    Making the full line be a single
@@ -656,6 +652,7 @@ particular records in a file and perform operations upon them.
                                         Pipes.
 * Close Return Value::                  Using the return value from
                                         @code{close()}.
+* Noflush::                             Speeding Up Pipe Output.
 * Nonfatal::                            Enabling Nonfatal Output.
 * Output Summary::                      Output summary.
 * Output Exercises::                    Exercises.
@@ -838,6 +835,8 @@ particular records in a file and perform operations upon them.
                                         shell.
 * Isnumeric Function::                  A function to test whether a value is
                                         numeric.
+* To CSV Function::                     A function to convert output to CSV
+                                        format.
 * Data File Management::                Functions for managing command-line
                                         data files.
 * Filetrans Function::                  A function for handling data file
@@ -1484,11 +1483,7 @@ has been removed.}
 @cindex recipe for a programming language
 @cindex programming language, recipe for
 @cindex sidebar @subentry Recipe for a Programming Language
-@ifdocbook
-@docbook
-<sidebar><title>Recipe for a Programming Language</title>
-@end docbook
-
+@cartouche Recipe for a Programming Language
 
 @multitable {2 parts} {1 part  @code{egrep}} {1 part  @code{snobol}}
 @item @tab 1 part  @code{egrep} @tab 1 part  @code{snobol}
@@ -1501,29 +1496,10 @@ Document minimally and release.
 After eight years, add another part @code{egrep} and two
 more parts C.  Document very well and release.
 
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Recipe for a Programming Language}
-
-
-
-@multitable {2 parts} {1 part  @code{egrep}} {1 part  @code{snobol}}
-@item @tab 1 part  @code{egrep} @tab 1 part  @code{snobol}
-@item @tab 2 parts @code{ed} @tab 3 parts C
-@end multitable
-
-Blend all parts well using @code{lex} and @code{yacc}.
-Document minimally and release.
-
-After eight years, add another part @code{egrep} and two
-more parts C.  Document very well and release.
+After 35 more years, add Unicode and CSV support, sprinkle lightly with
+a few choice features from @command{gawk}, document very well again,
+and release.
 @end cartouche
-@end ifnotdocbook
 
 @cindex Aho, Alfred
 @cindex Weinberger, Peter
@@ -2704,62 +2680,7 @@ program that users can invoke without their having to know that the program is
 written in @command{awk}.
 
 @cindex sidebar @subentry Understanding @samp{#!}
-@ifdocbook
-@docbook
-<sidebar><title>Understanding @samp{#!}</title>
-@end docbook
-
-@cindex portability @subentry @code{#!} (executable scripts)
-
-@command{awk} is an @dfn{interpreted} language. This means that the
-@command{awk} utility reads your program and then processes your data
-according to the instructions in your program. (This is different
-from a @dfn{compiled} language such as C, where your program is first
-compiled into machine code that is executed directly by your system's
-processor.)  The @command{awk} utility is thus termed an @dfn{interpreter}.
-Many modern languages are interpreted.
-
-The line beginning with @samp{#!} lists the full @value{FN} of an
-interpreter to run and a single optional initial command-line argument
-to pass to that interpreter.  The operating system then runs the
-interpreter with the given argument and the full argument list of the
-executed program.  The first argument in the list is the full @value{FN}
-of the @command{awk} program.  The rest of the argument list contains
-either options to @command{awk}, or @value{DF}s, or both. (Note that on
-many systems @command{awk} is found in @file{/usr/bin} instead of
-in @file{/bin}.)
-
-Some systems limit the length of the interpreter name to 32 characters.
-Often, this can be dealt with by using a symbolic link.
-
-You should not put more than one argument on the @samp{#!}
-line after the path to @command{awk}. It does not work. The operating system
-treats the rest of the line as a single argument and passes it to @command{awk}.
-Doing this leads to confusing behavior---most likely a usage diagnostic
-of some sort from @command{awk}.
-
-@cindex @code{ARGC}/@code{ARGV} variables @subentry portability and
-@cindex portability @subentry @code{ARGV} variable
-@cindex dark corner @subentry @code{ARGV} variable, value of
-Finally, the value of @code{ARGV[0]}
-(@pxref{Built-in Variables})
-varies depending upon your operating system.
-Some systems put @samp{awk} there, some put the full pathname
-of @command{awk} (such as @file{/bin/awk}), and some put the name
-of your script (@samp{advice}).  @value{DARKCORNER}
-Don't rely on the value of @code{ARGV[0]}
-to provide your script name.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Understanding @samp{#!}}
-
-
+@cartouche Understanding @samp{#!}
 @cindex portability @subentry @code{#!} (executable scripts)
 
 @command{awk} is an @dfn{interpreted} language. This means that the
@@ -2801,7 +2722,6 @@ of your script (@samp{advice}).  @value{DARKCORNER}
 Don't rely on the value of @code{ARGV[0]}
 to provide your script name.
 @end cartouche
-@end ifnotdocbook
 
 @node Comments
 @subsection Comments in @command{awk} Programs
@@ -3669,6 +3589,35 @@ next line. However, the backslash-newline combination is never even
 noticed because it is ``hidden'' inside the comment. Thus, the
 @code{BEGIN} is noted as a syntax error.
 
+@cindex dark corner @subentry backslash continuation on command line
+@cindex dark corner @subentry command line, backslash continuation on
+Backslash continuation comes into play in an additional, unexpected situation.
+Consider:
+
+@example
+gawk -F'\
+a' '@dots{}'
+@end example
+
+@noindent
+This command line assigns a value to @code{FS}. But what value?
+There are several possibilities, and in fact different versions of
+@command{awk} do different things.  @command{gawk} treats this as
+if it were written:
+
+@example
+BEGIN @{ FS = "\
+a"
+@}
+@dots{}
+@end example
+
+@noindent
+In short, the backslash and newline are removed, assigning @code{"a"}
+to @code{FS}.  This same treatment applies to variable assignments
+made with the @option{-v} option (@pxref{Options})
+and to regular command-line variable assignments (@pxref{Assignment Options}).
+
 If you're interested, see
 @uref{https://lists.gnu.org/archive/html/bug-gawk/2022-10/msg00025.html}
 for a source code patch that allows lines to be continued when inside
@@ -4173,6 +4122,19 @@ the program. The trace is printed to standard error. Each ``op code''
 is preceded by a @code{+}
 sign in the output.
 
+@item @option{-k}
+@itemx @option{--csv}
+@cindex @option{-k} option
+@cindex @option{--csv} option
+@cindex comma separated values (CSV) data @subentry @option{-k} option
+@cindex comma separated values (CSV) data @subentry @option{--csv} option
+@cindex CSV (comma separated values) data @subentry @option{-k} option
+@cindex CSV (comma separated values) data @subentry @option{--csv} option
+Enable special processing for files with comma separated values
+(CSV). @xref{Comma Separated Fields}.
+This option cannot be used with @option{--posix}. Attempting to do
+causes a fatal error.
+
 @item @option{-l} @var{ext}
 @itemx @option{--load} @var{ext}
 @cindex @option{-l} option
@@ -4604,49 +4566,7 @@ the value of @code{FS} is not
 strictly necessary.  It remains for historical compatibility.
 
 @cindex sidebar @subentry Quoting Shell Variables On The @command{awk} Command Line
-@ifdocbook
-@docbook
-<sidebar><title>Quoting Shell Variables On The @command{awk} Command Line</title>
-@end docbook
-
-@cindex quoting @subentry in @command{gawk} command lines
-@cindex shell quoting, rules for
-@cindex null strings @subentry in @command{gawk} arguments, quoting and
-
-Small @command{awk} programs are often embedded in larger shell scripts,
-so it's worthwhile to understand some shell basics. Consider the following:
-
-@example
-f=""
-awk '@{ print("hi") @}' $f
-@end example
-
-In this case, @command{awk} reads from standard input instead of trying
-to open any command line files. To the unwary, this looks like @command{awk}
-is hanging.
-
-However @command{awk} doesn't see an explicit empty string. When a
-variable expansion is the null string, @emph{and} it's not quoted,
-the shell simply removes it from the command line. To demonstrate:
-
-@example
-$ @kbd{f=""}
-$ @kbd{awk 'BEGIN @{ print ARGC @}' $f}
-@print{} 1
-$ @kbd{awk 'BEGIN @{ print ARGC @}' "$f"}
-@print{} 2
-@end example
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Quoting Shell Variables On The @command{awk} Command Line}
-
-
+@cartouche Quoting Shell Variables On The @command{awk} Command Line
 @cindex quoting @subentry in @command{gawk} command lines
 @cindex shell quoting, rules for
 @cindex null strings @subentry in @command{gawk} arguments, quoting and
@@ -4675,7 +4595,6 @@ $ @kbd{awk 'BEGIN @{ print ARGC @}' "$f"}
 @print{} 2
 @end example
 @end cartouche
-@end ifnotdocbook
 
 @node Naming Standard Input
 @section Naming Standard Input
@@ -5244,10 +5163,20 @@ is thus essentially a place holder,
 in case some option becomes obsolete in a future version of @command{gawk}.
 @end ignore
 
+@ignore
 The arbitrary precision arithmetic feature is deprecated as of
 @command{gawk} @value{PVERSION} 5.2.
 Use of @option{-M}/@option{--bignum} produces a warning message.
 The feature will be removed in the release of 2024.
+@end ignore
+
+As of
+@command{gawk} @value{PVERSION} 5.2.
+the arbitrary precision arithmetic feature is ``on parole.''
+This feature is now being
+supported by a volunteer in the development team and not by the primary
+maintainer.  If this situation changes, then the feature will be removed.
+For more information see @ref{MPFR On Parole}.
 
 @node Undocumented
 @section Undocumented Options and Features
@@ -5689,6 +5618,28 @@ As of @value{PVERSION} 4.2, only two digits
 are processed.
 @end quotation
 
+@cindex @code{\} (backslash) @subentry @code{\u} escape sequence
+@cindex backslash (@code{\}) @subentry @code{\u} escape sequence
+@cindex common extensions @subentry @code{\u} escape sequence
+@cindex extensions @subentry common @subentry @code{\u} escape sequence
+@item \u@var{hh}@dots{}
+The hexadecimal value @var{hh}, where @var{hh} stands for a sequence
+of one or more hexadecimal digits (@samp{0}--@samp{9}, and either
+@samp{A}--@samp{F} or @samp{a}--@samp{f}).  A maximum of eight digits
+are allowed after the @samp{\u}. Any further hexadecimal digits are
+treated as simple letters or numbers.  @value{COMMONEXT} (The @samp{\u}
+escape sequence is not allowed in POSIX awk.)
+
+This escape sequence is intended for designating a character in
+the current locale's character set.@footnote{Typically, this is a
+Unicode-based locale, but it doesn't have to be.} @command{gawk} first
+converts the given digits into an integer and then translates the given
+``wide character'' value into the current locale's multibyte encoding. If
+the wide character value does not represent a valid character, or if
+the character is valid but cannot be encoded into the current locale's
+multibyte encoding, the value becomes @code{"?"}. @command{gawk} issues
+a warning message when this happens.
+
 @cindex @code{\} (backslash) @subentry @code{\/} escape sequence
 @cindex backslash (@code{\}) @subentry @code{\/} escape sequence
 @item \/
@@ -5732,55 +5683,7 @@ shown in the previous list or that is not an operator.
 
 @c 11/2014: Moved so as to not stack sidebars
 @cindex sidebar @subentry Backslash Before Regular Characters
-@ifdocbook
-@docbook
-<sidebar><title>Backslash Before Regular Characters</title>
-@end docbook
-
-@cindex portability @subentry backslash in escape sequences
-@cindex POSIX @command{awk} @subentry backslashes in string constants
-@cindex backslash (@code{\}) @subentry in escape sequences @subentry POSIX and
-@cindex @code{\} (backslash) @subentry in escape sequences @subentry POSIX and
-
-@cindex troubleshooting @subentry backslash before nonspecial character
-If you place a backslash in a string constant before something that is
-not one of the characters previously listed, POSIX @command{awk} purposely
-leaves what happens as undefined.  There are two choices:
-
-@c @cindex automatic warnings
-@c @cindex warnings, automatic
-@cindex Brian Kernighan's @command{awk}
-@table @asis
-@item Strip the backslash out
-This is what BWK @command{awk} and @command{gawk} both do.
-For example, @code{"a\qc"} is the same as @code{"aqc"}.
-(Because this is such an easy bug both to introduce and to miss,
-@command{gawk} warns you about it.)
-Consider @samp{FS = @w{"[ \t]+\|[ \t]+"}} to use vertical bars
-surrounded by whitespace as the field separator. There should be
-two backslashes in the string: @samp{FS = @w{"[ \t]+\\|[ \t]+"}}.)
-@c I did this!  This is why I added the warning.
-
-@cindex @command{gawk} @subentry escape sequences
-@cindex @command{gawk} @subentry escape sequences @seealso{backslash}
-@cindex Unix @command{awk} @subentry backslashes in escape sequences
-@cindex @command{mawk} utility
-@item Leave the backslash alone
-Some other @command{awk} implementations do this.
-In such implementations, typing @code{"a\qc"} is the same as typing
-@code{"a\\qc"}.
-@end table
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Backslash Before Regular Characters}
-
-
+@cartouche Backslash Before Regular Characters
 @cindex portability @subentry backslash in escape sequences
 @cindex POSIX @command{awk} @subentry backslashes in string constants
 @cindex backslash (@code{\}) @subentry in escape sequences @subentry POSIX and
@@ -5815,7 +5718,6 @@ In such implementations, typing @code{"a\qc"} is the same as typing
 @code{"a\\qc"}.
 @end table
 @end cartouche
-@end ifnotdocbook
 
 To summarize:
 
@@ -5837,39 +5739,7 @@ literally.
 @end itemize
 
 @cindex sidebar @subentry Escape Sequences for Metacharacters
-@ifdocbook
-@docbook
-<sidebar><title>Escape Sequences for Metacharacters</title>
-@end docbook
-
-@cindex metacharacters @subentry escape sequences for
-
-Suppose you use an octal or hexadecimal
-escape to represent a regexp metacharacter.
-(See @ref{Regexp Operators}.)
-Does @command{awk} treat the character as a literal character or as a regexp
-operator?
-
-@cindex dark corner @subentry escape sequences @subentry for metacharacters
-Historically, such characters were taken literally.
-@value{DARKCORNER}
-However, the POSIX standard indicates that they should be treated
-as real metacharacters, which is what @command{gawk} does.
-In compatibility mode (@pxref{Options}),
-@command{gawk} treats the characters represented by octal and hexadecimal
-escape sequences literally when used in regexp constants. Thus,
-@code{/a\52b/} is equivalent to @code{/a\*b/}.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Escape Sequences for Metacharacters}
-
-
+@cartouche Escape Sequences for Metacharacters
 @cindex metacharacters @subentry escape sequences for
 
 Suppose you use an octal or hexadecimal
@@ -5888,7 +5758,6 @@ In compatibility mode (@pxref{Options}),
 escape sequences literally when used in regexp constants. Thus,
 @code{/a\52b/} is equivalent to @code{/a\*b/}.
 @end cartouche
-@end ifnotdocbook
 
 @node Regexp Operators
 @section Regular Expression Operators
@@ -6104,66 +5973,17 @@ As in arithmetic, parentheses can change how operators are grouped.
 
 @cindex POSIX @command{awk} @subentry regular expressions and
 @cindex @command{gawk} @subentry regular expressions @subentry precedence
-In POSIX @command{awk} and @command{gawk}, the @samp{*}, @samp{+}, and
-@samp{?} operators stand for themselves when there is nothing in the
+According to the POSIX specification, when @samp{*}, @samp{+}, @samp{?},
+or @samp{@{} are not preceded by a character, the behavior is
+``undefined.''
+In practice, for @command{gawk}, the @samp{*}, @samp{+}, @samp{?} and
+@samp{@{} operators stand for themselves when there is nothing in the
 regexp that precedes them.  For example, @code{/+/} matches a literal
 plus sign.  However, many other versions of @command{awk} treat such a
 usage as a syntax error.
 
 @cindex sidebar @subentry What About The Empty Regexp?
-@ifdocbook
-@docbook
-<sidebar><title>What About The Empty Regexp?</title>
-@end docbook
-
-@cindex empty regexps
-@cindex regexps, empty
-We describe here an advanced regexp usage. Feel free to skip it
-upon first reading.
-
-You can supply an empty regexp constant (@samp{//}) in all places
-where a regexp is expected. Is this useful?  What does it match?
-
-It is useful. It matches the (invisible) empty string at the start
-and end of a string of characters, as well as the empty string
-between characters. This is best illustrated with the @code{gsub()}
-function, which makes global substitutions in a string
-(@pxref{String Functions}).  Normal usage of @code{gsub()} is like
-so:
-
-@example
-$ @kbd{awk '}
-> @kbd{BEGIN @{}
-> @kbd{    x = "ABC_CBA"}
-> @kbd{    gsub(/B/, "bb", x)}
-> @kbd{    print x}
-> @kbd{@}'}
-@print{} AbbC_CbbA
-@end example
-
-We can use @code{gsub()} to see where the empty strings
-are that match the empty regexp:
-
-@example
-$ @kbd{awk '}
-> @kbd{BEGIN @{}
-> @kbd{    x = "ABC"}
-> @kbd{    gsub(//, "x", x)}
-> @kbd{    print x}
-> @kbd{@}'}
-@print{} xAxBxCx
-@end example
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{What About The Empty Regexp?}
-
-
+@cartouche What About The Empty Regexp?
 @cindex empty regexps
 @cindex regexps, empty
 We describe here an advanced regexp usage. Feel free to skip it
@@ -6202,7 +6022,6 @@ $ @kbd{awk '}
 @print{} xAxBxCx
 @end example
 @end cartouche
-@end ifnotdocbook
 
 @node Interval Expressions
 @subsection Some Notes On Interval Expressions
@@ -6571,49 +6390,7 @@ intend a regexp match.
 @end itemize
 
 @cindex sidebar @subentry Using @code{\n} in Bracket Expressions of Dynamic Regexps
-@ifdocbook
-@docbook
-<sidebar><title>Using @code{\n} in Bracket Expressions of Dynamic Regexps</title>
-@end docbook
-
-@cindex regular expressions @subentry dynamic @subentry with embedded newlines
-@cindex newlines @subentry in dynamic regexps
-
-Some older versions of @command{awk} do not allow the newline
-character to be used inside a bracket expression for a dynamic regexp:
-
-@example
-$ @kbd{awk '$0 ~ "[ \t\n]"'}
-@error{} awk: newline in character class [
-@error{} ]...
-@error{}  source line number 1
-@error{}  context is
-@error{}        $0 ~ "[ >>>  \t\n]" <<<
-@end example
-
-@cindex newlines @subentry in regexp constants
-But a newline in a regexp constant works with no problem:
-
-@example
-$ @kbd{awk '$0 ~ /[ \t\n]/'}
-@kbd{here is a sample line}
-@print{} here is a sample line
-@kbd{Ctrl-d}
-@end example
-
-@command{gawk} does not have this problem, and it isn't likely to
-occur often in practice, but it's worth noting for future reference.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Using @code{\n} in Bracket Expressions of Dynamic Regexps}
-
-
+@cartouche Using @code{\n} in Bracket Expressions of Dynamic Regexps
 @cindex regular expressions @subentry dynamic @subentry with embedded newlines
 @cindex newlines @subentry in dynamic regexps
 
@@ -6642,7 +6419,6 @@ $ @kbd{awk '$0 ~ /[ \t\n]/'}
 @command{gawk} does not have this problem, and it isn't likely to
 occur often in practice, but it's worth noting for future reference.
 @end cartouche
-@end ifnotdocbook
 
 @node GNU Regexp Operators
 @section @command{gawk}-Specific Regexp Operators
@@ -7029,6 +6805,12 @@ If @code{RS} is any single character, that character separates records.
 Otherwise (in @command{gawk}), @code{RS} is treated as a regular expression.
 This mechanism is explained in greater detail shortly.
 
+@quotation NOTE
+When @command{gawk} is invoked with the @option{--csv} option, nothing
+in this @value{SECTION} applies. @xref{Comma Separated Fields}, for the
+details.
+@end quotation
+
 @menu
 * awk split records::           How standard @command{awk} splits records.
 * gawk split records::          How @command{gawk} splits records.
@@ -7255,35 +7037,7 @@ if the input text that could match the trailing part is fairly long.
 no guarantee that this will never happen.
 
 @cindex sidebar @subentry Caveats When Using Regular Expressions for @code{RS}
-@ifdocbook
-@docbook
-<sidebar><title>Caveats When Using Regular Expressions for @code{RS}</title>
-@end docbook
-
-Remember that in @command{awk}, the @samp{^} and @samp{$} anchor
-metacharacters match the beginning and end of a @emph{string}, and not
-the beginning and end of a @emph{line}.  As a result, something like
-@samp{RS = "^[[:upper:]]"} can only match at the beginning of a file.
-This is because @command{gawk} views the input file as one long string
-that happens to contain newline characters.
-It is thus best to avoid anchor metacharacters in the value of @code{RS}.
-
-Record splitting with regular expressions works differently than
-regexp matching with the @code{sub()}, @code{gsub()}, and @code{gensub()}
-(@pxref{String Functions}).  Those functions allow a regexp to match the empty string;
-record splitting does not.  Thus, for example @samp{RS = "()"} does @emph{not}
-split records between characters.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Caveats When Using Regular Expressions for @code{RS}}
-
-
+@cartouche Caveats When Using Regular Expressions for @code{RS}
 Remember that in @command{awk}, the @samp{^} and @samp{$} anchor
 metacharacters match the beginning and end of a @emph{string}, and not
 the beginning and end of a @emph{line}.  As a result, something like
@@ -7298,7 +7052,6 @@ regexp matching with the @code{sub()}, @code{gsub()}, and @code{gensub()}
 record splitting does not.  Thus, for example @samp{RS = "()"} does @emph{not}
 split records between characters.
 @end cartouche
-@end ifnotdocbook
 
 @cindex @command{gawk} @subentry @code{RT} variable in
 @cindex @code{RT} variable
@@ -7316,63 +7069,7 @@ As of October, 2019, BWK @command{awk} also supports it.  Neither
 version supplies @code{RT}, however.
 
 @cindex sidebar @subentry @code{RS = "\0"} Is Not Portable
-@ifdocbook
-@docbook
-<sidebar><title>@code{RS = "\0"} Is Not Portable</title>
-@end docbook
-
-@cindex portability @subentry data files as single record
-There are times when you might want to treat an entire @value{DF} as a
-single record.  The only way to make this happen is to give @code{RS}
-a value that you know doesn't occur in the input file.  This is hard
-to do in a general way, such that a program always works for arbitrary
-input files.
-
-You might think that for text files, the @sc{nul} character, which
-consists of a character with all bits equal to zero, is a good
-value to use for @code{RS} in this case:
-
-@example
-BEGIN @{ RS = "\0" @}  # whole file becomes one record?
-@end example
-
-@cindex differences in @command{awk} and @command{gawk} @subentry strings @subentry storing
-@command{gawk} in fact accepts this, and uses the @sc{nul}
-character for the record separator.
-This works for certain special files, such as @file{/proc/environ} on
-GNU/Linux systems, where the @sc{nul} character is in fact the record separator.
-However, this usage is @emph{not} portable
-to most other @command{awk} implementations.
-
-@cindex dark corner @subentry strings, storing
-Almost all other @command{awk} implementations@footnote{At least that we know
-about.} store strings internally as C-style strings.  C strings use the
-@sc{nul} character as the string terminator.  In effect, this means that
-@samp{RS = "\0"} is the same as @samp{RS = ""}.
-@value{DARKCORNER}
-
-It happens that recent versions of @command{mawk} can use the @sc{nul}
-character as a record separator. However, this is a special case:
-@command{mawk} does not allow embedded @sc{nul} characters in strings.
-(This may change in a future version of @command{mawk}.)
-
-@cindex records @subentry treating files as
-@cindex treating files, as single records
-@cindex single records, treating files as
-@xref{Readfile Function} for an interesting way to read
-whole files.  If you are using @command{gawk}, see @ref{Extension Sample
-Readfile} for another option.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{@code{RS = "\0"} Is Not Portable}
-
-
+@cartouche @code{RS = "\0"} Is Not Portable
 @cindex portability @subentry data files as single record
 There are times when you might want to treat an entire @value{DF} as a
 single record.  The only way to make this happen is to give @code{RS}
@@ -7415,7 +7112,6 @@ character as a record separator. However, this is a special case:
 whole files.  If you are using @command{gawk}, see @ref{Extension Sample
 Readfile} for another option.
 @end cartouche
-@end ifnotdocbook
 
 @node Fields
 @section Examining Fields
@@ -7472,7 +7168,9 @@ there are, the last field in a record can be represented by @code{$NF}.
 So, @code{$NF} is the same as @code{$7}, which is @samp{example.}.
 If you try to reference a field beyond the last
 one (such as @code{$8} when the record has only seven fields), you get
-the empty string.  (If used in a numeric operation, you get zero.)
+the empty string.  If used in a numeric operation, you get zero.@footnote{In
+either case, with the @option{--lint} option, @command{gawk} warns that you
+are referencing an uninitialized field.}
 
 The use of @code{$0}, which looks like a reference to the ``zeroth'' field, is
 a special case: it represents the whole input record. Use it
@@ -7739,36 +7437,7 @@ such as @code{sub()} and @code{gsub()}
 (@pxref{String Functions}).
 
 @cindex sidebar @subentry Understanding @code{$0}
-@ifdocbook
-@docbook
-<sidebar><title>Understanding @code{$0}</title>
-@end docbook
-
-
-It is important to remember that @code{$0} is the @emph{full}
-record, exactly as it was read from the input.  This includes
-any leading or trailing whitespace, and the exact whitespace (or other
-characters) that separates the fields.
-
-It is a common error to try to change the field separators
-in a record simply by setting @code{FS} and @code{OFS}, and then
-expecting a plain @samp{print} or @samp{print $0} to print the
-modified record.
-
-But this does not work, because nothing was done to change the record
-itself.  Instead, you must force the record to be rebuilt, typically
-with a statement such as @samp{$1 = $1}, as described earlier.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Understanding @code{$0}}
-
-
+@cartouche Understanding @code{$0}
 
 It is important to remember that @code{$0} is the @emph{full}
 record, exactly as it was read from the input.  This includes
@@ -7784,7 +7453,6 @@ But this does not work, because nothing was done to change the record
 itself.  Instead, you must force the record to be rebuilt, typically
 with a statement such as @samp{$1 = $1}, as described earlier.
 @end cartouche
-@end ifnotdocbook
 
 
 @node Field Separators
@@ -7794,6 +7462,7 @@ with a statement such as @samp{$1 = $1}, as described earlier.
 * Default Field Splitting::      How fields are normally separated.
 * Regexp Field Splitting::       Using regexps as the field separator.
 * Single Character Fields::      Making each character a separate field.
+* Comma Separated Fields::       Working with CSV files.
 * Command Line Field Separator:: Setting @code{FS} from the command line.
 * Full Line Fields::             Making the full line be a single field.
 * Field Splitting Summary::      Some final points and a summary table.
@@ -7836,10 +7505,10 @@ is read with the proper separator.  To do this, use the special
 @code{BEGIN} pattern
 (@pxref{BEGIN/END}).
 For example, here we set the value of @code{FS} to the string
-@code{","}:
+@code{":"}:
 
 @example
-awk 'BEGIN @{ FS = "," @} ; @{ print $2 @}'
+awk 'BEGIN @{ FS = ":" @} ; @{ print $2 @}'
 @end example
 
 @cindex @code{BEGIN} pattern
@@ -7847,7 +7516,7 @@ awk 'BEGIN @{ FS = "," @} ; @{ print $2 @}'
 Given the input line:
 
 @example
-John Q. Smith, 29 Oak St., Walamazoo, MI 42139
+John Q. Smith: 29 Oak St.: Walamazoo: MI 42139
 @end example
 
 @noindent
@@ -7863,7 +7532,7 @@ person's name in the example we just used might have a title or
 suffix attached, such as:
 
 @example
-John Q. Smith, LXIX, 29 Oak St., Walamazoo, MI 42139
+John Q. Smith: LXIX: 29 Oak St.: Walamazoo: MI 42139
 @end example
 
 @noindent
@@ -8050,6 +7719,94 @@ In compatibility mode
 if @code{FS} is the null string, then @command{gawk} also
 behaves this way.
 
+@node Comma Separated Fields
+@subsection Working With Comma Separated Value Files
+
+@cindex comma separated values (CSV) data @subentry records and fields
+@cindex CSV (comma separated values) data @subentry records and fields
+Many commonly-used tools use a comma to separate fields, instead of whitespace.
+This is particularly true of popular spreadsheet programs.  There is no
+universally accepted standard for the format of these files, although
+@uref{http://www.ietf.org/rfc/rfc4180, RFC 4180} lists the common
+practices.
+
+For decades, anyone wishing to work with CSV files and @command{awk}
+had to ``roll their own'' solution.
+(For an example, @pxref{Splitting By Content}).
+In 2023, Brian Kernighan decided to add CSV support to his version of
+@command{awk}.  In order to keep up, @command{gawk} too provides the same
+support as his version.
+To use CSV data, invoke @command{gawk} with either of the
+@option{-k} or @option{--csv} options.
+
+Fields in CSV files are separated by commas.  In order to allow a comma
+to appear inside a field (i.e., as data), the field may be quoted
+by beginning and ending it with double quotes.  In order to allow a double
+quote inside a field, the field @emph{must} be quoted, and two double quotes
+represent an actual double quote.
+The double quote that starts a quoted field must be the first
+character after the comma.
+@ref{table-csv-examples} shows some examples.
+
+@float Table,table-csv-examples
+@caption{Examples of CSV data}
+@multitable @columnfractions .3 .3
+@headitem Input @tab Field Contents
+@item @code{abc def} @tab @code{abc def}
+@item @code{"quoted data"} @tab @code{quoted data}
+@item @code{"quoted, data"} @tab @code{quoted, data}
+@item @code{"She said ""Stop!""."} @tab @code{She said "Stop!".}
+@end multitable
+@end float
+
+Additionally, and here's where it gets messy, newlines are also
+allowed inside double-quoted fields!
+In order to deal with such things, when processing CSV files,
+@command{gawk} scans the input data looking for newlines that
+are not enclosed in double quotes. Thus, use of the @option{--csv} option
+totally overrides normal record processing with @code{RS} (@pxref{Records}),
+as well as field splitting with any of @code{FS}, @code{FIELDWIDTHS},
+or @code{FPAT}.
+
+@cindex Kernighan, Brian @subentry quotes
+@cindex sidebar @subentry Carriage-Return--Line-Feed Line Endings In CSV Files
+@cartouche Carriage-Return--Line-Feed Line Endings In CSV Files
+@quotation
+@code{\r\n} @i{is the invention of the devil.}
+@author Brian Kernighan
+@end quotation
+
+Many CSV files are imported from systems where the line terminator
+for text files is a carriage-return--line-feed pair
+(CR-LF, @samp{\r} followed by @samp{\n}).
+For ease of use, when processing CSV files, @command{gawk} converts
+CR-LF pairs into a single newline. That is, the @samp{\r} is removed.
+
+This occurs only when a CR is paired with an LF; a standalone CR
+is left alone. This behavior is consistent with Windows systems
+which automatically convert CR-LF in files into a plain LF in memory,
+and also with the commonly available @command{unix2dos} utility program.
+@end cartouche
+
+The behavior of the @code{split()} function (not formally discussed
+yet, see @ref{String Functions}) differs slightly when processing CSV
+files. When called with two arguments
+(@samp{split(@var{string}, @var{array})}), @code{split()}
+does CSV-based splitting.  Otherwise, it behaves normally.
+
+If @option{--csv} has been used, @code{PROCINFO["CSV"]} will
+exist. Otherwise, it will not. @xref{Auto-set}.
+
+Finally, if @option{--csv} has been used, assigning a value
+to any of @code{FS}, @code{FIELDWIDTHS}, @code{FPAT}, or
+@code{RS} generates a warning message.
+
+To be clear, @command{gawk} takes
+@uref{http://www.ietf.org/rfc/rfc4180, RFC 4180} as its
+specification for CSV input data.  There are no mechanisms
+for accepting nonstandard CSV data, such as files that use
+a semicolon instead of a comma as the separator.
+
 @node Command Line Field Separator
 @subsection Setting @code{FS} from the Command Line
 @cindex @option{-F} option @subentry command-line
@@ -8171,65 +7928,7 @@ awk -F'\n' '@var{program}' @var{files @dots{}}
 When you do this, @code{$1} is the same as @code{$0}.
 
 @cindex sidebar @subentry Changing @code{FS} Does Not Affect the Fields
-@ifdocbook
-@docbook
-<sidebar><title>Changing @code{FS} Does Not Affect the Fields</title>
-@end docbook
-
-
-@cindex POSIX @command{awk} @subentry field separators and
-@cindex field separator @subentry POSIX and
-According to the POSIX standard, @command{awk} is supposed to behave
-as if each record is split into fields at the time it is read.
-In particular, this means that if you change the value of @code{FS}
-after a record is read, the values of the fields (i.e., how they were split)
-should reflect the old value of @code{FS}, not the new one.
-
-@cindex dark corner @subentry field separators
-@cindex @command{sed} utility
-@cindex stream editors
-However, many older implementations of @command{awk} do not work this way.  Instead,
-they defer splitting the fields until a field is actually
-referenced.  The fields are split
-using the @emph{current} value of @code{FS}!
-@value{DARKCORNER}
-This behavior can be difficult
-to diagnose. The following example illustrates the difference
-between the two methods:
-
-@example
-sed 1q /etc/passwd | awk '@{ FS = ":" ; print $1 @}'
-@end example
-
-@noindent
-which usually prints:
-
-@example
-root
-@end example
-
-@noindent
-on an incorrect implementation of @command{awk}, while @command{gawk}
-prints the full first line of the file, something like:
-
-@example
-root:x:0:0:Root:/:
-@end example
-
-(The @command{sed}@footnote{The @command{sed} utility is a ``stream editor.''
-Its behavior is also defined by the POSIX standard.}
-command prints just the first line of @file{/etc/passwd}.)
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Changing @code{FS} Does Not Affect the Fields}
-
-
+@cartouche Changing @code{FS} Does Not Affect the Fields
 
 @cindex POSIX @command{awk} @subentry field separators and
 @cindex field separator @subentry POSIX and
@@ -8274,7 +7973,6 @@ root:x:0:0:Root:/:
 Its behavior is also defined by the POSIX standard.}
 command prints just the first line of @file{/etc/passwd}.)
 @end cartouche
-@end ifnotdocbook
 
 @node Field Splitting Summary
 @subsection Field-Splitting Summary
@@ -8292,6 +7990,10 @@ The following list summarizes how fields are split, based on the value
 of @code{FS} (@samp{==} means ``is equal to''):
 
 @table @code
+@item @asis{@command{gawk} was invoked with @option{--csv}}
+Field splitting follows the rules given in @ref{Comma Separated Fields}.
+The value of @code{FS} is ignored.
+
 @item FS == " "
 Fields are separated by runs of whitespace.  Leading and trailing
 whitespace are ignored.  This is the default.
@@ -8313,41 +8015,7 @@ Each individual character in the record becomes a separate field.
 @end table
 
 @cindex sidebar @subentry @code{FS} and @code{IGNORECASE}
-@ifdocbook
-@docbook
-<sidebar><title>@code{FS} and @code{IGNORECASE}</title>
-@end docbook
-
-
-The @code{IGNORECASE} variable
-(@pxref{User-modified})
-affects field splitting @emph{only} when the value of @code{FS} is a regexp.
-It has no effect when @code{FS} is a single character, even if
-that character is a letter.  Thus, in the following code:
-
-@example
-FS = "c"
-IGNORECASE = 1
-$0 = "aCa"
-print $1
-@end example
-
-@noindent
-The output is @samp{aCa}.  If you really want to split fields on an
-alphabetic character while ignoring case, use a regexp that will
-do it for you (e.g., @samp{FS = "[c]"}).  In this case, @code{IGNORECASE}
-will take effect.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{@code{FS} and @code{IGNORECASE}}
-
-
+@cartouche @code{FS} and @code{IGNORECASE}
 
 The @code{IGNORECASE} variable
 (@pxref{User-modified})
@@ -8368,7 +8036,6 @@ alphabetic character while ignoring case, use a regexp that will
 do it for you (e.g., @samp{FS = "[c]"}).  In this case, @code{IGNORECASE}
 will take effect.
 @end cartouche
-@end ifnotdocbook
 
 
 @node Constant Size
@@ -8577,6 +8244,11 @@ four, and @code{$4} has the value @code{"ddd"}.
 @node Splitting By Content
 @section Defining Fields by Content
 
+@quotation NOTE
+This whole section needs rewriting now
+that @command{gawk} has built-in CSV parsing. Sigh.
+@end quotation
+
 @menu
 * More CSV::                    More on CSV files.
 * FS versus FPAT::              A subtle difference.
@@ -8598,7 +8270,7 @@ what they are, and not by what they are not.
 @cindex CSV (comma separated values) data @subentry parsing with @code{FPAT}
 @cindex Comma separated values (CSV) data @subentry parsing with @code{FPAT}
 The most notorious such case
-is so-called @dfn{comma-separated values} (CSV) data. Many spreadsheet programs,
+is comma-separated values (CSV) data. Many spreadsheet programs,
 for example, can export their data into text files, where each record is
 terminated with a newline, and fields are separated by commas. If
 commas only separated the data, there wouldn't be an issue. The problem comes when
@@ -8715,6 +8387,13 @@ with @code{FS} and with @code{FIELDWIDTHS}.
 
 Finally, the @code{patsplit()} function makes the same functionality
 available for splitting regular strings (@pxref{String Functions}).
+
+@quotation NOTE
+Given that @command{gawk} now has built-in CSV parsing
+(@pxref{Comma Separated Fields}), the examples presented here are obsolete.
+Nonetheless, it remains useful as an example of what @code{FPAT}-based
+field parsing can do.
+@end quotation
 
 @node More CSV
 @subsection More on CSV Files
@@ -8834,7 +8513,9 @@ The value is @code{"FS"} if regular field splitting is being used,
 or @code{"FPAT"} if content-based field splitting is being used:
 
 @example
-if (PROCINFO["FS"] == "FS")
+if ("CSV" in PROCINFO)
+    @var{CSV-based field splitting} @dots{}
+else if (PROCINFO["FS"] == "FS")
     @var{regular field splitting} @dots{}
 else if (PROCINFO["FS"] == "FIELDWIDTHS")
     @var{fixed-width field splitting} @dots{}
@@ -8845,7 +8526,7 @@ else
 @end example
 
 This information is useful when writing a function that needs to
-temporarily change @code{FS} or @code{FIELDWIDTHS}, read some records,
+temporarily change @code{FS}, @code{FIELDWIDTHS}, or @code{FPAT}, read some records,
 and then restore the original settings (@pxref{Passwd Functions} for an
 example of such a function).
 
@@ -9945,6 +9626,7 @@ and discusses the @code{close()} built-in function.
                                 @command{gawk} allows access to inherited file
                                 descriptors.
 * Close Files And Pipes::       Closing Input and Output Files and Pipes.
+* Noflush::                     Speeding Up Pipe Output.
 * Nonfatal::                    Enabling Nonfatal Output.
 * Output Summary::              Output summary.
 * Output Exercises::            Exercises.
@@ -10207,6 +9889,12 @@ $ @kbd{awk 'BEGIN @{}
 >   @kbd{print 17.23, 17.54 @}'}
 @print{} 17 18
 @end example
+
+More detail on how @command{awk} converts numeric values into
+strings is provided in @ref{Strings And Numbers}. In particular, for
+@code{print}, @command{awk} uses the value of @code{OFMT} instead of
+that of @code{CONVFMT}, but otherwise behaves exactly the same
+as described in that @value{SECTION}.
 
 @noindent
 @cindex dark corner @subentry @code{OFMT} variable
@@ -10897,27 +10585,36 @@ Redirecting output using @samp{>}, @samp{>>}, @samp{|}, or @samp{|&}
 asks the system to open a file, pipe, or coprocess only if the particular
 @var{file} or @var{command} you specify has not already been written
 to by your program or if it has been closed since it was last written to.
+In other words, files, pipes, and coprocesses remain open until
+explicitly closed. All further @code{print} and @code{printf} statements
+continue to write to the same open file, pipe, or coprocess.
 
 @cindex troubleshooting @subentry printing
-It is a common error to use @samp{>} redirection for the first @code{print}
-to a file, and then to use @samp{>>} for subsequent output:
+In the shell, when you are building up a file a line at a time, you
+first use @samp{>} to create the file, and then you use @samp{>>} for
+subsequent additions to it, like so:
 
 @example
-# clear the file
-print "Don't panic" > "guide.txt"
-@dots{}
-# append
-print "Avoid improbability generators" >> "guide.txt"
+echo Name: Arnold Robbins > data
+echo Street Address: 1234 A Pretty Street, NE >> data
+echo City and State: MyTown, MyState 12345-6789 >> data
 @end example
 
-@noindent
-This is indeed how redirections must be used from the shell.  But in
-@command{awk}, it isn't necessary.  In this kind of case, a program should
-use @samp{>} for all the @code{print} statements, because the output file
-is only opened once. (It happens that if you mix @samp{>} and @samp{>>}
-output is produced in the expected order. However, mixing the operators
-for the same file is definitely poor style, and is confusing to readers
-of your program.)
+In @command{awk}, the @samp{>} and @samp{>>} operators are subtly
+different.  The operator you use the @emph{first time} you write to a
+file determines how @command{awk} will open (or create) the file.
+If you use @samp{>}, the file is truncated, and then all subsequent
+output appends data to the file, even if additional @code{print} or
+@code{printf} statements continue to use @samp{>}.  If you use @samp{>>}
+the first time, then existing data is not truncated, and all subsequent
+@code{print} or @code{printf} statements append data to the file.
+
+You should be consistent and always use the same operator for all output
+to the same file. (You can mix @samp{>} and @samp{>>}, and nothing bad
+will happen, but mixing the operators is considered to be bad style in
+@command{awk}. If invoked with the @option{--lint} option, @command{gawk}
+issues a warning when it encounters both operators being used for the
+same open file.)
 
 @cindex differences in @command{awk} and @command{gawk} @subentry implementation limitations
 @cindex implementation issues, @command{gawk} @subentry limits
@@ -10940,46 +10637,7 @@ program may have open to just one!  In @command{gawk}, there is no such limit.
 open as many pipelines as the underlying operating system permits.
 
 @cindex sidebar @subentry Piping into @command{sh}
-@ifdocbook
-@docbook
-<sidebar><title>Piping into @command{sh}</title>
-@end docbook
-
-@cindex shells @subentry piping commands into
-
-A particularly powerful way to use redirection is to build command lines
-and pipe them into the shell, @command{sh}.  For example, suppose you
-have a list of files brought over from a system where all the @value{FN}s
-are stored in uppercase, and you wish to rename them to have names in
-all lowercase.  The following program is both simple and efficient:
-
-@c @cindex @command{mv} utility
-@example
-@{ printf("mv %s %s\n", $0, tolower($0)) | "sh" @}
-
-END @{ close("sh") @}
-@end example
-
-The @code{tolower()} function returns its argument string with all
-uppercase characters converted to lowercase
-(@pxref{String Functions}).
-The program builds up a list of command lines,
-using the @command{mv} utility to rename the files.
-It then sends the list to the shell for execution.
-
-@xref{Shell Quoting} for a function that can help in generating
-command lines to be fed to the shell.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Piping into @command{sh}}
-
-
+@cartouche Piping into @command{sh}
 @cindex shells @subentry piping commands into
 
 A particularly powerful way to use redirection is to build command lines
@@ -11005,7 +10663,6 @@ It then sends the list to the shell for execution.
 @xref{Shell Quoting} for a function that can help in generating
 command lines to be fed to the shell.
 @end cartouche
-@end ifnotdocbook
 
 @node Special FD
 @section Special Files for Standard Preopened Data Streams
@@ -11446,8 +11103,56 @@ pipes; thus, the return value cannot be used portably.
 In POSIX mode (@pxref{Options}), @command{gawk} just returns zero
 when closing a pipe.
 
+@node Noflush
+@section Speeding Up Pipe Output
+@cindex @code{PROCINFO} array @subentry not flushing pipe buffers
+@cindex pipe output, speeding up
+
+This @value{SECTION} describes a @command{gawk}-specific feature.
+
+Normally, when you send data down a pipeline to a command with
+@code{print} or @code{printf}, @command{gawk} @dfn{flushes} the
+output down the pipe. That is, output is not buffered, but
+written directly.  This assures, that pipeline output
+intermixed with @command{gawk}'s output comes out in the
+expected order:
+
+@example
+print "something"                       # goes to standard output
+print "something else" | "some-command" # also to standard output
+print "more stuff"                      # and this too
+@end example
+
+There can be a price to pay for this; flushing data down
+the pipeline uses more CPU time, and in certain environments
+this can become expensive.
+
+You can tell @command{gawk} not to flush buffered data in
+one of two ways:
+
+@itemize @bullet
+@item
+Set @code{PROCINFO["BUFFERPIPE"]} to any value. When this is done,
+@command{gawk} will buffer data for all pipelines.
+
+@item
+Set @code{PROCINFO["@var{command}", "BUFFERPIPE"]} to any value.
+In this case, only @var{command}'s data will be fully buffered.
+@end itemize
+
+You @emph{must} create one or the other of these elements
+in @code{PROCINFO} before the first @code{print} or
+@code{printf} to the pipeline.  Doing so after output has
+already been sent is too late.
+
+Be aware that using this feature may change the output behavior of
+your programs, so exercise caution.
+
 @node Nonfatal
 @section Enabling Nonfatal Output
+@cindex @code{PROCINFO} array @subentry nonfatal output
+@cindex output, nonfatal
+@cindex nonfatal output
 
 This @value{SECTION} describes a @command{gawk}-specific feature.
 
@@ -11734,7 +11439,8 @@ $ @kbd{gawk 'BEGIN @{ print "hello, \}
 In POSIX mode (@pxref{Options}), @command{gawk} does not
 allow escaped newlines.  Otherwise, it behaves as just described.
 
-BWK @command{awk} and BusyBox @command{awk}
+BWK @command{awk}@footnote{In all examples throughout this @value{DOCUMENT},
+@command{nawk} is BWK @command{awk}.} and BusyBox @command{awk}
 remove the backslash but leave the newline
 intact, as part of the string:
 
@@ -11831,34 +11537,7 @@ If @command{gawk} is in compatibility mode
 they are not available.
 
 @cindex sidebar @subentry A Constant's Base Does Not Affect Its Value
-@ifdocbook
-@docbook
-<sidebar><title>A Constant's Base Does Not Affect Its Value</title>
-@end docbook
-
-
-Once a numeric constant has
-been converted internally into a number,
-@command{gawk} no longer remembers
-what the original form of the constant was; the internal value is
-always used.  This has particular consequences for conversion of
-numbers to strings:
-
-@example
-$ @kbd{gawk 'BEGIN @{ printf "0x11 is <%s>\n", 0x11 @}'}
-@print{} 0x11 is <17>
-@end example
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{A Constant's Base Does Not Affect Its Value}
-
-
+@cartouche A Constant's Base Does Not Affect Its Value
 
 Once a numeric constant has
 been converted internally into a number,
@@ -11872,7 +11551,6 @@ $ @kbd{gawk 'BEGIN @{ printf "0x11 is <%s>\n", 0x11 @}'}
 @print{} 0x11 is <17>
 @end example
 @end cartouche
-@end ifnotdocbook
 
 @node Regexp Constants
 @subsubsection Regular Expression Constants
@@ -12357,34 +12035,7 @@ b = a ""
 @value{DARKCORNER}
 
 @cindex sidebar @subentry Pre-POSIX @command{awk} Used @code{OFMT} for String Conversion
-@ifdocbook
-@docbook
-<sidebar><title>Pre-POSIX @command{awk} Used @code{OFMT} for String Conversion</title>
-@end docbook
-
-@cindex POSIX @command{awk} @subentry @code{OFMT} variable and
-@cindex @code{OFMT} variable
-@cindex portability @subentry new @command{awk} vs.@: old @command{awk}
-@cindex @command{awk} @subentry new vs.@: old @subentry @code{OFMT} variable
-Prior to the POSIX standard, @command{awk} used the value
-of @code{OFMT} for converting numbers to strings.  @code{OFMT}
-specifies the output format to use when printing numbers with @code{print}.
-@code{CONVFMT} was introduced in order to separate the semantics of
-conversion from the semantics of printing.  Both @code{CONVFMT} and
-@code{OFMT} have the same default value: @code{"%.6g"}.  In the vast majority
-of cases, old @command{awk} programs do not change their behavior.
-@xref{Print} for more information on the @code{print} statement.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Pre-POSIX @command{awk} Used @code{OFMT} for String Conversion}
-
-
+@cartouche Pre-POSIX @command{awk} Used @code{OFMT} for String Conversion
 @cindex POSIX @command{awk} @subentry @code{OFMT} variable and
 @cindex @code{OFMT} variable
 @cindex portability @subentry new @command{awk} vs.@: old @command{awk}
@@ -12398,7 +12049,6 @@ conversion from the semantics of printing.  Both @code{CONVFMT} and
 of cases, old @command{awk} programs do not change their behavior.
 @xref{Print} for more information on the @code{print} statement.
 @end cartouche
-@end ifnotdocbook
 
 @node Locale influences conversions
 @subsubsection Locales Can Influence Conversion
@@ -12977,57 +12627,7 @@ For maximum portability, do not use the @samp{**=} operator.
 @end quotation
 
 @cindex sidebar @subentry Syntactic Ambiguities Between @samp{/=} and Regular Expressions
-@ifdocbook
-@docbook
-<sidebar><title>Syntactic Ambiguities Between @samp{/=} and Regular Expressions</title>
-@end docbook
-
-@cindex dark corner @subentry regexp constants @subentry @code{/=} operator and
-@cindex @code{/} (forward slash) @subentry @code{/=} operator @subentry vs.@: @code{/=@dots{}/} regexp constant
-@cindex forward slash (@code{/}) @subentry @code{/=} operator @subentry vs.@: @code{/=@dots{}/} regexp constant
-@cindex regexp constants @subentry @code{/=@dots{}/} @subentry @code{/=} operator and
-
-@c derived from email from  "Nelson H. F. Beebe" <beebe@math.utah.edu>
-@c Date: Mon, 1 Sep 1997 13:38:35 -0600 (MDT)
-
-@cindex dark corner @subentry @code{/=} operator vs.@: @code{/=@dots{}/} regexp constant
-@cindex ambiguity, syntactic: @code{/=} operator vs.@: @code{/=@dots{}/} regexp constant
-@cindex syntactic ambiguity: @code{/=} operator vs.@: @code{/=@dots{}/} regexp constant
-@cindex @code{/=} operator vs.@: @code{/=@dots{}/} regexp constant
-There is a syntactic ambiguity between the @code{/=} assignment
-operator and regexp constants whose first character is an @samp{=}.
-@value{DARKCORNER}
-This is most notable in some commercial @command{awk} versions.
-For example:
-
-@example
-$ @kbd{awk /==/ /dev/null}
-@error{} awk: syntax error at source line 1
-@error{}  context is
-@error{}         >>> /= <<<
-@error{} awk: bailing out at source line 1
-@end example
-
-@noindent
-A workaround is:
-
-@example
-awk '/[=]=/' /dev/null
-@end example
-
-@command{gawk} does not have this problem; BWK @command{awk}
-and @command{mawk} also do not.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Syntactic Ambiguities Between @samp{/=} and Regular Expressions}
-
-
+@cartouche Syntactic Ambiguities Between @samp{/=} and Regular Expressions
 @cindex dark corner @subentry regexp constants @subentry @code{/=} operator and
 @cindex @code{/} (forward slash) @subentry @code{/=} operator @subentry vs.@: @code{/=@dots{}/} regexp constant
 @cindex forward slash (@code{/}) @subentry @code{/=} operator @subentry vs.@: @code{/=@dots{}/} regexp constant
@@ -13064,7 +12664,6 @@ awk '/[=]=/' /dev/null
 @command{gawk} does not have this problem; BWK @command{awk}
 and @command{mawk} also do not.
 @end cartouche
-@end ifnotdocbook
 
 @node Increment Ops
 @subsection Increment and Decrement Operators
@@ -13150,63 +12749,7 @@ like @samp{@var{lvalue}++}, but instead of adding, it subtracts.)
 @end table
 
 @cindex sidebar @subentry Operator Evaluation Order
-@ifdocbook
-@docbook
-<sidebar><title>Operator Evaluation Order</title>
-@end docbook
-
-@cindex precedence
-@cindex operators @subentry precedence of
-@cindex portability @subentry operators
-@cindex evaluation order
-@cindex Marx, Groucho
-@quotation
-@i{Doctor, it hurts when I do this!@*
-Then don't do that!}
-@author Groucho Marx
-@end quotation
-
-@noindent
-What happens for something like the following?
-
-@example
-b = 6
-print b += b++
-@end example
-
-@noindent
-Or something even stranger?
-
-@example
-b = 6
-b += ++b + b++
-print b
-@end example
-
-@cindex side effects
-In other words, when do the various side effects prescribed by the
-postfix operators (@samp{b++}) take effect?
-When side effects happen is @dfn{implementation-defined}.
-In other words, it is up to the particular version of @command{awk}.
-The result for the first example may be 12 or 13, and for the second, it
-may be 22 or 23.
-
-In short, doing things like this is not recommended and definitely
-not anything that you can rely upon for portability.
-You should avoid such things in your own programs.
-@c You'll sleep better at night and be able to look at yourself
-@c in the mirror in the morning.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Operator Evaluation Order}
-
-
+@cartouche Operator Evaluation Order
 @cindex precedence
 @cindex operators @subentry precedence of
 @cindex portability @subentry operators
@@ -13249,7 +12792,6 @@ You should avoid such things in your own programs.
 @c You'll sleep better at night and be able to look at yourself
 @c in the mirror in the morning.
 @end cartouche
-@end ifnotdocbook
 
 @node Truth Values and Conditions
 @section Truth Values and Conditions
@@ -16555,6 +16097,14 @@ to test for these elements
 The following elements allow you to change @command{gawk}'s behavior:
 
 @table @code
+@item PROCINFO["BUFFERPIPE"]
+If this element exists, all output to pipelines becomes buffered.
+@xref{Noflush}.
+
+@item PROCINFO["@var{command}", "BUFFERPIPE"]
+Make output to @var{command} buffered.
+@xref{Noflush}.
+
 @item PROCINFO["NONFATAL"]
 If this element exists, then I/O errors for all redirections become nonfatal.
 @xref{Nonfatal}.
@@ -16696,51 +16246,7 @@ is available as an element within the @code{SYMTAB} array.
 @end table
 
 @cindex sidebar @subentry Changing @code{NR} and @code{FNR}
-@ifdocbook
-@docbook
-<sidebar><title>Changing @code{NR} and @code{FNR}</title>
-@end docbook
-
-@cindex @code{NR} variable @subentry changing
-@cindex @code{FNR} variable @subentry changing
-@cindex dark corner @subentry @code{FNR}/@code{NR} variables
-@command{awk} increments @code{NR} and @code{FNR}
-each time it reads a record, instead of setting them to the absolute
-value of the number of records read.  This means that a program can
-change these variables and their new values are incremented for
-each record.
-@value{DARKCORNER}
-The following example shows this:
-
-@example
-$ @kbd{echo '1}
-> @kbd{2}
-> @kbd{3}
-> @kbd{4' | awk 'NR == 2 @{ NR = 17 @}}
-> @kbd{@{ print NR @}'}
-@print{} 1
-@print{} 17
-@print{} 18
-@print{} 19
-@end example
-
-@noindent
-Before @code{FNR} was added to the @command{awk} language
-(@pxref{V7/SVR3.1}),
-many @command{awk} programs used this feature to track the number of
-records in a file by resetting @code{NR} to zero when @code{FILENAME}
-changed.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Changing @code{NR} and @code{FNR}}
-
-
+@cartouche Changing @code{NR} and @code{FNR}
 @cindex @code{NR} variable @subentry changing
 @cindex @code{FNR} variable @subentry changing
 @cindex dark corner @subentry @code{FNR}/@code{NR} variables
@@ -16771,7 +16277,6 @@ many @command{awk} programs used this feature to track the number of
 records in a file by resetting @code{NR} to zero when @code{FILENAME}
 changed.
 @end cartouche
-@end ifnotdocbook
 
 @node ARGC and ARGV
 @subsection Using @code{ARGC} and @code{ARGV}
@@ -18355,24 +17860,6 @@ for (i in a) @{
 @xref{Walking Arrays} for a user-defined function that ``walks'' an
 arbitrarily dimensioned array of arrays.
 
-Recall that a reference to an uninitialized array element yields a value
-of @code{""}, the null string. This has one important implication when you
-intend to use a subarray as an argument to a function, as illustrated by
-the following example:
-
-@example
-$ @kbd{gawk 'BEGIN @{ split("a b c d", b[1]); print b[1][1] @}'}
-@error{} gawk: cmd. line:1: fatal: split: second argument is not an array
-@end example
-
-The way to work around this is to first force @code{b[1]} to be an array by
-creating an arbitrary index:
-
-@example
-$ @kbd{gawk 'BEGIN @{ b[1][1] = ""; split("a b c d", b[1]); print b[1][1] @}'}
-@print{} a
-@end example
-
 @node Arrays Summary
 @section Summary
 
@@ -18918,6 +18405,11 @@ If @var{regexp} does not match @var{target}, @code{gensub()}'s return value
 is the original unchanged value of @var{target}.  Note that, as mentioned
 above, the returned value is a string, even if @var{target} was not.
 
+In the replacement string, a backslash before a non-digit character
+is simply elided. For example, @samp{\q} becomes @samp{q} in the result.
+If the final character in the replacement string is a backslash,
+it is left alone.
+
 @item @code{gsub(@var{regexp}, @var{replacement}} [@code{, @var{target}}]@code{)}
 @cindexawkfunc{gsub}
 Search @var{target} for
@@ -19233,6 +18725,13 @@ seps[2] = "-"
 @noindent
 The value returned by this call to @code{split()} is three.
 
+If @command{gawk} is invoked with @option{--csv}, then a two-argument
+call to @code{split()} splits the string using the CSV parsing rules as
+described in @ref{Comma Separated Fields}.  With three and four arguments,
+@code{split()} works as just described.  The four-argument call makes
+no sense, since each element of @var{seps} would simply consist of a
+string containing a comma.
+
 @cindex differences in @command{awk} and @command{gawk} @subentry @code{split()} function
 As with input field-splitting, when the value of @var{fieldsep} is
 @w{@code{" "}}, leading and trailing whitespace is ignored in values assigned to
@@ -19502,38 +19001,7 @@ special rules involved for @code{FS}.
 @end itemize
 
 @cindex sidebar @subentry Matching the Null String
-@ifdocbook
-@docbook
-<sidebar><title>Matching the Null String</title>
-@end docbook
-
-@cindex matching @subentry null strings
-@cindex null strings @subentry matching
-@cindex @code{*} (asterisk) @subentry @code{*} operator @subentry null strings, matching
-@cindex asterisk (@code{*}) @subentry @code{*} operator @subentry null strings, matching
-
-In @command{awk}, the @samp{*} operator can match the null string.
-This is particularly important for the @code{sub()}, @code{gsub()},
-and @code{gensub()} functions.  For example:
-
-@example
-$ @kbd{echo abc | awk '@{ gsub(/m*/, "X"); print @}'}
-@print{} XaXbXcX
-@end example
-
-@noindent
-Although this makes a certain amount of sense, it can be surprising.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Matching the Null String}
-
-
+@cartouche Matching the Null String
 @cindex matching @subentry null strings
 @cindex null strings @subentry matching
 @cindex @code{*} (asterisk) @subentry @code{*} operator @subentry null strings, matching
@@ -19551,7 +19019,6 @@ $ @kbd{echo abc | awk '@{ gsub(/m*/, "X"); print @}'}
 @noindent
 Although this makes a certain amount of sense, it can be surprising.
 @end cartouche
-@end ifnotdocbook
 
 
 @node Gory Details
@@ -19565,6 +19032,12 @@ Although this makes a certain amount of sense, it can be surprising.
 @cindex backslash (@code{\}) @subentry @code{gsub()}/@code{gensub()}/@code{sub()} functions and
 @cindex @code{&} (ampersand) @subentry @code{gsub()}/@code{gensub()}/@code{sub()} functions and
 @cindex ampersand (@code{&}) @subentry @code{gsub()}/@code{gensub()}/@code{sub()} functions and
+@cindex Spengler, Egon
+@cindex Ghostbusters
+@quotation
+@i{I collect spores, molds, and fungus.}
+@author Dr.@: Egon Spengler (``Ghostbusters,'' 1984)
+@end quotation
 
 @quotation CAUTION
 This subsubsection has been reported to cause headaches.
@@ -19952,62 +19425,7 @@ In such a case, @code{fflush()} returns @minus{}1, as well.
 @end table
 
 @cindex sidebar @subentry Interactive Versus Noninteractive Buffering
-@ifdocbook
-@docbook
-<sidebar><title>Interactive Versus Noninteractive Buffering</title>
-@end docbook
-
-@cindex buffering @subentry interactive vs.@: noninteractive
-
-As a side point, buffering issues can be even more confusing if
-your program is @dfn{interactive} (i.e., communicating
-with a user sitting at a keyboard).@footnote{A program is interactive
-if the standard output is connected to a terminal device. On modern
-systems, this means your keyboard and screen.}
-
-@c Thanks to Walter.Mecky@dresdnerbank.de for this example, and for
-@c motivating me to write this section.
-Interactive programs generally @dfn{line buffer} their output (i.e., they
-write out every line).  Noninteractive programs wait until they have
-a full buffer, which may be many lines of output.
-Here is an example of the difference:
-
-@example
-$ @kbd{awk '@{ print $1 + $2 @}'}
-@kbd{1 1}
-@print{} 2
-@kbd{2 3}
-@print{} 5
-@kbd{Ctrl-d}
-@end example
-
-@noindent
-Each line of output is printed immediately. Compare that behavior
-with this example:
-
-@example
-$ @kbd{awk '@{ print $1 + $2 @}' | cat}
-@kbd{1 1}
-@kbd{2 3}
-@kbd{Ctrl-d}
-@print{} 2
-@print{} 5
-@end example
-
-@noindent
-Here, no output is printed until after the @kbd{Ctrl-d} is typed, because
-it is all buffered and sent down the pipe to @command{cat} in one shot.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Interactive Versus Noninteractive Buffering}
-
-
+@cartouche Interactive Versus Noninteractive Buffering
 @cindex buffering @subentry interactive vs.@: noninteractive
 
 As a side point, buffering issues can be even more confusing if
@@ -20049,7 +19467,6 @@ $ @kbd{awk '@{ print $1 + $2 @}' | cat}
 Here, no output is printed until after the @kbd{Ctrl-d} is typed, because
 it is all buffered and sent down the pipe to @command{cat} in one shot.
 @end cartouche
-@end ifnotdocbook
 
 @table @asis
 @item @code{system(@var{command})}
@@ -20131,76 +19548,7 @@ As of August, 2018, BWK @command{awk} now follows @command{gawk}'s behavior
 for the return value of @code{system()}.
 
 @cindex sidebar @subentry Controlling Output Buffering with @code{system()}
-@ifdocbook
-@docbook
-<sidebar><title>Controlling Output Buffering with @code{system()}</title>
-@end docbook
-
-@cindex buffers @subentry flushing
-@cindex buffering @subentry input/output
-@cindex output @subentry buffering
-
-The @code{fflush()} function provides explicit control over output buffering for
-individual files and pipes.  However, its use is not portable to many older
-@command{awk} implementations.  An alternative method to flush output
-buffers is to call @code{system()} with a null string as its argument:
-
-@example
-system("")   # flush output
-@end example
-
-@noindent
-@command{gawk} treats this use of the @code{system()} function as a special
-case and is smart enough not to run a shell (or other command
-interpreter) with the empty command.  Therefore, with @command{gawk}, this
-idiom is not only useful, it is also efficient.  Although this method should work
-with other @command{awk} implementations, it does not necessarily avoid
-starting an unnecessary shell.  (Other implementations may only
-flush the buffer associated with the standard output and not necessarily
-all buffered output.)
-
-If you think about what a programmer expects, it makes sense that
-@code{system()} should flush any pending output.  The following program:
-
-@example
-BEGIN @{
-     print "first print"
-     system("echo system echo")
-     print "second print"
-@}
-@end example
-
-@noindent
-must print:
-
-@example
-first print
-system echo
-second print
-@end example
-
-@noindent
-and not:
-
-@example
-system echo
-first print
-second print
-@end example
-
-If @command{awk} did not flush its buffers before calling @code{system()},
-you would see the latter (undesirable) output.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Controlling Output Buffering with @code{system()}}
-
-
+@cartouche Controlling Output Buffering with @code{system()}
 @cindex buffers @subentry flushing
 @cindex buffering @subentry input/output
 @cindex output @subentry buffering
@@ -20256,7 +19604,6 @@ second print
 If @command{awk} did not flush its buffers before calling @code{system()},
 you would see the latter (undesirable) output.
 @end cartouche
-@end ifnotdocbook
 
 @node Time Functions
 @subsection Time Functions
@@ -20943,73 +20290,7 @@ and then demonstrates the
 results of the @code{compl()}, @code{lshift()}, and @code{rshift()} functions.
 
 @cindex sidebar @subentry Beware The Smoke and Mirrors!
-@ifdocbook
-@docbook
-<sidebar><title>Beware The Smoke and Mirrors!</title>
-@end docbook
-
-
-It other languages, bitwise operations are performed on integer values,
-not floating-point values.  As a general statement, such operations work
-best when performed on unsigned integers.
-
-@command{gawk} attempts to treat the arguments to the bitwise functions
-as unsigned integers.  For this reason, negative arguments produce a
-fatal error.
-
-In normal operation, for all of these functions, first the
-double-precision floating-point value is converted to the widest C
-unsigned integer type, then the bitwise operation is performed.  If the
-result cannot be represented exactly as a C @code{double}, leading
-nonzero bits are removed one by one until it can be represented exactly.
-The result is then converted back into a C @code{double}.@footnote{If you don't
-understand this paragraph, the upshot is that @command{gawk} can only
-store a particular range of integer values; numbers outside that range
-are reduced to fit within the range.}
-
-However, when using arbitrary precision arithmetic with the @option{-M}
-option (@pxref{Arbitrary Precision Arithmetic}), the results may differ.
-This is particularly noticeable with the @code{compl()} function:
-
-@example
-$ @kbd{gawk 'BEGIN @{ print compl(42) @}'}
-@print{} 9007199254740949
-$ @kbd{gawk -M 'BEGIN @{ print compl(42) @}'}
-@print{} -43
-@end example
-
-What's going on becomes clear when printing the results
-in hexadecimal:
-
-@example
-$ @kbd{gawk 'BEGIN @{ printf "%#x\n", compl(42) @}'}
-@print{} 0x1fffffffffffd5
-$ @kbd{gawk -M 'BEGIN @{ printf "%#x\n", compl(42) @}'}
-@print{} 0xffffffffffffffd5
-@end example
-
-When using the @option{-M} option, under the hood, @command{gawk} uses
-GNU MP arbitrary precision integers which have at least 64 bits of precision.
-When not using @option{-M}, @command{gawk} stores integral values in
-regular double-precision floating point, which only maintain 53 bits of
-precision.  Furthermore, the GNU MP library treats (or at least seems to treat)
-the leading bit as a sign bit; thus the result with @option{-M} in this case is
-a negative number.
-
-In short, using @command{gawk} for any but the simplest kind of bitwise
-operations is probably a bad idea; caveat emptor!
-
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Beware The Smoke and Mirrors!}
-
-
+@cartouche Beware The Smoke and Mirrors!
 
 It other languages, bitwise operations are performed on integer values,
 not floating-point values.  As a general statement, such operations work
@@ -21062,7 +20343,6 @@ In short, using @command{gawk} for any but the simplest kind of bitwise
 operations is probably a bad idea; caveat emptor!
 
 @end cartouche
-@end ifnotdocbook
 
 @node Type Functions
 @subsection Getting Type Information
@@ -22033,7 +21313,7 @@ $ @kbd{nawk -v A=1 -f funky.awk}
 @end example
 
 Or @command{awk} could wait until runtime to set the type of @code{a}.
-In this case, since @code{a} was never assigned used before being
+In this case, since @code{a} was never used before being
 passed to the function, how the function uses it forces the type to
 be resolved to either scalar or array.  @command{gawk}
 and the MKS @command{awk} do this:
@@ -22754,6 +22034,7 @@ programming use.
 * Readfile Function::           A function to read an entire file at once.
 * Shell Quoting::               A function to quote strings for the shell.
 * Isnumeric Function::          A function to test whether a value is numeric.
+* To CSV Function::             A function to convert output to CSV format.
 @end menu
 
 @node Strtonum Function
@@ -23585,6 +22866,88 @@ the original string.
 On the other hand, it uses the @code{typeof()} function
 (@pxref{Type Functions}), which is specific to @command{gawk}.
 
+@node To CSV Function
+@subsection Producing CSV Data
+
+@cindex comma separated values (CSV) data @subentry generating CSV data
+@cindex CSV (comma separated values) data @subentry generating CSV data
+@command{gawk}'s @option{--csv} option causes @command{gawk}
+to process CSV data (@pxref{Comma Separated Fields}).
+
+But what if you have regular data that you want to output
+in CSV format?  This @value{SECTION} provides functions for
+doing that.
+
+The first function, @code{tocsv()}, takes an array of data
+fields as input. The array should be indexed starting from one.
+The optional second parameter is the separator to use. If none
+is supplied, the default is a comma.
+
+The function takes care to quote fields that contain double
+quotes, newlines, or the separator character.  It then builds
+up the final CSV record and returns it.
+
+@cindex @code{tocsv()} user-defined function
+@example
+@c file eg/lib/tocsv.awk
+# tocsv.awk --- convert data to CSV format
+@c endfile
+@ignore
+@c file eg/lib/tocsv.awk
+#
+# Arnold Robbins, arnold@@skeeve.com, Public Domain
+# April 2023
+@c endfile
+@end ignore
+@c file eg/lib/tocsv.awk
+
+function tocsv(fields, sep,     i, j, nfields, result)
+@{
+    if (length(fields) == 0)
+        return ""
+
+    if (sep == "")
+        sep = ","
+    delete nfields
+    for (i = 1; i in fields; i++) @{
+        nfields[i] = fields[i]
+        if (nfields[i] ~ /["\n]/ || index(nfields[i], sep) != 0) @{
+            gsub(/"/, "\"\"", nfields[i])       # double up quotes
+            nfields[i] = "\"" nfields[i] "\""   # wrap in quotes
+        @}
+    @}
+
+    result = nfields[1]
+    j = length(nfields)
+    for (i = 2; i <= j; i++)
+        result = result sep nfields[i]
+
+    return result
+@}
+@c endfile
+@end example
+
+The next function, @code{tocsv_rec()} is a wrapper around
+@code{tocsv()}. Its intended use is for when you want to convert the
+current input record to CSV format.  The function itself simply copies
+the fields into an array to pass to @code{tocsv()} which does the work.
+It accepts an optional separator character as its first parameter,
+which it simply passes on to @code{tocsv()}.
+
+@cindex @code{tocsv_rec()} user-defined function
+@example
+@c file eg/lib/tocsv.awk
+function tocsv_rec(sep,     i, fields)
+@{
+    delete fields
+    for (i = 1; i <= NF; i++)
+        fields[i] = $i
+
+    return tocsv(fields, sep)
+@}
+@c endfile
+@end example
+
 @node Data File Management
 @section @value{DDF} Management
 
@@ -23710,35 +23073,7 @@ shows how this library function can be used and
 how it simplifies writing the main program.
 
 @cindex sidebar @subentry So Why Does @command{gawk} Have @code{BEGINFILE} and @code{ENDFILE}?
-@ifdocbook
-@docbook
-<sidebar><title>So Why Does @command{gawk} Have @code{BEGINFILE} and @code{ENDFILE}?</title>
-@end docbook
-
-
-You are probably wondering, if @code{beginfile()} and @code{endfile()}
-functions can do the job, why does @command{gawk} have
-@code{BEGINFILE} and @code{ENDFILE} patterns?
-
-Good question.  Normally, if @command{awk} cannot open a file, this
-causes an immediate fatal error.  In this case, there is no way for a
-user-defined function to deal with the problem, as the mechanism for
-calling it relies on the file being open and at the first record.  Thus,
-the main reason for @code{BEGINFILE} is to give you a ``hook'' to catch
-files that cannot be processed.  @code{ENDFILE} exists for symmetry,
-and because it provides an easy way to do per-file cleanup processing.
-For more information, refer to @ref{BEGINFILE/ENDFILE}.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{So Why Does @command{gawk} Have @code{BEGINFILE} and @code{ENDFILE}?}
-
-
+@cartouche So Why Does @command{gawk} Have @code{BEGINFILE} and @code{ENDFILE}?
 
 You are probably wondering, if @code{beginfile()} and @code{endfile()}
 functions can do the job, why does @command{gawk} have
@@ -23753,7 +23088,6 @@ files that cannot be processed.  @code{ENDFILE} exists for symmetry,
 and because it provides an easy way to do per-file cleanup processing.
 For more information, refer to @ref{BEGINFILE/ENDFILE}.
 @end cartouche
-@end ifnotdocbook
 
 @node Rewind Function
 @subsection Rereading the Current File
@@ -33828,7 +33162,7 @@ compiled, it is used by the debugger to provide command-line history
 and editing.
 
 @item
-Usually, the debugger does not not affect the
+Usually, the debugger does not affect the
 program being debugged, but occasionally it can.
 
 @end itemize
@@ -35280,44 +34614,7 @@ default rounding mode for IEEE 754 computing functions and operators.
 
 @c January 2018. Thanks to nethox@gmail.com for the example.
 @cindex sidebar @subentry Rounding Modes and Conversion
-@ifdocbook
-@docbook
-<sidebar><title>Rounding Modes and Conversion</title>
-@end docbook
-
-It's important to understand that, along with @code{CONVFMT} and
-@code{OFMT}, the rounding mode affects how numbers are converted to strings.
-For example, consider the following program:
-
-@example
-BEGIN @{
-    pi = 3.1416
-    OFMT = "%.f"        # Print value as integer
-    print pi            # ROUNDMODE = "N" by default.
-    ROUNDMODE = "U"     # Now change ROUNDMODE
-    print pi
-@}
-@end example
-
-@noindent
-Running this program produces this output:
-
-@example
-$ @kbd{gawk -M -f roundmode.awk}
-@print{} 3
-@print{} 4
-@end example
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{Rounding Modes and Conversion}
-
-
+@cartouche Rounding Modes and Conversion
 It's important to understand that, along with @code{CONVFMT} and
 @code{OFMT}, the rounding mode affects how numbers are converted to strings.
 For example, consider the following program:
@@ -35341,7 +34638,6 @@ $ @kbd{gawk -M -f roundmode.awk}
 @print{} 4
 @end example
 @end cartouche
-@end ifnotdocbook
 
 The other rounding modes are rarely used.  Rounding toward positive infinity
 (@code{roundTowardPositive}) and toward negative infinity
@@ -38803,6 +38099,9 @@ whether the corresponding command-line options were enabled when
 @command{gawk} was invoked.  The variables are:
 
 @table @code
+@item do_csv
+This variable is true if @command{gawk} was invoked with @option{--csv} option.
+
 @item do_debug
 This variable is true if @command{gawk} was invoked with @option{--debug} option.
 
@@ -40150,12 +39449,10 @@ When this extension is in use, instead of skipping directories named
 on the command line (or with @code{getline}),
 they are read, with each entry returned as a record.
 
-The record consists of three fields. The first two are the inode number and the
-@value{FN}, separated by a forward slash character.
-On systems where the directory entry contains the file type, the record
-has a third field (also separated by a slash), which is a single letter
-indicating the type of the file. The letters and their corresponding file
-types are shown in @ref{table-readdir-file-types}.
+The record consists of three fields separated by forward slash characters.
+The first two are the inode number and the @value{FN}, and the third field
+is a single letter indicating the type of the file.  The letters and their
+corresponding file types are shown in @ref{table-readdir-file-types}.
 
 @float Table,table-readdir-file-types
 @caption{File types returned by the @code{readdir} extension}
@@ -40168,19 +39465,21 @@ types are shown in @ref{table-readdir-file-types}.
 @item @code{l} @tab Symbolic link
 @item @code{p} @tab Named pipe (FIFO)
 @item @code{s} @tab Socket
-@item @code{u} @tab Anything else (unknown)
 @end multitable
 @end float
 
-On systems without the file type information, the third field is always
-@samp{u}.
+On systems where the directory entry contains the file type, the third
+field is filled in from that information.
+On systems without the file type information, the extension falls back
+to calling the @code{stat()} system call
+in order to provide the information.
+Thus the third field should never be @samp{u} (for ``unknown'').
 
-@quotation NOTE
-On GNU/Linux systems, there are filesystems that don't support the
-@code{d_type} entry (see the @i{readdir}(3) manual page), and so the file
-type is always @samp{u}.  You can use the @code{filefuncs} extension to call
-@code{stat()} in order to get correct type information.
-@end quotation
+Normally, when reading directories, you should set @code{FS}
+equal to @code{"/"}.  However, you may instead chose to create
+@code{PROCINFO["readdir_override"]} (with any value). If this element
+exists when the directory is opened, then the extension automatically
+sets the fields in each record for you.
 
 By default, if a directory cannot be opened (due to permission problems,
 for example), @command{gawk} will exit.  As with regular files, this
@@ -42179,6 +41478,37 @@ in (@pxref{Auto-set}).
 
 @end itemize
 
+Version 5.3 added the following features:
+
+@itemize
+@item
+Comma separated value (CSV) field splitting and the @option{--csv}
+command-line option
+(@pxref{Comma Separated Fields}).
+
+@item
+@code{PROCINFO["CSV"]} exists if @command{gawk} was invoked
+with @option{--csv} (@pxref{Auto-set}).
+
+@item
+The @code{do_csv} API information variable
+(@pxref{Extension API Informational Variables}).
+
+@item
+The ability to make @command{gawk} buffer output to pipes
+(@pxref{Noflush}).
+
+@item
+The @samp{\u} escape sequence
+(@pxref{Escape Sequences}).
+
+@item
+The need for GNU @code{libsigsegv} was removed from @command{gawk}.
+The value-add was never very much and it caused problems in some
+environments.
+
+@end itemize
+
 @c XXX ADD MORE STUFF HERE
 @end ifclear
 
@@ -42196,10 +41526,12 @@ the three most widely used freely available versions of @command{awk}
 @headitem Feature @tab BWK @command{awk} @tab @command{mawk} @tab @command{gawk} @tab Now standard
 @item @code{**} and @code{**=} operators @tab X @tab @tab X @tab
 @item @samp{\x} escape sequence @tab X @tab X @tab X @tab
+@item @samp{\u} escape sequence @tab X @tab @tab X @tab
 @item @file{/dev/stdin} special file @tab X @tab X @tab X @tab
 @item @file{/dev/stdout} special file @tab X @tab X @tab X @tab
 @item @file{/dev/stderr} special file @tab X @tab X @tab X @tab
 @item @code{BINMODE} variable @tab @tab X @tab X @tab
+@item CSV support @tab X @tab @tab X @tab
 @item @code{FS} as null string @tab X @tab X @tab X @tab
 @item @code{delete} without subscript @tab X @tab X @tab X @tab X
 @item @code{fflush()} function @tab X @tab X @tab X @tab X
@@ -44016,33 +43348,7 @@ For more information, see @uref{http://www.skeeve.com/fork-my-code.html,
 by Arnold Robbins and Chet Ramey.
 
 @cindex sidebar @subentry A Note About Fuzzers
-@ifdocbook
-@docbook
-<sidebar><title>A Note About Fuzzers</title>
-@end docbook
-
-In recent years, people have been running ``fuzzers'' to generate
-invalid @command{awk} programs in order to find and report (so-called)
-bugs in @command{gawk}.
-
-In general, such reports are not of much practical use.  The programs
-they create are not realistic and the bugs found are generally from
-some kind of memory corruption that is fatal anyway.
-
-So, if you want to run a fuzzer against @command{gawk} and report the
-results, you may do so, but be aware that such reports don't carry the
-same weight as reports of real bugs do.
-
-@docbook
-</sidebar>
-@end docbook
-@end ifdocbook
-
-@ifnotdocbook
-@cartouche
-@center @b{A Note About Fuzzers}
-
-
+@cartouche A Note About Fuzzers
 In recent years, people have been running ``fuzzers'' to generate
 invalid @command{awk} programs in order to find and report (so-called)
 bugs in @command{gawk}.
@@ -44055,7 +43361,6 @@ So, if you want to run a fuzzer against @command{gawk} and report the
 results, you may do so, but be aware that such reports don't carry the
 same weight as reports of real bugs do.
 @end cartouche
-@end ifnotdocbook
 
 @node Bug address
 @appendixsubsec Submitting Bug Reports
@@ -44449,6 +43754,15 @@ To build it, review the settings in the @file{makefile}, and then just run
 @xref{Common Extensions}
 for a list of extensions in this @command{awk} that are not in POSIX @command{awk}.
 
+@cindex Aho, Alfred
+@cindex Weinberger, Peter
+@cindex Kernighan, Brian
+In 2023, Brian Kernighan, along with Al Aho and Peter Weinberger, published
+a second edition of their book on @command{awk}.  Professor Kernighan
+also maintains a @uref{https://awk.dev, companion web site} for the book.
+A copy of all the book's programs are available there for download.
+
+@cindex Bornstein, Dan
 As a side note, Dan Bornstein has created a Git repository tracking
 all the versions of BWK @command{awk} that he could find. It's
 available at @uref{https://github.com/danfuzz/one-true-awk}.
@@ -48225,39 +47539,5 @@ text.  It's ok as one word when it's a metasyntactic variable, though.
 
 ------------------------
 ORA uses filename, thus the macro.
-
-Suggestions:
-------------
-
-Better sidebars can almost sort of be done with:
-
-	@ifdocbook
-	@macro @sidebar{title, content}
-	@inlinefmt{docbook, <sidebar><title>}
-	\title\
-	@inlinefmt{docbook, </title>}
-	\content\
-	@inlinefmt{docbook, </sidebar>}
-	@end macro
-	@end ifdocbook
-
-
-	@ifnotdocbook
-	@macro @sidebar{title, content}
-	@cartouche
-	@center @b{\title\}
-
-	\content\
-	@end cartouche
-	@end macro
-	@end ifnotdocbook
-
-But to use it you have to say
-
-	@sidebar{Title Here,
-	@include file-with-content
-	}
-
-which sorta sucks.
 
 TODO:

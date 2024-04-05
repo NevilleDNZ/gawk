@@ -2791,9 +2791,9 @@ do_match(int nargs)
 		size_t *wc_indices = NULL;
 
 		rlength = REEND(rp, t1->stptr) - RESTART(rp, t1->stptr);	/* byte length */
-		if (rlength > 0 && gawk_mb_cur_max > 1) {
+		if (gawk_mb_cur_max > 1) {
 			t1 = str2wstr(t1, & wc_indices);
-			rlength = wc_indices[rstart + rlength - 1] - wc_indices[rstart] + 1;
+			rlength = wc_indices[rstart + rlength] - wc_indices[rstart];
 			rstart = wc_indices[rstart];
 		}
 
@@ -2816,9 +2816,9 @@ do_match(int nargs)
 					start = t1->stptr + s;
 					subpat_start = s;
 					subpat_len = len = SUBPATEND(rp, t1->stptr, ii) - s;
-					if (len > 0 && gawk_mb_cur_max > 1) {
+					if (gawk_mb_cur_max > 1) {
 						subpat_start = wc_indices[s];
-						subpat_len = wc_indices[s + len - 1] - subpat_start + 1;
+						subpat_len = wc_indices[s + len] - subpat_start;
 					}
 
 					it = make_string(start, len);
@@ -2962,6 +2962,8 @@ do_match(int nargs)
  *
  * 7/2011: Reverted backslash handling to what it used to be. It was in
  * gawk for too long. Should have known better.
+ *
+ * 9/2023: Update for matches of null strings around multibyte characters.
  */
 
 /*
@@ -3218,6 +3220,8 @@ do_sub(int nargs, unsigned int flags)
 									*bp++ = *cp;
 							}
 							scan++;
+						} else if (scan+1 == replend) {
+							*bp++ = *scan;
 						} else	/* \q for any q --> q */
 							*bp++ = *++scan;
 					} else if (do_posix) {
@@ -3262,8 +3266,20 @@ do_sub(int nargs, unsigned int flags)
 	empty:
 		/* catch the case of gsub(//, "blah", whatever), i.e. empty regexp */
 		if (matchstart == matchend && matchend < text + textlen) {
-			*bp++ = *matchend;
-			matchend++;
+			// copy in regular text
+			if (gawk_mb_cur_max == 1) {
+				*bp++ = *matchend;
+				matchend++;
+			} else {
+				mbstate_t mbs;
+				size_t i, j;
+
+				memset(& mbs, 0, sizeof(mbs));
+				j = mbrlen(matchend, (target->stptr + target->stlen) - matchend, & mbs);
+				// FIXME: Error checking on the value of `j' would be a good idea....
+				for (i = 0; i < j; i++)
+					*bp++ = *matchend++;
+			}
 		}
 		textlen = text + textlen - matchend;
 		text = matchend;
@@ -3314,8 +3330,9 @@ done:
 			return make_str_node(buf, textlen, ALREADY_MALLOCED);
 		} else if ((target->flags & STRING) == 0) {
 			/* return a copy of original string */
+			NODE *copy = make_str_node(target->stptr, target->stlen, 0);
 			DEREF(target);
-			return make_str_node(target->stptr, target->stlen, 0);
+			return copy;
 		}
 
 		/* return the original string */

@@ -1,3 +1,207 @@
+2023-11-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* 5.3.0: Release tar ball made.
+
+2023-10-31         Corinna Vinschen      <vinschen@redhat.com>
+
+	* awk.h (wcitomb): Add declaration.
+	* node.c (parse_escape): Use it on Cygwin.
+
+2023-10-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* eval.c (setup_frame): Fix a potential use after free
+	error. Thanks to Michal Jaegermann for the report.
+
+2023-10-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* builtin.c (do_sub): Fix a use-after-free issue reported
+	by Miguel Pineiro Jr. <mpj@pineiro.cc>.
+
+2023-10-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* nonposix.h, re.c: Update coyright year.
+
+2023-10-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c (parse_args): Deal better with things if -p
+	given twice. Thanks to Hermann Peifer for the report.
+	* Checklist: Revised a bit.
+	* awkgram.y (isnoeffect): Add Op_exec_count to the list so
+	that `gawk --lint --profile BEGIN{0}' also produces a lint
+	warning. Thanks yet again to Hermann Peifer.
+
+2023-10-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+	* README: Version bumped to 5.3.0. Updated info about makeinfo
+	and texinfo.tex versions.
+
+2023-10-17         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* re.c (make_regexp): Fix setting ok_to_escape.
+
+2023-10-15         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Editing, in preparation for release.
+
+2023-10-12         Eli Zaretskii  <eliz@gnu.org>
+
+	* node.c (parse_escape) [__MINGW32__]: Use w32_wc_to_lc to convert
+	Unicode codepoints.
+
+	* nonposix.h (w32_wc_to_lc) [__MINGW32__]: Add prototype.
+
+2023-10-08         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* node.c (parse_escape): Fix warning message for \u escape.
+	* interpret.h (Op_lint_plus): Improve the test, especially
+	for if dealing with user intput. Thanks to Hermann Peifer
+	for the report.
+
+2023-10-03         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* profile.c (pprint): Add case for Op_lint_plus. Thanks to
+	Hermann Peifer for the report.
+
+2023-09-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+
+2023-09-13         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Fix handling of zero length matching in multibyte locales
+	with sub/gsub. Thanks again to Ed Morton for the report.
+
+	* builtin.c (do_sub): When the match is empty and we copy in
+	the subsequent character, check gawk_mb_cur_max to know whether
+	to copy one byte or multiple bytes.
+
+2023-09-11         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (do_split): Fix some whitespace.
+
+	Unrelated: Add do_csv variable to the API.
+
+	* gawkapi.h: Bump major version to 4, minor version back to zero.
+	(DO_FLAGS_SIZE): Increase to 7.
+	(gawk_do_csv, do_csv): New macros.
+	* gawkapi.c (init_ext_api): Init the do_csv element. Replace
+	numeric indices with symbolic ones.
+	* NEWS: Updated for do_csv in the API, and the major and
+	minor API versions.
+
+2023-09-01         Miguel Pineiro Jr     <mpj@pineiro.cc>
+
+	Fix the handling of zero-length matches in multibyte locales.
+	Thanks to Ed Morton <mortoneccc@comcast.net> for the report.
+
+	* builtin.c (do_match): Translate rstart (byte idx to char idx)
+	even when rlength is zero. For this we tweak the conversion of
+	rlength to keep it in bounds when rstart and rlength are both 0.
+	* node.c (str2wstr): Add an entry to the indices array for the
+	terminating null. It facilitates the tweak above and is needed
+	to translate the idx of a zero-width match at the end of the
+	string.
+
+2023-08-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* re.c (make_regexp): When do_traditional and looking to see
+	if an escape created a metacharacter, use `metas' instead of
+	a separate string, since BWK awk now also handles interval
+	expressions. Found by inspection.
+
+2023-08-25         Miguel Pineiro Jr     <mpj@pineiro.cc>
+
+	* awk.h (enum escape_results): Fix ESCAPE_LINE_CONINUATION typo.
+	* node.c (make_str_node): Ditto.
+	* (parse_escape): Ditto.
+	* re.c (make_regexp): Ditto.
+
+	Unrelated: Use size_t for multibyte character lengths (aside
+	from it being the type which the interfaces return, using it
+	avoids implementation-defined behavior when -1 or -2 is cast
+	to size_t then stored in an int).
+
+	* node.c (make_str_node): Change mblen from int to size_t.
+
+	Unrelated: Change the length of a translated escape sequence
+	from int to size_t (to match the underlying interfaces).
+
+	* awk.h (parse_escape): Change prototype.
+	* node.c (make_str_node): Adjust to accomodate new type.
+	* (parse_escape): Ditto.
+	* re.c (make_regexp): Ditto.
+
+	Unrelated: Clarify make_regexp, inspired by make_str_node.
+
+	* re.c (make_regexp): Copy multibyte characters at once, move
+	the escape sequence post-processing into the switch statement
+	to explicitly connect a return value with its handling, add a
+	default case to catch unrecognized values, and move ok_to_escape
+	next to where it's used (and only set it once).
+
+2023-08-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* node.c (make_str_node): Don't use N_() in cant_happen message.
+	* re.c (make_regexp): Ditto.
+
+2023-08-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Change parse_escape() to return an enum instead of relying
+	on manifest constants.
+
+	* awk.h (enum escape_results): New enum.
+	(parse_escape): Now returns a value from it, add nbytes pointer
+	parameter.
+	* node.c (make_str_node): Revised to use switch/case on
+	parse_escape return value.
+	(parse_escape): Update code.
+	* re.c (make_regexp): Revised to use switch/case on parse_escape
+	return value.
+
+2023-08-20         Miguel Pineiro Jr     <mpj@pineiro.cc>
+
+	* awk.h (ELIDE_BACK_NL): Removed.
+	(parse_escape): Update declaration.
+	* main.c (cmdline_fs): Don't use ELIDE_BACK_NL.
+	(arg_assign): Ditto.
+	* node.c (make_str_node): Rework handling of return value
+	from parse_escape.
+	(parse_escape): Change return code to convey more info,
+	fully parse escapes and handle conversion from unicode to
+	UTF-8.
+	* re.c (make_regexp): Rework for new interface to parse_escape.
+
+2023-07-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* re.c (make_regexp): In error message, use the original text
+	directly as a string and not with calculated length. Thanks
+	to Neil R. Ormos <ormos-gnulists17@ormos.org> for the report.
+
+2023-06-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+
+2023-06-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (comma_parse_field): Don't set the field if len
+	is zero. Kudos to BWK's awk for finding this gawk bug.
+
+2023-06-12         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c (cmdline_fs): Add ELIDE_BACK_NL to flags in call
+	to make_str_node(). Fixes weirdness with -F. Thanks to
+	Denys Vlasenko <dvlasenk@redhat.com> for the report.
+
+2023-06-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* builtin.c (do_sub): Fix a Day 1 gensub bug, reported by
+	Denys Vlasenko <dvlasenk@redhat.com>.
+
+2023-06-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+
 2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.2: Release tar ball made.
@@ -37,11 +241,47 @@
 	if you sort SYMTAB. Thanks to zhou shuiqing
 	<zhoushuiqing321@outlook.com> for the report.
 
+2023-04-13         Andrew J. Schorr      <aschorr@telemetry-investments.com>
+
+	* io.c (csvscan): Convert CR-LF pairs to plain LF, both at the
+	end of the line and when embedded. Plain CRs are not touched.
+
+2023-04-07         Andrew J. Schorr      <aschorr@telemetry-investments.com>
+
+	* io.c (csvscan): Instead of stripping all carriage returns in the
+	input, simply include the CR in the RT if it occurs just before
+	the linefeed character.
+
 2023-04-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* array.c (assoc_info): Update to handle additional cases so
 	that one may dump SYMTAB or FUNCTAB. Issue reported by
 	zhou shuiqing <zhoushuiqing321@outlook.com>.
+
+2023-03-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+
+2023-03-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Add support for \u escape sequence.
+
+	* awk.h (parse_escaape): New bool* parameter for unicode.
+	* node.c (make_str_node): Deal with a \u escape.
+	(parse_escape): Handle \u.
+	* re.c (make_regexp): Deal with a \u escape.
+
+2023-03-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* io.c (set_RS): Fix first time and warning logic for csv mode.
+
+2023-03-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* io.c (csvscan): Strip CRs.
+
+2023-03-21         Manuel Collado        <mcollado2011@gmail.com>
+
+	* io.c (csvscan): Real implementation.
 
 2023-03-18         Miguel Pineiro Jr.    <mpj@pineiro.cc>
 
@@ -57,6 +297,27 @@
 	(do_getline_redir): Adjust calling get_a_record().
 	(do_getline): Ditto.
 	(inrec): Ditto.
+
+2023-03-17         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (do_split): Modify behavior for --csv.
+
+2023-03-16         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awk.h (enum do_flag_values): Add DO_CSV.
+	(do_csv): New macro.
+	(init_csv_fields, init_csv_records): Add declarations.
+	* field.c (init_csv_fields): New function.
+	(set_parser): Don't set the parser if doing CSV. Add warnings.
+	* io.c (csvscan): New function (placeholder for now).
+	(init_csv_records): New function.
+	(set_RS): Don't set the parser if doing CSV. Add warnings.
+	* main.c (optab): Add new options -k/--csv.
+	(main): Fatal out if --posix and --csv. Call init_csv_records()
+	and init_csv_fields().
+	(usage): Add a line for the new options.
+	(load_procinfo): Install PROCINFO["CSV"] if doing CSV.
+	(parse_args): Update for new options.
 
 2023-03-09         Arnold D. Robbins     <arnold@skeeve.com>
 
@@ -113,6 +374,11 @@
 
 2023-02-24         Arnold D. Robbins     <arnold@skeeve.com>
 
+	* field.c (set_comma_field): Free the string node. Fixes a
+	memory leak. Thanks to Andrew Schorr for the report.
+
+2023-02-24         Arnold D. Robbins     <arnold@skeeve.com>
+
 	* awk.h (boolval): Handle Node_var. Thanks to
 	Daniel Pouzzner <douzzer@mega.nu> for the report, relayed
 	by Andrew Schorr.
@@ -132,6 +398,17 @@
 	* builtin.c (efwrite): Ditto
 	* io.c (redflags2str, check_duplicated_redirections,
 	redirect_string): Ditto.
+
+2023-02-12         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+
+2023-02-10         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* io.c (avoid_flush): New function.
+	(redirect_string): Use it when setting up an output pipeline.
+	Thanks to Alexandre Ferrieux <alexandre.ferrieux@orange.com>
+	for pointing out the performance issue.
 
 2023-02-09         Arnold D. Robbins     <arnold@skeeve.com>
 
@@ -180,6 +457,11 @@
 	* README: Updated with texinfo.tex and makeinfo versions.
 	Update copyright year.
 
+2022-12-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c (extra_stack): Remove variable and its uses. Left over
+	from libsigsegv cleanup.
+
 2022-12-23         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* README: Updated with texinfo.tex version.
@@ -187,6 +469,12 @@
 2022-12-22         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* README: Updated with texinfo.tex version.
+	* NEWS: Updated.
+
+2022-12-11         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c (load_procinfo): Remove "mb_cur_max" and "utf8"
+	entries, they're not of any real use.
 	* NEWS: Updated.
 
 2022-12-11         Arnold D. Robbins     <arnold@skeeve.com>
@@ -220,6 +508,16 @@
 	structure.
 	* main.c (parse_args): Call pma_mpfr_check() if using persisent
 	malloc.
+
+2022-12-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* configure.ac: Removed use of libsigsegv.
+	* main.c: Removed code related to libsigsegv.
+	* NEWS: Updated.
+
+2022-11-25         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (comma_parse_field): Remove unused variable `field'.
 
 2022-11-23         Arnold D. Robbins     <arnold@skeeve.com>
 
@@ -372,6 +670,25 @@
 2022-09-02         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* awkgram.c, command.c: Regenerated, using Bison 3.8.2.
+
+2022-09-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (do_split): Check for not do_posix if separator is comma.
+
+2022-08-31         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (do_split): Make "," as third arg do CSV parsing.
+
+2022-08-30         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (comma_parse_field): Add resizing of new field buffer;
+	No Arbitrary Limits!
+
+2022-08-29         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* field.c (comma_parse_field, set_comma_field): New functions.
+	(set_FS): If FS is "," and not posix mode, use CSV parsing.
+	Code follows what BWK's new code does.
 
 2022-08-25         Arnold D. Robbins     <arnold@skeeve.com>
 

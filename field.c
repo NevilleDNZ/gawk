@@ -59,12 +59,15 @@ static long sc_parse_field(long, char **, int, NODE *,
 			     Regexp *, Setfunc, NODE *, NODE *, bool);
 static long fw_parse_field(long, char **, int, NODE *,
 			     Regexp *, Setfunc, NODE *, NODE *, bool);
+static long comma_parse_field(long, char **, int, NODE *,
+			     Regexp *, Setfunc, NODE *, NODE *, bool);
 static const awk_fieldwidth_info_t *api_fw = NULL;
 static long fpat_parse_field(long, char **, int, NODE *,
 			     Regexp *, Setfunc, NODE *, NODE *, bool);
 static void set_element(long num, char * str, long len, NODE *arr);
 static void grow_fields_arr(long num);
 static void set_field(long num, char *str, long len, NODE *dummy);
+static void set_comma_field(long num, char *str, long len, NODE *dummy);
 static void purge_record(void);
 
 static char *parse_extent;	/* marks where to restart parse of record */
@@ -111,6 +114,15 @@ init_fields()
 	field0_valid = true;
 }
 
+/* init_csv_fields --- set up to handle --csv */
+
+void
+init_csv_fields(void)
+{
+	if (do_csv)
+		parse_field = comma_parse_field;
+}
+
 /* grow_fields --- acquire new fields as needed */
 
 static void
@@ -145,6 +157,27 @@ set_field(long num,
 	n->stptr = str;
 	n->stlen = len;
 	n->flags = (STRCUR|STRING|USER_INPUT);	/* do not set MALLOC */
+}
+
+/* set_comma_field --- set the value of a particular field, coming from CSV */
+
+/*ARGSUSED*/
+static void
+set_comma_field(long num,
+	char *str,
+	long len,
+	NODE *dummy ATTRIBUTE_UNUSED)	/* just to make interface same as set_element */
+{
+	NODE *n;
+	NODE *val = make_string(str, len);
+
+	if (num > nf_high_water)
+		grow_fields_arr(num);
+	n = fields_arr[num];
+	n->stptr = val->stptr;
+	n->stlen = val->stlen;
+	n->flags = (STRCUR|STRING|USER_INPUT|MALLOC);
+	freenode(val);
 }
 
 /* rebuild_record --- Someone assigned a value to $(something).
@@ -741,6 +774,115 @@ sc_parse_field(long up_to,	/* parse only up to this field number */
 }
 
 /*
+ * comma_parse_field --- CSV parsing same as BWK awk.
+ *
+ * This is called both from get_field() and from do_split()
+ * via (*parse_field)().  This variation is for when FS is a comma,
+ * we do very basic CSV parsing, the same as BWK awk.
+ */
+
+static long
+comma_parse_field(long up_to,	/* parse only up to this field number */
+	char **buf,	/* on input: string to parse; on output: point to start next */
+	int len,
+	NODE *fs,
+	Regexp *rp ATTRIBUTE_UNUSED,
+	Setfunc set,	/* routine to set the value of the parsed field */
+	NODE *n,
+	NODE *sep_arr,  /* array of field separators (maybe NULL) */
+	bool in_middle ATTRIBUTE_UNUSED)
+{
+	char *scan = *buf;
+	static const char comma = ',';
+	long nf = parse_high_water;
+	char *end = scan + len;
+
+	static char *newfield = NULL;
+	static size_t buflen = 0;
+
+	if (newfield == NULL) {
+		emalloc(newfield, char *, BUFSIZ, "comma_parse_field");
+		buflen = BUFSIZ;
+	}
+
+	if (set == set_field)	// not an array element
+		set = set_comma_field;
+
+	if (up_to == UNLIMITED)
+		nf = 0;
+
+	if (len == 0) {
+		// Don't set the field.
+		//	echo | gawk --csv '{ print NF }'
+		// should print 0.
+		return nf;
+	}
+
+	for (; nf < up_to;) {
+		char *new_end = newfield;
+		memset(newfield, '\0', buflen);
+
+		while (*scan != comma && scan < end) {
+			if (*scan == '"') {
+				for (scan++; scan < end;) {
+					// grow buffer if needed
+					if (new_end >= newfield + buflen) {
+						size_t offset = buflen;
+
+						buflen *= 2;
+						erealloc(newfield, char *, buflen, "comma_parse_field");
+						new_end = newfield + offset;
+					}
+
+					if (*scan == '"' && scan[1] == '"') {	// "" -> "
+						*new_end++ = '"';
+						scan += 2;
+					} else if (*scan == '"' && (scan == end-1 || scan[1] == comma)) {
+						// close of quoted string
+						scan++;
+						break;
+					} else {
+						*new_end++ = *scan++;
+					}
+				}
+			} else {
+				// unquoted field
+				while (*scan != comma && scan < end) {
+					// grow buffer if needed
+					if (new_end >= newfield + buflen) {
+						size_t offset = buflen;
+
+						buflen *= 2;
+						erealloc(newfield, char *, buflen, "comma_parse_field");
+						new_end = newfield + offset;
+					}
+					*new_end++ = *scan++;
+				}
+			}
+		}
+
+		(*set)(++nf, newfield, (long)(new_end - newfield), n);
+
+		if (scan == end)
+			break;
+
+		if (scan == *buf) {
+			scan++;
+			continue;
+		}
+
+		scan++;
+		if (scan == end) {	/* FS at end of record */
+			(*set)(++nf, newfield, 0L, n);
+			break;
+		}
+	}
+
+	*buf = scan;
+	return nf;
+}
+
+/*
  * calc_mbslen --- calculate the length in bytes of a multi-byte string
  * containing len characters.
  */
@@ -1033,7 +1175,10 @@ do_split(int nargs)
 	if ((sep->flags & REGEX) != 0)
 		sep = sep->typed_re;
 
-	if (   (sep->re_flags & FS_DFLT) != 0
+	if (do_csv && (sep->re_flags & FS_DFLT) != 0 && nargs == 3) {
+		fs = NULL;
+		parseit = comma_parse_field;
+	} else if ((sep->re_flags & FS_DFLT) != 0
 	    && current_field_sep() == Using_FS
 	    && ! RS_is_null) {
 		parseit = parse_field;
@@ -1146,11 +1291,29 @@ do_patsplit(int nargs)
 static void
 set_parser(parse_field_func_t func)
 {
+	/*
+	 * Setting FS does nothing if CSV mode, warn in that case,
+	 * but don't warn on first call which happens at initialization.
+	 */
+	static bool first_time = true;
+	static bool warned = false;
+
+	if (! first_time && do_csv) {
+		if (! warned) {
+			warned = true;
+			warning(_("assignment to FS/FIELDWIDTHS/FPAT has no effect when using --csv"));
+		}
+		return;
+	}
+
 	normal_parse_field = func;
 	if (! api_parser_override && parse_field != func) {
 		parse_field = func;
 	        update_PROCINFO_str("FS", current_field_sep_str());
 	}
+
+	if (first_time)
+		first_time = false;
 }
 
 /* set_FIELDWIDTHS --- handle an assignment to FIELDWIDTHS */
@@ -1309,7 +1472,8 @@ set_FS()
 	save_rs = dupnode(RS_node->var_value);
 	resave_fs = true;
 
-	/* If FS_re_no_case assignment is fatal (make_regexp in remake_re)
+	/*
+	 * If FS_re_no_case assignment is fatal (make_regexp in remake_re)
 	 * FS_regexp will be NULL with a non-null FS_re_yes_case.
 	 * refree() handles null argument; no need for `if (FS_regexp != NULL)' below.
 	 * Please do not remerge.

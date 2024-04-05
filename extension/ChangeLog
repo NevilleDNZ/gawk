@@ -1,3 +1,40 @@
+2023-11-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* 5.3.0: Release tar ball made.
+
+2023-10-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am: Update copyright year.
+
+2023-10-19         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* configure.ac: Update version.
+
+2023-06-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir.3am: Very small fix.
+
+2023-05-28         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir.c: Add checking of PROCINFO["readdir_override"].
+	* readdir.3am: Updated.
+
+2023-05-25         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir.c: Synced fully with readdir_test.c.
+	* readdir_test.c: Removed.
+
+2023-05-25         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir_test.c: Sync somewhat with readdir.c. A full
+	sync is W.I.P.
+
+2023-05-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* readdir.c (dir_can_take_file): Only check the stat buffer;
+	the open fd could be on a regular file.
+	(dir_take_control_of): Add the filename to the error output.
+
 2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 
