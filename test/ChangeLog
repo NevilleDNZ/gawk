@@ -1,3 +1,112 @@
+2023-11-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* 5.3.0: Release tar ball made.
+
+2023-11-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* badargs.ok: Updated after version bump.
+
+2023-10-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* badargs.ok: Updated after version bump.
+
+2023-10-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am: Sort and prettify the various collections
+	of tests in preparation for a release.
+
+2023-10-18         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXPECTED_FAIL_ZOS): Update with more tests.
+
+2023-10-15         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* badargs.ok: Updated after version bump.
+
+2023-10-12  Eli Zaretskii  <eliz@gnu.org>
+
+	* Makefile.am (EXPECTED_FAIL_MINGW): Add a few non-ASCII tests.
+
+2023-10-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* cmdlinefsbacknl2.sh: Add sed commands after all the od
+	commands to fix up whitespace so that the test passes
+	on MacOS.
+
+2023-10-08         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* cmdlinefsbacknl2.sh: Add -v BINMODE=2 to gawk invocation
+	for Windows. Thanks to Eli Zaretskii for the tip.
+	* cmdlinefsbacknl2.ok: Updated after fix to warning message.
+
+	Unrelated:
+
+	* Makefile.am (EXTRA_DIST): New test, lintplus3.
+	* lintplus3.awk, lintplus3.in, lintplus3.ok: New files.
+
+2023-10-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* badargs.ok: Update after code changes.
+
+2023-10-03         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, lintplus2.
+	* lintplus2.awk, lintplus2.ok: New files.
+
+2023-09-13         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, gsubnulli18n.
+	* gsubnulli18n.awk, gsubnulli18n.ok: New files.
+
+2023-09-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* mtchi18n2.awk: Change to use \u in the regexp instead of
+	octal escapes.
+
+2023-09-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, mtchi18n2.
+	* mtchi18n2.sh, mtchi18n2.ok: New files.
+	Thanks to Miguel Pineiro Jr <mpj@pineiro.cc> for the tests.
+
+2023-08-20         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, cmdlinefsbacknl2.
+	* cmdlinefsbacknl2.sh, cmdlinefsbacknl2.ok: New files.
+	Thanks to Miguel Pineiro Jr <mpj@pineiro.cc> for the test.
+
+2023-07-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, regexpbad.
+	* regexpbad.sh, regexpbad.ok: New files.
+
+2023-06-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* csv1.ok: Updated after code fix.
+
+2023-06-12         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, cmdlinefsbacknl.
+	* cmdlinefsbacknl.sh, cmdlinefsbacknl.ok: New files.
+
+2023-06-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test, gensub4.
+	* gensub4.awk, gensub4.ok: New files.
+
+2023-05-28         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (readdir_test): Adjust comparison programs.
+
+2023-05-25         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Deal with removal of extension/readdir_test.c.
+
+	* Makefile.am (EXTRA_DIST, GENTEST_UNUSED): New file: check_retest.awk.
+	(readdir_test): Simplified.
+	(readdir_retest): Revised.
+	* check_retest.awk: New file.
+
 2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.2: Release tar ball made.
@@ -9,6 +118,12 @@
 2023-04-20         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* badargs.ok: Update after code changes.
+
+2023-04-13         Manuel Collado        <mcollado2011@gmail.com>
+
+	* Makefile.am (EXTRA_DIST): New test: csvodd.
+	(NEED_CSV): Add csvodd.
+	* New files: csvodd.awk, csvodd.in, csvodd.ok:
 
 2023-04-13         Arnold D. Robbins     <arnold@skeeve.com>
 
@@ -23,6 +138,34 @@
 
 	* sort1.awk: Add tests for ind_num_desc and @ind_str_asc.
 	* sort1.ok: Updated.
+
+2023-03-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): New test: unicode1.
+	* unicode1.awk, unicode1.ok: New files.
+	* funstack.ok: Updated after code change.
+
+2023-03-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* csv1.in, csv1.ok: Adjusted after code change and to match
+	RFC 4180 format.
+
+2023-03-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST, NEED_CSV, GAWK_EXT_TESTS): New test, csv3.
+	* csv3.awk, csv3.in, csv3.ok: New files.
+
+2023-03-17         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST, NEED_CSV, GAWK_EXT_TESTS): New test, csv2.
+	* csv2.awk, csv2.ok: New files.
+
+2023-03-16         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Gentests: Handle NEED_CSV.
+	* Makefile.am (NEED_CSV): New list of tests that need --csv.
+	* badargs.ok: Update after code changes.
+	* csv1.awk: Adjust after code changes.
 
 2023-03-09         Arnold D. Robbins     <arnold@skeeve.com>
 
@@ -122,6 +265,11 @@
 	Move these tets to the end and add a message that if any
 	of them fail, don't worry about it. Thanks to
 	"WeissonHan" <Weisson@linux.alibaba.com> for the report.
+
+2022-08-29         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am (EXTRA_DIST): csv1: New test.
+	* csv1.awk, csv1.in, csv1.ok: New files.
 
 2022-08-25         Arnold D. Robbins     <arnold@skeeve.com>
 
@@ -559,7 +707,7 @@
 
 	* Gentests: Remove CHECK_MPFR handling. Instead, read the
 	EXTRA_DIST list of files and generate better checking tests
-	for tests that have an -mpfr.ok file. Use GAWK_TEST__ARGS
+	for tests that have an -mpfr.ok file. Use GAWK_TEST_ARGS
 	instead of AWKFLAGS.
 	* Makefile.am (CHECK_MPFR): Removed.
 	(arrdbg, testext): Checks updated.

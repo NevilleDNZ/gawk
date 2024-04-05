@@ -1,9 +1,9 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-%
+% 
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2023-03-27.21}
+\def\texinfoversion{2023-09-19.19}
 %
 % Copyright 1985, 1986, 1988, 1990-2023 Free Software Foundation, Inc.
 %
@@ -212,7 +212,7 @@
 % @errormsg{MSG}.  Do the index-like expansions on MSG, but if things
 % aren't perfect, it's not the end of the world, being an error message,
 % after all.
-%
+% 
 \def\errormsg{\begingroup \indexnofonts \doerrormsg}
 \def\doerrormsg#1{\errmessage{#1}}
 
@@ -275,8 +275,7 @@
 % \topmark doesn't work for the very first chapter (after the title
 % page or the contents), so we use \firstmark there -- this gets us
 % the mark with the chapter defs, unless the user sneaks in, e.g.,
-% @setcolor (or @url, or @link, etc.) between @contents and the very
-% first @chapter.
+% @setcolor (or @url etc.) between @contents and the very first @chapter.
 \def\gettopheadingmarks{%
   \ifcase0\the\savedtopmark\fi
   \ifx\thischapter\empty \ifcase0\firstmark\fi \fi
@@ -426,43 +425,22 @@
   }%
 }
 
-% First remove any @comment, then any @c comment.  Pass the result on to
-% \argcheckspaces.
+% First remove any @comment, then any @c comment.  Pass the result on to 
+% \argremovespace.
 \def\argremovecomment#1\comment#2\ArgTerm{\argremovec #1\c\ArgTerm}
-\def\argremovec#1\c#2\ArgTerm{\argcheckspaces#1\^^M\ArgTerm}
-
-% Each occurrence of `\^^M' or `<space>\^^M' is replaced by a single space.
-%
-% \argremovec might leave us with trailing space, e.g.,
+\def\argremovec#1\c#2\ArgTerm{\argremovespace#1$ $\ArgTerm}
+% \argremovec might leave us with trailing space, though; e.g.,
 %    @end itemize  @c foo
-% This space token undergoes the same procedure and is eventually removed
-% by \finishparsearg.
-%
-\def\argcheckspaces#1\^^M{\argcheckspacesX#1\^^M \^^M}
-\def\argcheckspacesX#1 \^^M{\argcheckspacesY#1\^^M}
-\def\argcheckspacesY#1\^^M#2\^^M#3\ArgTerm{%
-  \def\temp{#3}%
-  \ifx\temp\empty
-    % Do not use \next, perhaps the caller of \parsearg uses it; reuse \temp:
-    \let\temp\finishparsearg
-  \else
-    \let\temp\argcheckspaces
-  \fi
-  % Put the space token in:
-  \temp#1 #3\ArgTerm
-}
+% Note that the argument cannot contain the TeX $, as its catcode is
+% changed to \other when Texinfo source is read.
+\def\argremovespace#1 $#2\ArgTerm{\finishparsearg#1$\ArgTerm}
 
 % If a _delimited_ argument is enclosed in braces, they get stripped; so
 % to get _exactly_ the rest of the line, we had to prevent such situation.
-% We prepended an \empty token at the very beginning and we expand it now,
-% just before passing the control to \argtorun.
-% (Similarly, we have to think about #3 of \argcheckspacesY above: it is
-% either the null string, or it ends with \^^M---thus there is no danger
-% that a pair of braces would be stripped.
-%
-% But first, we have to remove the trailing space token.
-%
-\def\finishparsearg#1 \ArgTerm{\expandafter\argtorun\expandafter{#1}}
+% We prepended an \empty token at the very beginning and we expand it
+% just before passing the control to \next.
+% (But first, we have to remove the remaining $ or two.)
+\def\finishparsearg#1$#2\ArgTerm{\expandafter\argtorun\expandafter{#1}}
 
 
 % \parseargdef - define a command taking an argument on the line
@@ -1048,8 +1026,8 @@ where each line of input produces a line of output.}
         end
       end
     }
-    % The -2 in the arguments here gives all the input to TeX catcode 12
-    % (other) or 10 (space), preventing undefined control sequence errors. See
+    % The -2 in the arguments here gives all the input to TeX catcode 12 
+    % (other) or 10 (space), preventing undefined control sequence errors. See 
     % https://lists.gnu.org/archive/html/bug-texinfo/2019-08/msg00031.html
     %
   \endgroup
@@ -1151,7 +1129,7 @@ where each line of input produces a line of output.}
 % for display in the outlines, and in other places.  Thus, we have to
 % double any backslashes.  Otherwise, a name like "\node" will be
 % interpreted as a newline (\n), followed by o, d, e.  Not good.
-%
+% 
 % See http://www.ntg.nl/pipermail/ntg-pdftex/2004-July/000654.html and
 % related messages.  The final outcome is that it is up to the TeX user
 % to double the backslashes and otherwise make the string valid, so
@@ -1443,7 +1421,7 @@ output) for that.)}
       % We use the node names as the destinations.
       %
       % Currently we prefix the section name with the section number
-      % for chapter and appendix headings only in order to avoid too much
+      % for chapter and appendix headings only in order to avoid too much 
       % horizontal space being required in the PDF viewer.
       \def\numchapentry##1##2##3##4{%
         \dopdfoutline{##2 ##1}{count-\expnumber{chap##2}}{##3}{##4}}%
@@ -1466,7 +1444,7 @@ output) for that.)}
       % their "best" equivalent, based on the @documentencoding.  Too
       % much work for too little return.  Just use the ASCII equivalents
       % we use for the index sort strings.
-      %
+      % 
       \indexnofonts
       \setupdatafile
       % We can have normal brace characters in the PDF outlines, unlike
@@ -1692,7 +1670,7 @@ output) for that.)}
       % We use node names as destinations.
       %
       % Currently we prefix the section name with the section number
-      % for chapter and appendix headings only in order to avoid too much
+      % for chapter and appendix headings only in order to avoid too much 
       % horizontal space being required in the PDF viewer.
       \def\partentry##1##2##3##4{}% ignore parts in the outlines
       \def\numchapentry##1##2##3##4{%
@@ -2719,7 +2697,7 @@ end
 }
 
 % Commands to set the quote options.
-%
+% 
 \parseargdef\codequoteundirected{%
   \def\temp{#1}%
   \ifx\temp\onword
@@ -2765,7 +2743,7 @@ end
 % If we are in a monospaced environment, however, 1) always use \ttsl,
 % and 2) do not add an italic correction.
 \def\dosmartslant#1#2{%
-  \ifusingtt
+  \ifusingtt 
     {{\ttsl #2}\let\next=\relax}%
     {\def\next{{#1#2}\smartitaliccorrection}}%
   \next
@@ -2944,7 +2922,7 @@ end
   \gdef\codedash{\futurelet\next\codedashfinish}
   \gdef\codedashfinish{%
     \normaldash % always output the dash character itself.
-    %
+    % 
     % Now, output a discretionary to allow a line break, unless
     % (a) the next character is a -, or
     % (b) the preceding character is a -, or
@@ -3050,7 +3028,7 @@ end
         % For pdfTeX and LuaTeX
         \ifurefurlonlylink
           % PDF plus option to not display url, show just arg
-          \unhbox0
+          \unhbox0             
         \else
           % PDF, normally display both arg and url for consistency,
           % visibility, if the pdf is eventually used to print, etc.
@@ -3063,7 +3041,7 @@ end
           % For XeTeX
           \ifurefurlonlylink
             % PDF plus option to not display url, show just arg
-            \unhbox0
+            \unhbox0             
           \else
             % PDF, normally display both arg and url for consistency,
             % visibility, if the pdf is eventually used to print, etc.
@@ -3121,10 +3099,10 @@ end
   }
 }
 
-% By default we'll break after the special characters, but some people like to
-% break before the special chars, so allow that.  Also allow no breaking at
+% By default we'll break after the special characters, but some people like to 
+% break before the special chars, so allow that.  Also allow no breaking at 
 % all, for manual control.
-%
+% 
 \parseargdef\urefbreakstyle{%
   \def\txiarg{#1}%
   \ifx\txiarg\wordnone
@@ -3143,10 +3121,10 @@ end
 \def\wordnone{none}
 
 % Allow a ragged right output to aid breaking long URL's.  There can
-% be a break at the \allowbreak with no extra glue (if the existing stretch in
+% be a break at the \allowbreak with no extra glue (if the existing stretch in 
 % the line is sufficient), a break at the \penalty with extra glue added
 % at the end of the line, or no break at all here.
-%   Changing the value of the penalty and/or the amount of stretch affects how
+%   Changing the value of the penalty and/or the amount of stretch affects how 
 % preferable one choice is over the other.
 \def\urefallowbreak{%
   \penalty0\relax
@@ -3361,7 +3339,7 @@ $$%
 % @inlinefmt{FMTNAME,PROCESSED-TEXT} and @inlineraw{FMTNAME,RAW-TEXT}.
 % Ignore unless FMTNAME == tex; then it is like @iftex and @tex,
 % except specified as a normal braced arg, so no newlines to worry about.
-%
+% 
 \def\outfmtnametex{tex}
 %
 \long\def\inlinefmt#1{\doinlinefmt #1,\finish}
@@ -3369,7 +3347,7 @@ $$%
   \def\inlinefmtname{#1}%
   \ifx\inlinefmtname\outfmtnametex \ignorespaces #2\fi
 }
-%
+% 
 % @inlinefmtifelse{FMTNAME,THEN-TEXT,ELSE-TEXT} expands THEN-TEXT if
 % FMTNAME is tex, else ELSE-TEXT.
 \long\def\inlinefmtifelse#1{\doinlinefmtifelse #1,,,\finish}
@@ -3385,7 +3363,7 @@ $$%
 % *right* brace they would have to use a command anyway, so they may as
 % well use a command to get a left brace too.  We could re-use the
 % delimiter character idea from \verb, but it seems like overkill.
-%
+% 
 \long\def\inlineraw{\tex \doinlineraw}
 \long\def\doinlineraw#1{\doinlinerawtwo #1,\finish}
 \def\doinlinerawtwo#1,#2,\finish{%
@@ -3671,7 +3649,7 @@ $$%
 % for non-CM glyphs.  That is ec* for regular text and tc* for the text
 % companion symbols (LaTeX TS1 encoding).  Both are part of the ec
 % package and follow the same conventions.
-%
+% 
 \def\ecfont{\etcfont{e}}
 \def\tcfont{\etcfont{t}}
 %
@@ -3753,7 +3731,7 @@ $$%
               after the title page.}}%
 \def\setshortcontentsaftertitlepage{%
   \errmessage{@setshortcontentsaftertitlepage has been removed as a Texinfo
-              command; move your @shortcontents and @contents commands if you
+              command; move your @shortcontents and @contents commands if you 
               want the contents after the title page.}}%
 
 \parseargdef\shorttitlepage{%
@@ -3807,7 +3785,7 @@ $$%
 % don't worry much about spacing, ragged right.  This should be used
 % inside a \vbox, and fonts need to be set appropriately first. \par should
 % be specified before the end of the \vbox, since a vbox is a group.
-%
+% 
 \def\raggedtitlesettings{%
   \rm
   \hyphenpenalty=10000
@@ -4633,7 +4611,7 @@ $$%
 % Like \expandablevalue, but completely expandable (the \message in the
 % definition above operates at the execution level of TeX).  Used when
 % writing to auxiliary files, due to the expansion that \write does.
-% If flag is undefined, pass through an unexpanded @value command: maybe it
+% If flag is undefined, pass through an unexpanded @value command: maybe it 
 % will be set by the time it is read back in.
 %
 % NB flag names containing - or _ may not work here.
@@ -4657,7 +4635,7 @@ $$%
 
 % @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
 % with @set.
-%
+% 
 % To get the special treatment we need for `@end ifset,' we call
 % \makecond and then redefine.
 %
@@ -4690,7 +4668,7 @@ $$%
 % without the @) is in fact defined.  We can only feasibly check at the
 % TeX level, so something like `mathcode' is going to considered
 % defined even though it is not a Texinfo command.
-%
+% 
 \makecond{ifcommanddefined}
 \def\ifcommanddefined{\parsearg{\doifcmddefined{\let\next=\ifcmddefinedfail}}}
 %
@@ -4796,7 +4774,7 @@ $$%
 \def\docodeindex#1{\edef\indexname{#1}\parsearg\docodeindexxxx}
 \def\docodeindexxxx #1{\docind{\indexname}{#1}}
 
-
+
 % \definedummyword defines \#1 as \string\#1\space, thus effectively
 % preventing its expansion.  This is used only for control words,
 % not control letters, because the \space would be incorrect for
@@ -4813,7 +4791,7 @@ $$%
 \def\definedummyword  #1{\def#1{\string#1\space}}%
 \def\definedummyletter#1{\def#1{\string#1}}%
 
-% Used for the aux, toc and index files to prevent expansion of Texinfo
+% Used for the aux, toc and index files to prevent expansion of Texinfo 
 % commands.  Most of the commands are controlled through the
 % \ifdummies conditional.
 %
@@ -4950,6 +4928,7 @@ $$%
   \commondummyword\inforef    {}%
   \commondummyword\kbd        {}%
   \commondummyword\key        {}%
+  \commondummyword\link       {}%
   \commondummyword\math       {}%
   \commondummyword\option     {}%
   \commondummyword\pxref      {}%
@@ -5102,7 +5081,7 @@ $$%
   \let\value\indexnofontsvalue
 }
 
-
+
 
 
 % #1 is the index name, #2 is the entry text.
@@ -5143,7 +5122,7 @@ $$%
   \ifx\suffix\indexisfl\def\suffix{f1}\fi
   % Open the file
   \immediate\openout\csname#1indfile\endcsname \jobname.\suffix
-  % Using \immediate above here prevents an object entering into the current
+  % Using \immediate above here prevents an object entering into the current 
   % box, which could confound checks such as those in \safewhatsit for
   % preceding skips.
   \typeout{Writing index file \jobname.\suffix}%
@@ -5195,7 +5174,7 @@ $$%
   \ifx\segment\isfinish
   \else
     %
-    % Fully expand the segment, throwing away any @sortas directives, and
+    % Fully expand the segment, throwing away any @sortas directives, and 
     % trim spaces.
     \edef\trimmed{\segment}%
     \edef\trimmed{\expandafter\eatspaces\expandafter{\trimmed}}%
@@ -5259,12 +5238,12 @@ $$%
 % the current value of \escapechar.
 \def\escapeisbackslash{\escapechar=`\\}
 
-% Use \ in index files by default.  texi2dvi didn't support @ as the escape
-% character (as it checked for "\entry" in the files, and not "@entry").  When
-% the new version of texi2dvi has had a chance to become more prevalent, then
-% the escape character can change back to @ again.  This should be an easy
-% change to make now because both @ and \ are only used as escape characters in
-% index files, never standing for themselves.
+% Use \ in index files by default.  texi2dvi didn't support @ as the escape 
+% character (as it checked for "\entry" in the files, and not "@entry").  When 
+% the new version of texi2dvi has had a chance to become more prevalent, then 
+% the escape character can change back to @ again.  This should be an easy 
+% change to make now because both @ and \ are only used as escape characters in 
+% index files, never standing for themselves. 
 %
 \set txiindexescapeisbackslash
 
@@ -5287,7 +5266,7 @@ $$%
   \def\}{\rbracechar{}}%
   \uccode`\~=`\\ \uppercase{\def~{\backslashchar{}}}%
   %
-  % Split the entry into primary entry and any subentries, and get the index
+  % Split the entry into primary entry and any subentries, and get the index 
   % sort key.
   \splitindexentry\indextext
   %
@@ -5468,18 +5447,18 @@ $$%
     \uccode`\~=`\\ \uppercase{\if\noexpand~}\noexpand#1
       \ifflagclear{txiskipindexfileswithbackslash}{%
 \errmessage{%
-ERROR: A sorted index file in an obsolete format was skipped.
+ERROR: A sorted index file in an obsolete format was skipped.  
 To fix this problem, please upgrade your version of 'texi2dvi'
 or 'texi2pdf' to that at <https://ftp.gnu.org/gnu/texinfo>.
-If you are using an old version of 'texindex' (part of the Texinfo
+If you are using an old version of 'texindex' (part of the Texinfo 
 distribution), you may also need to upgrade to a newer version (at least 6.0).
 You may be able to typeset the index if you run
 'texindex \jobname.\indexname' yourself.
-You could also try setting the 'txiindexescapeisbackslash' flag by
+You could also try setting the 'txiindexescapeisbackslash' flag by 
 running a command like
-'texi2dvi -t "@set txiindexescapeisbackslash" \jobname.texi'.  If you do
+'texi2dvi -t "@set txiindexescapeisbackslash" \jobname.texi'.  If you do 
 this, Texinfo will try to use index files in the old format.
-If you continue to have problems, deleting the index files and starting again
+If you continue to have problems, deleting the index files and starting again 
 might help (with 'rm \jobname.?? \jobname.??s')%
 }%
       }{%
@@ -5552,7 +5531,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   % bottom of a column to reduce an increase in inter-line spacing.
   \nobreak
   \vskip 0pt plus 5\baselineskip
-  \penalty -300
+  \penalty -300 
   \vskip 0pt plus -5\baselineskip
   %
   % Typeset the initial.  Making this add up to a whole number of
@@ -5574,6 +5553,11 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 
 \newdimen\entryrightmargin
 \entryrightmargin=0pt
+
+% amount to indent subsequent lines in an entry when it spans more than
+% one line.
+\newdimen\entrycontskip
+\entrycontskip=1em
 
 % for PDF output, whether to make the text of the entry a link to the page
 % number.  set for @contents and @shortcontents where there is only one
@@ -5668,41 +5652,17 @@ might help (with 'rm \jobname.?? \jobname.??s')%
       \parfillskip=0pt plus -1fill
       %
       \advance\rightskip by \entryrightmargin
-      % Determine how far we can stretch into the margin.
-      % This allows, e.g., "Appendix H  GNU Free Documentation License" to
-      % fit on one line in @letterpaper format.
-      \ifdim\entryrightmargin>2.1em
-        \dimen@i=2.1em
-      \else
-        \dimen@i=0em
-      \fi
-      \advance \parfillskip by 0pt minus 1\dimen@i
       %
       \dimen@ii = \hsize
       \advance\dimen@ii by -1\leftskip
       \advance\dimen@ii by -1\entryrightmargin
-      \advance\dimen@ii by 1\dimen@i
       \ifdim\wd\boxA > \dimen@ii % If the entry doesn't fit in one line
       \ifdim\dimen@ > 0.8\dimen@ii   % due to long index text
-        % Try to split the text roughly evenly.  \dimen@ will be the length of
-        % the first line.
-        \dimen@ = 0.7\dimen@
-        \dimen@ii = \hsize
-        \ifnum\dimen@>\dimen@ii
-          % If the entry is too long (for example, if it needs more than
-          % two lines), use all the space in the first line.
-          \dimen@ = \dimen@ii
-        \fi
         \advance\leftskip by 0pt plus 1fill % ragged right
-        \advance \dimen@ by 1\rightskip
-        \parshape = 2 0pt \dimen@ 0em \dimen@ii
-        % Ideally we'd add a finite glue at the end of the first line only,
-        % instead of using \parshape with explicit line lengths, but TeX
-        % doesn't seem to provide a way to do such a thing.
         %
         % Indent all lines but the first one.
-        \advance\leftskip by 1em
-        \advance\parindent by -1em
+        \advance\leftskip by \entrycontskip
+        \advance\parindent by -\entrycontskip
       \fi\fi
       \indent % start paragraph
       \unhbox\boxA
@@ -5725,12 +5685,11 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 \newskip\thinshrinkable
 \skip\thinshrinkable=.15em minus .15em
 
-% Like plain.tex's \dotfill, except uses up at least 1 em.
+% Like plain.tex's \dotfill, except uses up at least 0.5 em.
 % The filll stretch here overpowers both the fil and fill stretch to push
 % the page number to the right.
 \def\indexdotfill{\cleaders
-  \hbox{$\mathsurround=0pt \mkern1.5mu.\mkern1.5mu$}\hskip 1em plus 1filll}
-
+  \hbox{$\mathsurround=0pt \mkern1.5mu.\mkern1.5mu$}\hskip 0.5em plus 1filll}
 
 \def\primary #1{\line{#1\hfil}}
 
@@ -5783,7 +5742,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   % below is chosen so that the gutter has the same value (well, +-<1pt)
   % as it did when we hard-coded it.
   %
-  % We put the result in a separate register, \doublecolumhsize, so we
+  % We put the result in a separate register, \doublecolumnhsize, so we
   % can restore it in \pagesofar, after \hsize itself has (potentially)
   % been clobbered.
   %
@@ -5892,7 +5851,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 \newbox\balancedcolumns
 \setbox\balancedcolumns=\vbox{shouldnt see this}%
 %
-% Only called for the last of the double column material.  \doublecolumnout
+% Only called for the last of the double column material.  \doublecolumnout 
 % does the others.
 \def\balancecolumns{%
   \setbox0 = \vbox{\unvbox\PAGE}% like \box255 but more efficient, see p.120.
@@ -5920,7 +5879,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
     }%
     % Now the left column is in box 1, and the right column in box 3.
     %
-    % Check whether the left column has come out higher than the page itself.
+    % Check whether the left column has come out higher than the page itself.  
     % (Note that we have doubled \vsize for the double columns, so
     % the actual height of the page is 0.5\vsize).
     \ifdim2\ht1>\vsize
@@ -6217,7 +6176,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 \let\top\unnumbered
 
 % Sections.
-%
+% 
 \outer\parseargdef\numberedsec{\numhead1{#1}} % normally calls seczzz
 \def\seczzz#1{%
   \global\subsecno=0 \global\subsubsecno=0  \global\advance\secno by 1
@@ -6240,7 +6199,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 }
 
 % Subsections.
-%
+% 
 % normally calls numberedsubseczzz:
 \outer\parseargdef\numberedsubsec{\numhead2{#1}}
 \def\numberedsubseczzz#1{%
@@ -6265,7 +6224,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 }
 
 % Subsubsections.
-%
+% 
 % normally numberedsubsubseczzz:
 \outer\parseargdef\numberedsubsubsec{\numhead3{#1}}
 \def\numberedsubsubseczzz#1{%
@@ -6721,6 +6680,82 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \input \tocreadfilename
 }
 
+% process toc file to find the maximum width of the section numbers for
+% each chapter
+\def\findsecnowidths{%
+  \begingroup
+  \setupdatafile
+  \activecatcodes
+  \secentryfonts
+  % Redefinitions
+  \def\numchapentry##1##2##3##4{%
+    \def\curchapname{secnowidth-##2}%
+    \curchapmax=0pt
+  }%
+  \let\appentry\numchapentry
+  %
+  \def\numsecentry##1##2##3##4{%
+    \def\cursecname{secnowidth-##2}%
+    \cursecmax=0pt
+    %
+    \setbox0=\hbox{##2}%
+    \ifdim\wd0>\curchapmax
+      \curchapmax=\wd0
+      \expandafter\xdef\csname\curchapname\endcsname{\the\wd0}%
+    \fi
+  }%
+  \let\appsecentry\numsecentry
+  %
+  \def\numsubsecentry##1##2##3##4{%
+    \def\curssecname{secnowidth-##2}%
+    \curssecmax=0pt
+    %
+    \setbox0=\hbox{##2}%
+    \ifdim\wd0>\cursecmax
+      \cursecmax=\wd0
+      \expandafter\xdef\csname\cursecname\endcsname{\the\wd0}%
+    \fi
+  }%
+  \let\appsubsecentry\numsubsecentry
+  %
+  \def\numsubsubsecentry##1##2##3##4{%
+    \setbox0=\hbox{##2}%
+    \ifdim\wd0>\curssecmax
+      \curssecmax=\wd0
+      \expandafter\xdef\csname\curssecname\endcsname{\the\wd0}%
+    \fi
+  }%
+  \let\appsubsubsecentry\numsubsubsecentry
+  %
+  % Discard any output by outputting to dummy vbox, in case the toc file
+  % contains macros that we have not redefined above.
+  \setbox\dummybox\vbox\bgroup
+    \input \tocreadfilename\relax
+  \egroup
+  \endgroup
+}
+\newdimen\curchapmax
+\newdimen\cursecmax
+\newdimen\curssecmax
+
+
+% set #1 to the maximum section width for #2
+\def\retrievesecnowidth#1#2{%
+  \expandafter\let\expandafter\savedsecnowidth \csname secnowidth-#2\endcsname
+  \ifx\savedsecnowidth\relax
+    #1=0pt
+  \else
+    #1=\savedsecnowidth
+  \fi
+}
+\newdimen\secnowidthchap
+\secnowidthchap=0pt
+\newdimen\secnowidthsec
+\secnowidthsec=0pt
+\newdimen\secnowidthssec
+\secnowidthssec=0pt
+
+
 \newskip\contentsrightmargin \contentsrightmargin=1in
 \newcount\savepageno
 \newcount\lastnegativepageno \lastnegativepageno = -1
@@ -6766,6 +6801,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \startcontents{\putwordTOC}%
     \openin 1 \tocreadfilename\space
     \ifeof 1 \else
+      \findsecnowidths
       \readtocfile
     \fi
     \vfill \eject
@@ -6793,6 +6829,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
     \rm
     \hyphenpenalty = 10000
     \advance\baselineskip by 1pt % Open it up a little.
+    \extrasecnoskip=0.4pt
     \def\numsecentry##1##2##3##4{}
     \let\appsecentry = \numsecentry
     \let\unnsecentry = \numsecentry
@@ -6828,8 +6865,6 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   % This space should be enough, since a single number is .5em, and the
   % widest letter (M) is 1em, at least in the Computer Modern fonts.
   % But use \hss just in case.
-  % (This space doesn't include the extra space that gets added after
-  % the label; that gets put in by \shortchapentry above.)
   %
   % We'd like to right-justify chapter numbers, but that looks strange
   % with appendix letters.  And right-justifying numbers and
@@ -6839,10 +6874,15 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \hbox to 1em{#1\hss}%
 }
 
-% These macros generate individual entries in the table of contents.
-% The first argument is the chapter or section name.
-% The last argument is the page number.
-% The arguments in between are the chapter number, section number, ...
+% These macros generate individual entries in the table of contents,
+% and are read in from the *.toc file.
+%
+% The arguments are like:
+% \def\numchapentry#1#2#3#4
+%   #1 - the chapter or section name.
+%   #2 - section number
+%   #3 - level of section (e.g "chap", "sec")
+%   #4 - page number
 
 % Parts, in the main contents.  Replace the part number, which doesn't
 % exist, with an empty box.  Let's hope all the numbers have the same width.
@@ -6855,7 +6895,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \vskip 0pt plus 5\baselineskip
   \penalty-300
   \vskip 0pt plus -5\baselineskip
-  \dochapentry{\numeralbox\labelspace#1}{}%
+  \dochapentry{#1}{\numeralbox}{}%
 }
 %
 % Parts, in the short toc.
@@ -6866,12 +6906,14 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 }
 
 % Chapters, in the main contents.
-\def\numchapentry#1#2#3#4{\dochapentry{#2\labelspace#1}{#4}}
+\def\numchapentry#1#2#3#4{%
+  \retrievesecnowidth\secnowidthchap{#2}%
+  \dochapentry{#1}{#2}{#4}%
+}
 
 % Chapters, in the short toc.
-% See comments in \dochapentry re vbox and related settings.
 \def\shortchapentry#1#2#3#4{%
-  \tocentry{\shortchaplabel{#2}\labelspace #1}{#4}%
+  \tocentry{#1}{\shortchaplabel{#2}}{#4}%
 }
 
 % Appendices, in the main contents.
@@ -6882,67 +6924,111 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \setbox0 = \hbox{\putwordAppendix{} M}%
   \hbox to \wd0{\putwordAppendix{} #1\hss}}
 %
-\def\appentry#1#2#3#4{\dochapentry{\appendixbox{#2}\hskip.7em#1}{#4}}
+\def\appentry#1#2#3#4{%
+  \retrievesecnowidth\secnowidthchap{#2}%
+  \dochapentry{\appendixbox{#2}\hskip.7em#1}{}{#4}%
+}
 
 % Unnumbered chapters.
-\def\unnchapentry#1#2#3#4{\dochapentry{#1}{#4}}
-\def\shortunnchapentry#1#2#3#4{\tocentry{#1}{#4}}
+\def\unnchapentry#1#2#3#4{\dochapentry{#1}{}{#4}}
+\def\shortunnchapentry#1#2#3#4{\tocentry{#1}{}{#4}}
 
 % Sections.
-\def\numsecentry#1#2#3#4{\dosecentry{#2\labelspace#1}{#4}}
+\def\numsecentry#1#2#3#4{\dosecentry{#1}{#2}{#4}}
+
+\def\numsecentry#1#2#3#4{%
+  \retrievesecnowidth\secnowidthsec{#2}%
+  \dosecentry{#1}{#2}{#4}%
+}
 \let\appsecentry=\numsecentry
-\def\unnsecentry#1#2#3#4{\dosecentry{#1}{#4}}
+\def\unnsecentry#1#2#3#4{%
+  \retrievesecnowidth\secnowidthsec{#2}%
+  \dosecentry{#1}{}{#4}%
+}
 
 % Subsections.
-\def\numsubsecentry#1#2#3#4{\dosubsecentry{#2\labelspace#1}{#4}}
+\def\numsubsecentry#1#2#3#4{%
+  \retrievesecnowidth\secnowidthssec{#2}%
+  \dosubsecentry{#1}{#2}{#4}%
+}
 \let\appsubsecentry=\numsubsecentry
-\def\unnsubsecentry#1#2#3#4{\dosubsecentry{#1}{#4}}
+\def\unnsubsecentry#1#2#3#4{%
+  \retrievesecnowidth\secnowidthssec{#2}%
+  \dosubsecentry{#1}{}{#4}%
+}
 
 % And subsubsections.
-\def\numsubsubsecentry#1#2#3#4{\dosubsubsecentry{#2\labelspace#1}{#4}}
+\def\numsubsubsecentry#1#2#3#4{\dosubsubsecentry{#1}{#2}{#4}}
 \let\appsubsubsecentry=\numsubsubsecentry
-\def\unnsubsubsecentry#1#2#3#4{\dosubsubsecentry{#1}{#4}}
+\def\unnsubsubsecentry#1#2#3#4{\dosubsubsecentry{#1}{}{#4}}
 
 % This parameter controls the indentation of the various levels.
 % Same as \defaultparindent.
 \newdimen\tocindent \tocindent = 15pt
 
-% Now for the actual typesetting. In all these, #1 is the text and #2 is the
-% page number.
+% Now for the actual typesetting. In all these, #1 is the text, #2 is
+% a section number if present, and #3 is the page number.
 %
 % If the toc has to be broken over pages, we want it to be at chapters
 % if at all possible; hence the \penalty.
-\def\dochapentry#1#2{%
+\def\dochapentry#1#2#3{%
    \penalty-300 \vskip1\baselineskip plus.33\baselineskip minus.25\baselineskip
    \begingroup
      % Move the page numbers slightly to the right
      \advance\entryrightmargin by -0.05em
      \chapentryfonts
-     \tocentry{#1}{#2}%
+     \extrasecnoskip=0.4em % separate chapter number more
+     \tocentry{#1}{#2}{#3}%
    \endgroup
    \nobreak\vskip .25\baselineskip plus.1\baselineskip
 }
 
-\def\dosecentry#1#2{\begingroup
+\def\dosecentry#1#2#3{\begingroup
+  \secnowidth=\secnowidthchap
   \secentryfonts \leftskip=\tocindent
-  \tocentry{#1}{#2}%
+  \tocentry{#1}{#2}{#3}%
 \endgroup}
 
-\def\dosubsecentry#1#2{\begingroup
+\def\dosubsecentry#1#2#3{\begingroup
+  \secnowidth=\secnowidthsec
   \subsecentryfonts \leftskip=2\tocindent
-  \tocentry{#1}{#2}%
+  \tocentry{#1}{#2}{#3}%
 \endgroup}
 
-\def\dosubsubsecentry#1#2{\begingroup
+\def\dosubsubsecentry#1#2#3{\begingroup
+  \secnowidth=\secnowidthssec
   \subsubsecentryfonts \leftskip=3\tocindent
-  \tocentry{#1}{#2}%
+  \tocentry{#1}{#2}{#3}%
 \endgroup}
 
-% We use the same \entry macro as for the index entries.
-\let\tocentry = \entry
+% Used for the maximum width of a section number so we can align
+% section titles.
+\newdimen\secnowidth
+\secnowidth=0pt
+\newdimen\extrasecnoskip
+\extrasecnoskip=0pt
 
-% Space between chapter (or whatever) number and the title.
-\def\labelspace{\hskip1em \relax}
+% \tocentry{TITLE}{SEC NO}{PAGE}
+%
+\def\tocentry#1#2#3{%
+  \def\secno{#2}%
+  \ifx\empty\secno
+    \entry{#1}{#3}%
+  \else
+    \ifdim 0pt=\secnowidth
+      \setbox0=\hbox{#2\hskip\labelspace\hskip\extrasecnoskip}%
+    \else
+      \advance\secnowidth by \labelspace
+      \advance\secnowidth by \extrasecnoskip
+      \setbox0=\hbox to \secnowidth{%
+        #2\hskip\labelspace\hskip\extrasecnoskip\hfill}%
+    \fi
+    \entrycontskip=\wd0
+    \entry{\box0 #1}{#3}%
+  \fi
+}
+\newdimen\labelspace
+\labelspace=0.6em
 
 \def\chapentryfonts{\secfonts \rm}
 \def\secentryfonts{\textfonts}
@@ -7323,7 +7409,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 
 % @indentedblock is like @quotation, but indents only on the left and
 % has no optional argument.
-%
+% 
 \makedispenvdef{indentedblock}{\indentedblockstart}
 %
 \def\indentedblockstart{%
@@ -7593,9 +7679,13 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 \def\deflineheader#1 #2 #3\endheader{%
   \printdefname{#1}{}{#2}\magicamp\defunargs{#3\unskip}%
 }
+
 \def\deftypeline{%
   \doingtypefntrue
-  \parseargusing\activeparens{\printdefunline\deflineheader}%
+  \parseargusing\activeparens{\printdefunline\deftypelineheader}%
+}
+\def\deftypelineheader#1 #2 #3 #4\endheader{%
+  \printdefname{#1}{#2}{#3}\magicamp\defunargs{#4\unskip}%
 }
 
 % \makedefun{deffoo} (\deffooheader parameters) { (\deffooheader expansion) }
@@ -7633,7 +7723,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % @deftypefnnewline on|off says whether the return type of typed functions
 % are printed on their own line.  This affects @deftypefn, @deftypefun,
 % @deftypeop, and @deftypemethod.
-%
+% 
 \parseargdef\deftypefnnewline{%
   \def\temp{#1}%
   \ifx\temp\onword
@@ -7787,6 +7877,8 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \tolerance=10000 \hbadness=10000
   \exdentamount=\defbodyindent
   {%
+    \def\^^M{}% for line continuation
+    %
     % defun fonts. We use typewriter by default (used to be bold) because:
     % . we're printing identifiers, they should be in tt in principle.
     % . in languages with many accents, such as Czech or French, it's
@@ -7801,7 +7893,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
       \tclose{\temp}% typeset the return type
       \ifrettypeownline
         % put return type on its own line; prohibit line break following:
-        \hfil\vadjust{\nobreak}\break
+        \hfil\vadjust{\nobreak}\break  
       \else
         \space  % type on same line, so just followed by a space
       \fi
@@ -7819,6 +7911,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % Print arguments.  Use slanted for @def*, typewriter for @deftype*.
 \def\defunargs#1{%
   \bgroup
+    \def\^^M{}% for line continuation
     \df \ifdoingtypefn \tt \else \sl \fi
     \ifflagclear{txicodevaristt}{}%
        {\def\var##1{{\setregularquotes \ttsl ##1}}}%
@@ -7950,7 +8043,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \scantokens{#1@comment}%
   %
   % The \comment is to remove the \newlinechar added by \scantokens, and
-  % can be noticed by \parsearg.  Note \c isn't used because this means cedilla
+  % can be noticed by \parsearg.  Note \c isn't used because this means cedilla 
   % in math mode.
 }
 
@@ -8145,7 +8238,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % list to some hook where the argument is to be expanded.  If there are
 % less than 10 arguments that hook is to be replaced by ##N where N
 % is the position in that list, that is to say the macro arguments are to be
-% defined `a la TeX in the macro body.
+% defined `a la TeX in the macro body.  
 %
 % That gets used by \mbodybackslash (above).
 %
@@ -8179,8 +8272,8 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 %
 % Read recursive and nonrecursive macro bodies. (They're different since
 % rec and nonrec macros end differently.)
-%
-% We are in \macrobodyctxt, and the \xdef causes backslashshes in the macro
+% 
+% We are in \macrobodyctxt, and the \xdef causes backslashes in the macro
 % body to be transformed.
 % Set \macrobody to the body of the macro, and call \macrodef.
 %
@@ -8214,7 +8307,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % twice the \macarg.BLAH macros does not cost too much processing power.
 \def\parsemmanyargdef@@#1,{%
   \if#1;\let\next=\relax
-  \else
+  \else 
     \let\next=\parsemmanyargdef@@
     \edef\tempb{\eatspaces{#1}}%
     \expandafter\def\expandafter\tempa
@@ -8299,7 +8392,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 
 % Replace arguments by their values in the macro body, and place the result
 % in macro \@tempa.
-%
+% 
 \def\macvalstoargs@{%
   %  To do this we use the property that token registers that are \the'ed
   % within an \edef  expand only once. So we are going to place all argument
@@ -8323,9 +8416,9 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \expandafter\def\expandafter\@tempa\expandafter{\@tempc}%
   }
 
-% Define the named-macro outside of this group and then close this group.
-%
-\def\macargexpandinbody@{%
+% Define the named-macro outside of this group and then close this group. 
+% 
+\def\macargexpandinbody@{% 
   \expandafter
   \endgroup
   \macargdeflist@
@@ -8363,7 +8456,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 }
 
 % Trailing missing arguments are set to empty.
-%
+% 
 \def\setemptyargvalues@{%
   \ifx\paramlist\nilm@
     \let\next\macargexpandinbody@
@@ -8441,7 +8534,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \else % at most 9
     \ifnum\paramno<10\relax
       % @MACNAME sets the context for reading the macro argument
-      % @MACNAME@@ gets the argument, processes backslashes and appends a
+      % @MACNAME@@ gets the argument, processes backslashes and appends a 
       % comma.
       % @MACNAME@@@ removes braces surrounding the argument list.
       % @MACNAME@@@@ scans the macro body with arguments substituted.
@@ -8485,11 +8578,11 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % Call #1 with a list of tokens #2, with any doubled backslashes in #2
 % compressed to one.
 %
-% This implementation works by expansion, and not execution (so we cannot use
-% \def or similar).  This reduces the risk of this failing in contexts where
-% complete expansion is done with no execution (for example, in writing out to
+% This implementation works by expansion, and not execution (so we cannot use 
+% \def or similar).  This reduces the risk of this failing in contexts where 
+% complete expansion is done with no execution (for example, in writing out to 
 % an auxiliary file for an index entry).
-%
+% 
 % State is kept in the input stream: the argument passed to
 % @look_ahead, @gobble_and_check_finish and @add_segment is
 %
@@ -8511,11 +8604,11 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % #3 - NEXT_TOKEN
 % #4 used to look ahead
 %
-% If the next token is not a backslash, process the rest of the argument;
+% If the next token is not a backslash, process the rest of the argument; 
 % otherwise, remove the next token.
 @gdef@look_ahead#1!#2#3#4{%
   @ifx#4\%
-   @expandafter@gobble_and_check_finish
+   @expandafter@gobble_and_check_finish 
   @else
    @expandafter@add_segment
   @fi#1!{#2}#4#4%
@@ -8539,9 +8632,9 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % #3 - NEXT_TOKEN
 % #4 is input stream until next backslash
 %
-% Input stream is either at the start of the argument, or just after a
-% backslash sequence, either a lone backslash, or a doubled backslash.
-% NEXT_TOKEN contains the first token in the input stream: if it is \finish,
+% Input stream is either at the start of the argument, or just after a 
+% backslash sequence, either a lone backslash, or a doubled backslash.  
+% NEXT_TOKEN contains the first token in the input stream: if it is \finish, 
 % finish; otherwise, append to ARG_RESULT the segment of the argument up until
 % the next backslash.  PENDING_BACKSLASH contains a backslash to represent
 % a backslash just before the start of the input stream that has not been
@@ -8553,13 +8646,13 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   % append the pending backslash to the result, followed by the next segment
   @expandafter@is_fi@look_ahead#1#2#4!{\}@fi
   % this @fi is discarded by @look_ahead.
-  % we can't get rid of it with \expandafter because we don't know how
+  % we can't get rid of it with \expandafter because we don't know how 
   % long #4 is.
 }
 
 % #1 - THE_MACRO
 % #2 - ARG_RESULT
-% #3 discards the res of the conditional in @add_segment, and @is_fi ends the
+% #3 discards the res of the conditional in @add_segment, and @is_fi ends the 
 % conditional.
 @gdef@call_the_macro#1#2!#3@fi{@is_fi #1{#2}}
 
@@ -8571,7 +8664,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % for reading the argument (slightly different in the two cases).  Then,
 % to read the argument, in the whole-line case, it then calls the regular
 % \parsearg MAC; in the lbrace case, it calls \passargtomacro MAC.
-%
+% 
 \def\braceorline#1{\let\macnamexxx=#1\futurelet\nchar\braceorlinexxx}
 \def\braceorlinexxx{%
   \ifx\nchar\bgroup
@@ -8694,7 +8787,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 
 % Used so that the @top node doesn't have to be wrapped in an @ifnottex
 % conditional.
-% \doignore goes to more effort to skip nested conditionals but we don't need
+% \doignore goes to more effort to skip nested conditionals but we don't need 
 % that here.
 \def\omittopnode{%
    \ifx\lastnode\wordTop
@@ -8726,6 +8819,11 @@ might help (with 'rm \jobname.?? \jobname.??s')%
     \global\let\lastnode=\empty
   \fi
 }
+
+% @nodedescription, @nodedescriptionblock - do nothing for TeX
+\parseargdef\nodedescription{}
+\def\nodedescriptionblock{\doignore{nodedescriptionblock}}
+
 
 % @anchor{NAME} -- define xref target at arbitrary point.
 %
@@ -8771,7 +8869,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % automatically in xrefs, if the third arg is not explicitly specified.
 % This was provided as a "secret" @set xref-automatic-section-title
 % variable, now it's official.
-%
+% 
 \parseargdef\xrefautomaticsectiontitle{%
   \def\temp{#1}%
   \ifx\temp\onword
@@ -8787,7 +8885,7 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \fi\fi
 }
 
-%
+% 
 % @xref, @pxref, and @ref generate cross-references.  For \xrefX, #1 is
 % the node name, #2 the name of the Info cross-reference, #3 the printed
 % node name, #4 the name of the Info file, #5 the name of the printed
@@ -8808,109 +8906,11 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 \def\xrefX[#1,#2,#3,#4,#5,#6]{\begingroup
   \unsepspaces
   %
-  % Get args without leading/trailing spaces.
-  \def\printedrefname{\ignorespaces #3}%
-  \setbox\printedrefnamebox = \hbox{\printedrefname\unskip}%
-  %
+  \getprintedrefname{#1}{#3}{#5}%
   \def\infofilename{\ignorespaces #4}%
   \setbox\infofilenamebox = \hbox{\infofilename\unskip}%
   %
-  \def\printedmanual{\ignorespaces #5}%
-  \setbox\printedmanualbox  = \hbox{\printedmanual\unskip}%
-  %
-  % If the printed reference name (arg #3) was not explicitly given in
-  % the @xref, figure out what we want to use.
-  \ifdim \wd\printedrefnamebox = 0pt
-    % No printed node name was explicitly given.
-    \expandafter\ifx\csname SETxref-automatic-section-title\endcsname \relax
-      % Not auto section-title: use node name inside the square brackets.
-      \def\printedrefname{\ignorespaces #1}%
-    \else
-      % Auto section-title: use chapter/section title inside
-      % the square brackets if we have it.
-      \ifdim \wd\printedmanualbox > 0pt
-        % It is in another manual, so we don't have it; use node name.
-        \def\printedrefname{\ignorespaces #1}%
-      \else
-        \ifhavexrefs
-          % We (should) know the real title if we have the xref values.
-          \def\printedrefname{\refx{#1-title}}%
-        \else
-          % Otherwise just copy the Info node name.
-          \def\printedrefname{\ignorespaces #1}%
-        \fi%
-      \fi
-    \fi
-  \fi
-  %
-  % Make link in pdf output.
-  \ifpdf
-    % For pdfTeX and LuaTeX
-    {\indexnofonts
-     \makevalueexpandable
-     \turnoffactive
-     % This expands tokens, so do it after making catcode changes, so _
-     % etc. don't get their TeX definitions.  This ignores all spaces in
-     % #4, including (wrongly) those in the middle of the filename.
-     \getfilename{#4}%
-     %
-     % This (wrongly) does not take account of leading or trailing
-     % spaces in #1, which should be ignored.
-     \setpdfdestname{#1}%
-     %
-     \ifx\pdfdestname\empty
-       \def\pdfdestname{Top}% no empty targets
-     \fi
-     %
-     \leavevmode
-     \startlink attr{/Border [0 0 0]}%
-     \ifnum\filenamelength>0
-       goto file{\the\filename.pdf} name{\pdfdestname}%
-     \else
-       goto name{\pdfmkpgn{\pdfdestname}}%
-     \fi
-    }%
-    \setcolor{\linkcolor}%
-  \else
-    \ifx\XeTeXrevision\thisisundefined
-    \else
-      % For XeTeX
-      {\indexnofonts
-       \makevalueexpandable
-       \turnoffactive
-       % This expands tokens, so do it after making catcode changes, so _
-       % etc. don't get their TeX definitions.  This ignores all spaces in
-       % #4, including (wrongly) those in the middle of the filename.
-       \getfilename{#4}%
-       %
-       % This (wrongly) does not take account of leading or trailing
-       % spaces in #1, which should be ignored.
-       \setpdfdestname{#1}%
-       %
-       \ifx\pdfdestname\empty
-         \def\pdfdestname{Top}% no empty targets
-       \fi
-       %
-       \leavevmode
-       \ifnum\filenamelength>0
-         % With default settings,
-         % XeTeX (xdvipdfmx) replaces link destination names with integers.
-         % In this case, the replaced destination names of
-         % remote PDFs are no longer known.  In order to avoid a replacement,
-         % you can use xdvipdfmx's command line option `-C 0x0010'.
-         % If you use XeTeX 0.99996+ (TeX Live 2016+),
-         % this command line option is no longer necessary
-         % because we can use the `dvipdfmx:config' special.
-         \special{pdf:bann << /Border [0 0 0] /Type /Annot /Subtype /Link /A
-           << /S /GoToR /F (\the\filename.pdf) /D (\pdfdestname) >> >>}%
-       \else
-         \special{pdf:bann << /Border [0 0 0] /Type /Annot /Subtype /Link /A
-           << /S /GoTo /D (\pdfdestname) >> >>}%
-       \fi
-      }%
-      \setcolor{\linkcolor}%
-    \fi
-  \fi
+  \startxreflink{#1}{#4}%
   {%
     % Have to otherify everything special to allow the \csname to
     % include an _ in the xref name, etc.
@@ -8991,25 +8991,112 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \endlink
 \endgroup}
 
+% \getprintedrefname{NODE}{LABEL}{MANUAL}
+% - set \printedrefname and \printedmanual
+%
+\def\getprintedrefname#1#2#3{%
+  % Get args without leading/trailing spaces.
+  \def\printedrefname{\ignorespaces #2}%
+  \setbox\printedrefnamebox = \hbox{\printedrefname\unskip}%
+  %
+  \def\printedmanual{\ignorespaces #3}%
+  \setbox\printedmanualbox  = \hbox{\printedmanual\unskip}%
+  %
+  % If the printed reference name (arg #2) was not explicitly given in
+  % the @xref, figure out what we want to use.
+  \ifdim \wd\printedrefnamebox = 0pt
+    % No printed node name was explicitly given.
+    \expandafter\ifx\csname SETxref-automatic-section-title\endcsname \relax
+      % Not auto section-title: use node name inside the square brackets.
+      \def\printedrefname{\ignorespaces #1}%
+    \else
+      % Auto section-title: use chapter/section title inside
+      % the square brackets if we have it.
+      \ifdim \wd\printedmanualbox > 0pt
+        % It is in another manual, so we don't have it; use node name.
+        \def\printedrefname{\ignorespaces #1}%
+      \else
+        \ifhavexrefs
+          % We (should) know the real title if we have the xref values.
+          \def\printedrefname{\refx{#1-title}}%
+        \else
+          % Otherwise just copy the Info node name.
+          \def\printedrefname{\ignorespaces #1}%
+        \fi%
+      \fi
+    \fi
+  \fi
+}
+
+% \startxreflink{NODE}{FILE} - start link in pdf output.
+\def\startxreflink#1#2{%
+  \ifpdforxetex
+    % For pdfTeX and LuaTeX
+    {\indexnofonts
+     \makevalueexpandable
+     \turnoffactive
+     % This expands tokens, so do it after making catcode changes, so _
+     % etc. don't get their TeX definitions.  This ignores all spaces in
+     % #2, including (wrongly) those in the middle of the filename.
+     \getfilename{#2}%
+     %
+     % This (wrongly) does not take account of leading or trailing
+     % spaces in #1, which should be ignored.
+     \setpdfdestname{#1}%
+     %
+     \ifx\pdfdestname\empty
+       \def\pdfdestname{Top}% no empty targets
+     \fi
+     %
+     \leavevmode
+     \ifpdf
+       \startlink attr{/Border [0 0 0]}%
+       \ifnum\filenamelength>0
+         goto file{\the\filename.pdf} name{\pdfdestname}%
+       \else
+         goto name{\pdfmkpgn{\pdfdestname}}%
+       \fi
+     \else % XeTeX
+       \ifnum\filenamelength>0
+         % With default settings,
+         % XeTeX (xdvipdfmx) replaces link destination names with integers.
+         % In this case, the replaced destination names of
+         % remote PDFs are no longer known.  In order to avoid a replacement,
+         % you can use xdvipdfmx's command line option `-C 0x0010'.
+         % If you use XeTeX 0.99996+ (TeX Live 2016+),
+         % this command line option is no longer necessary
+         % because we can use the `dvipdfmx:config' special.
+         \special{pdf:bann << /Border [0 0 0] /Type /Annot /Subtype /Link /A
+           << /S /GoToR /F (\the\filename.pdf) /D (\pdfdestname) >> >>}%
+       \else
+         \special{pdf:bann << /Border [0 0 0] /Type /Annot /Subtype /Link /A
+           << /S /GoTo /D (\pdfdestname) >> >>}%
+       \fi
+     \fi
+    }%
+    \setcolor{\linkcolor}%
+  \fi
+}
+
 % can be overridden in translation files
 \def\putpageref#1{%
   \space\putwordpage\tie\refx{#1-pg}}
 
 % Output a cross-manual xref to #1.  Used just above (twice).
-%
+% 
 % Only include the text "Section ``foo'' in" if the foo is neither
 % missing or Top.  Thus, @xref{,,,foo,The Foo Manual} outputs simply
 % "see The Foo Manual", the idea being to refer to the whole manual.
-%
+% 
 % But, this being TeX, we can't easily compare our node name against the
 % string "Top" while ignoring the possible spaces before and after in
 % the input.  By adding the arbitrary 7sp below, we make it much less
 % likely that a real node name would have the same width as "Top" (e.g.,
 % in a monospaced font).  Hopefully it will never happen in practice.
-%
+% 
 % For the same basic reason, we retypeset the "Top" at every
 % reference, since the current font is indeterminate.
-%
+% 
 \def\crossmanualxref#1{%
   \setbox\toprefbox = \hbox{Top\kern7sp}%
   \setbox2 = \hbox{\ignorespaces \printedrefname \unskip \kern7sp}%
@@ -9027,6 +9114,21 @@ might help (with 'rm \jobname.?? \jobname.??s')%
 % one that Bob is working on :).
 %
 \def\xrefprintnodename#1{[#1]}
+
+% @link{NODENAME, LABEL, MANUAL} - create a "plain" link, with no
+% page number.  Not useful if printed on paper.
+%
+\def\link#1{\linkX[#1,,,]}
+\def\linkX[#1,#2,#3,#4]{%
+  \begingroup
+  \unsepspaces
+  \getprintedrefname{#1}{#2}{#3}%
+  \startxreflink{#1}{#3}%
+  \printedrefname
+  \endlink
+  \endgroup
+}
+
 
 % Things referred to by \setref.
 %
@@ -9086,9 +9188,9 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \fi
 }
 
-% This is the macro invoked by entries in the aux file.  Define a control
-% sequence for a cross-reference target (we prepend XR to the control sequence
-% name to avoid collisions).  The value is the page number.  If this is a float
+% This is the macro invoked by entries in the aux file.  Define a control 
+% sequence for a cross-reference target (we prepend XR to the control sequence 
+% name to avoid collisions).  The value is the page number.  If this is a float 
 % type, we have more work to do.
 %
 \def\xrdef#1#2{%
@@ -9104,10 +9206,10 @@ might help (with 'rm \jobname.?? \jobname.??s')%
   \bgroup
     \expandafter\gdef\csname XR\safexrefname\endcsname{#2}%
   \egroup
-  % We put the \gdef inside a group to avoid the definitions building up on
-  % TeX's save stack, which can cause it to run out of space for aux files with
+  % We put the \gdef inside a group to avoid the definitions building up on 
+  % TeX's save stack, which can cause it to run out of space for aux files with 
   % thousands of lines.  \gdef doesn't use the save stack, but \csname does
-  % when it defines an unknown control sequence as \relax.
+  % when it defines an unknown control sequence as \relax. 
   %
   % Was that xref control sequence that we just defined for a float?
   \expandafter\iffloat\csname XR\safexrefname\endcsname
@@ -10304,7 +10406,7 @@ directory should work if nowhere else does.}
         \uppercase{.}
       \endgroup
     \else
-      \errhelp = \EMsimple
+      \errhelp = \EMsimple	
       \errmessage{Unicode character U+#1 not supported, sorry}%
     \fi
   \else
@@ -10337,7 +10439,7 @@ directory should work if nowhere else does.}
     \countUTFz = "#1\relax
     \begingroup
       \parseXMLCharref
-
+    
       % Give \u8:... its definition.  The sequence of seven \expandafter's
       % expands after the \gdef three times, e.g.
       %
@@ -10349,7 +10451,7 @@ directory should work if nowhere else does.}
       \expandafter\expandafter
       \expandafter\expandafter
       \expandafter\gdef       \UTFviiiTmp{#2}%
-      %
+      % 
       \expandafter\ifx\csname uni:#1\endcsname \relax \else
        \message{Internal error, already defined: #1}%
       \fi
@@ -10388,7 +10490,7 @@ directory should work if nowhere else does.}
     \divide\countUTFz by 64
     \countUTFy = \countUTFz  % Save to be the future value of \countUTFz.
     \multiply\countUTFz by 64
-
+    
     % \countUTFz is now \countUTFx with the last 5 bits cleared.  Subtract
     % in order to get the last five bits.
     \advance\countUTFx by -\countUTFz
@@ -10423,7 +10525,7 @@ directory should work if nowhere else does.}
 % U+0080..U+00FF = https://en.wikipedia.org/wiki/Latin-1_Supplement_(Unicode_block)
 % U+0100..U+017F = https://en.wikipedia.org/wiki/Latin_Extended-A
 % U+0180..U+024F = https://en.wikipedia.org/wiki/Latin_Extended-B
-%
+% 
 % Many of our renditions are less than wonderful, and all the missing
 % characters are available somewhere.  Loading the necessary fonts
 % awaits user request.  We can't truly support Unicode without
@@ -11668,7 +11770,7 @@ directory should work if nowhere else does.}
 \def\texinfochars{%
   \let< = \activeless
   \let> = \activegtr
-  \let~ = \activetilde
+  \let~ = \activetilde 
   \let^ = \activehat
   \setregularquotes
   \let\b = \strong
@@ -11736,9 +11838,13 @@ directory should work if nowhere else does.}
   \def\c{\loadconf\c}%
   % Definition for the first newline read in the file
   \def ^^M{\loadconf}%
-  % In case the first line has a whole-line command on it
+  % In case the first line has a whole-line or environment command on it
   \let\originalparsearg\parsearg%
   \def\parsearg{\loadconf\originalparsearg}%
+  %
+  % \startenvironment is in the expansion of commands defined with \envdef
+  \let\originalstartenvironment\startenvironment%
+  \def\startenvironment{\loadconf\startenvironment}%
 }}
 
 
@@ -11766,6 +11872,7 @@ directory should work if nowhere else does.}
   \enableemergencynewline
   \let\c=\comment
   \let\parsearg\originalparsearg
+  \let\startenvironment\originalstartenvironment
   %
   % Also turn back on active characters that might appear in the input
   % file name, in case not using a pre-dumped format.

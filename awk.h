@@ -86,6 +86,9 @@ extern int errno;
 /* We can handle multibyte strings.  */
 #include <wchar.h>
 #include <wctype.h>
+#ifdef __CYGWIN__ /* Define helper function for large Unicode values */
+extern size_t wcitomb (char *s, int wc, mbstate_t *ps);
+#endif
 
 #ifdef STDC_HEADERS
 #include <float.h>
@@ -292,6 +295,13 @@ enum commenttype {
 	EOL_COMMENT = 1,
 	BLOCK_COMMENT,
 	FOR_COMMENT	// special case
+};
+
+enum escape_results {
+	ESCAPE_OK,		// nbytes == 1 to MB_CUR_MAX: the length of the translated escape sequence
+	ESCAPE_CONV_ERR,	// wcrtomb conversion error
+	ESCAPE_TERM_BACKSLASH,	// terminal backslash (to be preserved in cmdline strings)
+	ESCAPE_LINE_CONTINUATION	// line continuation  (backslash-newline pair)
 };
 
 /* string hash table */
@@ -1173,6 +1183,7 @@ extern enum do_flag_values {
 	DO_PROFILE	   = 0x02000,	/* profile the program */
 	DO_DEBUG	   = 0x04000,	/* debug the program */
 	DO_MPFR		   = 0x08000,	/* arbitrary-precision floating-point math */
+	DO_CSV		   = 0x10000,	/* process comma-separated-value files */
 } do_flags;
 
 #define do_traditional      (do_flags & DO_TRADITIONAL)
@@ -1187,6 +1198,7 @@ extern enum do_flag_values {
 #define do_sandbox          (do_flags & DO_SANDBOX)
 #define do_debug            (do_flags & DO_DEBUG)
 #define do_mpfr             (do_flags & DO_MPFR)
+#define do_csv              (do_flags & DO_CSV)
 
 extern bool do_optimize;
 extern int use_lc_numeric;
@@ -1374,7 +1386,6 @@ extern void r_freeblock(void *, int id);
 // Flags for making string nodes
 #define		SCAN			1
 #define		ALREADY_MALLOCED	2
-#define		ELIDE_BACK_NL		4
 
 #define	cant_happen(format, ...)	r_fatal("internal error: file %s, line %d: " format, \
 				__FILE__, __LINE__, __VA_ARGS__)
@@ -1569,6 +1580,7 @@ extern NODE *get_actual_argument(NODE *, int, bool);
 #endif
 /* field.c */
 extern void init_fields(void);
+extern void init_csv_fields(void);
 extern void set_record(const char *buf, size_t cnt, const awk_fieldwidth_info_t *);
 extern void reset_record(void);
 extern void rebuild_record(void);
@@ -1629,6 +1641,7 @@ extern int isdirpunct(int c);
 /* io.c */
 extern void init_sockets(void);
 extern void init_io(void);
+extern void init_csv_records(void);
 extern void register_input_parser(awk_input_parser_t *input_parser);
 extern void register_output_wrapper(awk_output_wrapper_t *wrapper);
 extern void register_two_way_processor(awk_two_way_processor_t *processor);
@@ -1738,7 +1751,7 @@ extern NODE *make_str_node(const char *s, size_t len, int flags);
 extern NODE *make_bool_node(bool value);
 extern NODE *make_typed_regex(const char *re, size_t len);
 extern void *more_blocks(int id);
-extern int parse_escape(const char **string_ptr);
+extern enum escape_results parse_escape(const char **string_ptr, const char **escseq, size_t *nbytes);
 extern NODE *str2wstr(NODE *n, size_t **ptr);
 extern NODE *wstr2str(NODE *n);
 #define force_wstring(n)	str2wstr(n, NULL)

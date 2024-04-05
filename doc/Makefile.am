@@ -43,7 +43,6 @@ EXTRA_DIST = ChangeLog ChangeLog.0 ChangeLog.1 \
 	awkcard.in awkforai.txt texinfo.tex cardfonts \
 	$(fig_images) $(txt_images) $(eps_images) $(pdf_images) \
 	$(html_images) \
-	gawktexi.in sidebar.awk \
 	it \
 	macros colors no.colors $(man_MANS) \
 	lflashlight-small.xpic lflashlight.eps lflashlight.pdf \
@@ -54,7 +53,7 @@ EXTRA_DIST = ChangeLog ChangeLog.0 ChangeLog.1 \
 # Get rid of generated files when cleaning
 CLEANFILES = *.ps *.html *.dvi *~ awkcard.nc awkcard.tr gawk.pdf gawkinet.pdf gawkworkflow.pdf awkcard.pdf gawk.1.pdf gawkbug.1.pdf pm-gawk.1.pdf pm-gawk.pdf
 
-MAKEINFO = @MAKEINFO@ --no-split --force
+MAKEINFO = @MAKEINFO@ -c CHECK_NORMAL_MENU_STRUCTURE=1 --no-split --force
 
 TROFF = groff -t -Tps -U
 SEDME = sed -e "s/^level0 restore/level0 restore flashme 100 72 moveto (Copyright `date '+%m-%d-%y %T'`, FSF, Inc. (all)) show/" \
@@ -74,9 +73,6 @@ AWKCARD = awkcard.ps
 # is not groff you will have to change TROFF macro as well.  Do not forget
 # to ensure that awkcard.tr is processed by tbl.
 #AWKCARD = awkcard.nc
-
-gawk.texi: $(srcdir)/gawktexi.in $(srcdir)/sidebar.awk
-	awk -f $(srcdir)/sidebar.awk < $(srcdir)/gawktexi.in > gawk.texi
 
 postscript: gawk.ps gawkinet.ps gawkworkflow.ps pm-gawk.ps gawk.1.ps gawkbug.1.ps pm-gawk.1.ps $(AWKCARD)
 
@@ -127,8 +123,8 @@ awkcard.pdf: awkcard.ps
 spell: spellmanual spellworkflow spellmanpage spellinet
 
 spellmanual:
-	@echo ==== gawktexi.in ====;
-	export LC_ALL=C ; spell "$(srcdir)"/gawktexi.in | \
+	@echo ==== gawk.texi ====;
+	export LC_ALL=C ; spell "$(srcdir)"/gawk.texi | \
 	sort -u | comm -23 - "$(srcdir)"/wordlist
 
 spellworkflow:

@@ -49,6 +49,7 @@ BOOL
 BREs
 BSIZE
 BTL
+BUFFERPIPE
 BWK
 Banzai
 BeOS
@@ -150,6 +151,7 @@ Ec
 Ee
 Efraim
 Eggert
+Egon
 Egrep
 Embeddable
 Exp
@@ -202,6 +204,7 @@ Getline
 Getlocaltime
 Getopt
 Ggnru
+Ghostbusters
 Grigera
 Groucho
 GyeoNxTFby
@@ -351,6 +354,7 @@ Nextfile
 Nlines
 NoSQL
 Nof
+Noflush
 Nonalphabetic
 Nonconstant
 Nondecimal
@@ -1237,6 +1241,7 @@ libgcc
 libintl
 libmawk
 libs
+libsigsegv
 libtool
 licensors
 lineannotation
@@ -1576,6 +1581,7 @@ readline
 realdata
 realloc
 realprogram
+rec
 recomputation
 redir
 reenable
@@ -1764,6 +1770,7 @@ tlines
 tm
 tmp
 tmy
+tocsv
 tolower
 toolset
 toupper

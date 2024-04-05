@@ -11,7 +11,7 @@
  */
 
 /*
- * Copyright (C) 2012-2014, 2018, 2019, 2021, 2023,
+ * Copyright (C) 2012-2014, 2017, 2018, 2019, 2021, 2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -75,7 +76,7 @@
 
 static const gawk_api_t *api;	/* for convenience macros to work */
 static awk_ext_id_t ext_id;
-static const char *ext_version = "readdir extension: version 2.0";
+static const char *ext_version = "readdir extension: version 3.0";
 
 static awk_bool_t init_readdir(void);
 static awk_bool_t (*init_func)(void) = init_readdir;
@@ -87,7 +88,13 @@ int plugin_is_GPL_compatible;
 typedef struct open_directory {
 	DIR *dp;
 	char *buf;
+	union {
+		awk_fieldwidth_info_t fw;
+		char buf[awk_fieldwidth_info_size(3)];
+	} u;
+	bool override;
 } open_directory_t;
+#define fw u.fw
 
 /* ftype --- return type of file as a single character string */
 
@@ -111,9 +118,7 @@ ftype(struct dirent *entry, const char *dirname)
 	char fname[PATH_MAX];
 	struct stat sbuf;
 
-	strcpy(fname, dirname);
-	strcat(fname, "/");
-	strcat(fname, entry->d_name);
+	sprintf(fname, "%s/%s", dirname, entry->d_name);
 	if (stat(fname, &sbuf) == 0) {
 		if (S_ISBLK(sbuf.st_mode))
 			return "b";
@@ -174,11 +179,11 @@ get_inode(struct dirent *entry, const char *dirname)
 static int
 dir_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 		char **rt_start, size_t *rt_len,
-		const awk_fieldwidth_info_t **unused)
+		const awk_fieldwidth_info_t **field_width)
 {
 	DIR *dp;
 	struct dirent *dirent;
-	int len;
+	int len, flen;
 	open_directory_t *the_dir;
 	const char *ftstr;
 	unsigned long long ino;
@@ -207,18 +212,24 @@ dir_get_record(char **out, awk_input_buf_t *iobuf, int *errcode,
 	ino = get_inode(dirent, iobuf->name);
 
 #if __MINGW32__
-	len = sprintf(the_dir->buf, "%I64u/%s", ino, dirent->d_name);
+	len = sprintf(the_dir->buf, "%I64u", ino);
 #else
-	len = sprintf(the_dir->buf, "%llu/%s", ino, dirent->d_name);
+	len = sprintf(the_dir->buf, "%llu", ino);
 #endif
+	the_dir->fw.fields[0].len = len;
+	len += (flen = sprintf(the_dir->buf + len, "/%s", dirent->d_name));
+	the_dir->fw.fields[1].len = flen-1;
 
 	ftstr = ftype(dirent, iobuf->name);
-	len += sprintf(the_dir->buf + len, "/%s", ftstr);
+	len += (flen = sprintf(the_dir->buf + len, "/%s", ftstr));
+	the_dir->fw.fields[2].len = flen-1;
 
 	*out = the_dir->buf;
 
 	*rt_start = NULL;
 	*rt_len = 0;	/* set RT to "" */
+	if (field_width != NULL && the_dir->override)
+		*field_width = & the_dir->fw;
 	return len;
 }
 
@@ -249,7 +260,7 @@ dir_can_take_file(const awk_input_buf_t *iobuf)
 	if (iobuf == NULL)
 		return awk_false;
 
-	return (iobuf->fd != INVALID_HANDLE || S_ISDIR(iobuf->sbuf.st_mode));
+	return (S_ISDIR(iobuf->sbuf.st_mode));
 }
 
 /*
@@ -277,20 +288,36 @@ dir_take_control_of(awk_input_buf_t *iobuf)
 	}
 #endif
 	if (dp == NULL) {
-		warning(ext_id, _("dir_take_control_of: opendir/fdopendir failed: %s"),
-				strerror(errno));
+		warning(ext_id, _("dir_take_control_of: %s: opendir/fdopendir failed: %s"),
+				iobuf->name, strerror(errno));
 		update_ERRNO_int(errno);
 		return awk_false;
 	}
 
 	emalloc(the_dir, open_directory_t *, sizeof(open_directory_t), "dir_take_control_of");
 	the_dir->dp = dp;
+	/* pre-populate the field_width struct with constant values: */
+	the_dir->fw.use_chars = awk_false;
+	the_dir->fw.nf = 3;
+	the_dir->fw.fields[0].skip = 0;	/* no leading space */
+	the_dir->fw.fields[1].skip = 1;	/* single '/' separator */
+	the_dir->fw.fields[2].skip = 1;	/* single '/' separator */
 	size = sizeof(struct dirent) + 21 /* max digits in inode */ + 2 /* slashes */;
 	emalloc(the_dir->buf, char *, size, "dir_take_control_of");
 
 	iobuf->opaque = the_dir;
 	iobuf->get_record = dir_get_record;
 	iobuf->close_func = dir_close;
+
+	awk_value_t array, index, value;
+	static const char readdir_override[] = "readdir_override";
+
+	if (! sym_lookup("PROCINFO", AWK_ARRAY, & array)) {
+		the_dir->override = false;
+	} else {
+		(void) make_const_string(readdir_override, strlen(readdir_override), & index);
+		the_dir->override = get_array_element(array.array_cookie, & index, AWK_UNDEFINED, & value);
+	}
 
 	return awk_true;
 }
