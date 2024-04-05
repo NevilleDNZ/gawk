@@ -1,9 +1,9 @@
 dnl Decide whether or not to use the persistent memory allocator
-
-# Copyright (C) 2022 Free Software Foundation, Inc.
-# This file is free software; the Free Software Foundation
-# gives unlimited permission to copy and/or distribute it,
-# with or without modifications, as long as this notice is preserved.
+dnl
+dnl Copyright (C) 2022, 2023 Free Software Foundation, Inc.
+dnl This file is free software; the Free Software Foundation
+dnl gives unlimited permission to copy and/or distribute it,
+dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([GAWK_USE_PERSISTENT_MALLOC],
 [
@@ -23,15 +23,18 @@ then
 				[LDFLAGS="${LDFLAGS} -no-pie"
 				export LDFLAGS])
 			;;
-		*darwin*)
-			# 23 October 2022: See README_d/README.macosx for
-			# the details on what's happening here. See also
-			# the manual.
-
-			# Compile as Intel binary all the time, even on M1.
-			CFLAGS="${CFLAGS} -arch x86_64"
-			LDFLAGS="${LDFLAGS} -Xlinker -no_pie"
-			export CFLAGS LDFLAGS
+ 		*darwin*)
+			# 27 November 2022: PMA only works on Intel.
+			case $host in
+			x86_64-*)
+				LDFLAGS="${LDFLAGS} -Xlinker -no_pie"
+				export LDFLAGS
+				;;
+			*)
+				# disable on all other macOS systems
+				use_persistent_malloc=no
+				;;
+			esac
 			;;
 		*cygwin* | *CYGWIN* | *solaris2.11* | freebsd13.* | openbsd7.* )
 			true	# nothing do, exes on these systems are not PIE

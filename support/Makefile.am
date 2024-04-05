@@ -1,7 +1,7 @@
 #
 # Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 2000-2016, 2018, 2019, 2021, 2022
+# Copyright (C) 2000-2016, 2018, 2019, 2021, 2022, 2023
 # the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
@@ -77,6 +77,8 @@ libsupport_a_SOURCES = \
 
 if USE_PERSISTENT_MALLOC
 libsupport_a_SOURCES += pma.c pma.h
+CFLAGS += -DNDEBUG
+AM_CFLAGS += -DNDEBUG
 endif
 
 # For some make's, e.g. OpenBSD, that don't define this

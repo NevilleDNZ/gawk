@@ -1,3 +1,235 @@
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* 5.2.2: Release tar ball made.
+
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Update version.
+	* debug.c: Update copyright year.
+
+2023-04-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkgram.y, builtin.c, debug.c, eval.c, interpret.h,
+	profile.c: Fix some implicit fall through warnings.
+	Thanks to "Jannick" <thirdedition@gmx.net> for the report.
+
+2023-04-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* array.c (asort_actual): Initialize `value' to avoid
+	compiler complaints. Thanks to Michal Jaegermann
+	for the report.
+	* main.c (usage): Cast array subscript to int to silence
+	a compiler warning. Thanks to "Jannick" <thirdedition@gmx.net>
+	for the report.
+
+2023-04-14         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* array.c (asort_actual): Handle Node_elem_new. Add braces
+	for scoping, fixes tcc compiler error (GCC is too permissive!).
+	Update copyright year.
+	* Makefile.am, configure.ac, awk.h, agwkgram.y, builtin.c,
+	command.y, eval.c, field.c, io.c, msg.c, node.c, profile.c,
+	symbol.c: Update copyright year.
+
+2023-04-13         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* array.c (asort_actual): Handle Node_var_new. Can happen
+	if you sort SYMTAB. Thanks to zhou shuiqing
+	<zhoushuiqing321@outlook.com> for the report.
+
+2023-04-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* array.c (assoc_info): Update to handle additional cases so
+	that one may dump SYMTAB or FUNCTAB. Issue reported by
+	zhou shuiqing <zhoushuiqing321@outlook.com>.
+
+2023-03-18         Miguel Pineiro Jr.    <mpj@pineiro.cc>
+
+	Allow records longer than INT_MAX. For test cases,
+	see https://lists.gnu.org/archive/html/bug-gawk/2021-05/msg00003.html.
+
+	* awk.h (set_record): `cnt' is now size_t.
+	* field.c (set_record): `cnt' is now size_t. Adjust databuf_size
+	and MAX_SIZE macro.
+	* io.c (get_a_record): Add new second parameter, size_t *len,
+	which holds the size. Adjust return value meaning. Deal with
+	return from an extension's get_a_record() function.
+	(do_getline_redir): Adjust calling get_a_record().
+	(do_getline): Ditto.
+	(inrec): Ditto.
+
+2023-03-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawkapi.h: Update copyright year. Small edit in leading comment.
+
+	Unrelated:
+
+	* NEWS: Updated. Update copyright year.
+
+2023-03-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkgram.y (optimize_assignment): Turn Op_store_field_exp
+	into Op_store_field.  Add some explanatory comments.
+
+2023-03-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* interpret.h (r_interpret): Revert this change of 2023-01-23,
+	it's handled by the fix of 2023-02-27.
+
+	| * interpret.h (r_interpret): Op_assign case, don't unref the
+	| old lhs NODE until after the assignment. See test case in
+	| the comment in the code and test/fieldassign.awk. Thanks to
+	| Yasuhiro Yamada <yamada@gr3.ie> for the report.
+
+	* gawkapi.h: Add a note at the top pointing to the online
+	documentation, warning that the header file's comments aren't
+	enough. Thanks to Eli Zaretskii <eliz@gnu.org> for the suggestion.
+
+2023-02-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawkmisc.c: Use #elif. Update copyright year.
+
+	Unrelated: Fix handling of $a = $b so that it's done OK also in
+	expressions, and not just in statements. This fixes a memory
+	leak seen with valgrind in test/fieldassign.awk.
+
+	* awk.h (enum opcodeval): Add new member, Op_store_field_exp.
+	* awkgram.y (mk_assignment): Generate Op_store_field_exp under the
+	right circumstances.
+	(optimize_assignment): Remove case for Op_field_spec_lhs.
+	* eval.c (optypes): Add entry for Op_store_field.
+	* interpret.h (r_interpret): Handle Op_store_field in the switch.
+	* profile.c (pprint): Same.
+
+	Unrelated: Improve how information is passed to input parsers:
+
+	* io.c (iop_alloc): lstat() or stat() the file if could not be opened.
+	See the doc for explanation as to why.
+	* NEWS: Updated.
+
+2023-02-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Multiple files: Remove trailing whitespace.
+
+2023-02-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awk.h (boolval): Handle Node_var. Thanks to
+	Daniel Pouzzner <douzzer@mega.nu> for the report, relayed
+	by Andrew Schorr.
+	* builtin.c (do_typeof): Handle Node_var, could come from a
+	converted Node_elem_new. Thanks to Andrew Schorr for the
+	report.
+
+2023-02-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* io.c (find_input_parser): Improve check to see if iop is
+	already being handled by an input parser. Found by
+	code inspection.
+
+	Unrelated:
+
+	* awk.h (struct redirect): Change RED_NOBUF to RED_FLUSH.
+	* builtin.c (efwrite): Ditto
+	* io.c (redflags2str, check_duplicated_redirections,
+	redirect_string): Ditto.
+
+2023-02-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c (usage): Include URL for source code in the message.
+
+2023-02-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* io.c (do_getline_redir): If `s' from get_a_record is NULL,
+	pass "" to make_string() instead. Avoids undefined behavior
+	complaint from GCC -fsanitize=undefined. Thanks to Sam James
+	<sam@gentoo.org> for the report.
+	(do_getline): Ditto.
+
+2023-02-03         John E. Malmberg      <wb8tyw@qsl.net>
+
+	* custom.h (bool) OpenVMS compilers may have a bool type
+
+2023-02-02         John E. Malmberg      <wb8tyw@qsl.net>
+
+	* custom.h (bool) OpenVMS compilers do not have a bool type
+
+2023-01-31         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* interpret.h (r_interpret): For op_subscript, upref the variable
+	if it's Node_var, also. Thanks to Volodymyr Gubarkov <xonixx@gmail.com>
+	for the initial report and to Vincent Forest
+	<vincent.forest@meso-star.com> for help in getting a small
+	reproducer.
+	Also, update the copyright year.
+
+	* interpret.h (r_interpret): Op_assign case, don't unref the
+	old lhs NODE until after the assignment. See test case in
+	the comment in the code and test/fieldassign.awk. Thanks to
+	Yasuhiro Yamada <yamada@gr3.ie> for the report.
+
+2023-01-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c: Update copyright year.
+	(check_pma_security): New routine.
+	(main): Call it.
+	(UPDATE_YEAR): Bump to 2023.
+	* NEWS: Updated.
+
+2023-01-03         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Updated with texinfo.tex and makeinfo versions.
+	Update copyright year.
+
+2022-12-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Updated with texinfo.tex version.
+
+2022-12-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README: Updated with texinfo.tex version.
+	* NEWS: Updated.
+
+2022-12-11         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* main.c (get_pma_version): Add declaration.
+	(load_procinfo): Use it to set PROCINFO["pma"] if PMA is in use.
+	Thanks to J Naman for the feature suggestion.
+	* NEWS: Updated.
+
+2022-12-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* NEWS: Updated.
+	* awk.h (nextfree): Include dimension so we know how big it is.
+	(pma_save_free_lists): Declare new function.
+	* main.c (main): Call pma_save_free_lists() via atexit() upon exit.
+	(parse_args): Call pma_mpfr_check() unconditionally.
+	* symbol.c (struct root pointer): Add copy of nextfree[] array.
+	(init_symbol_table): On first alloc, zero out the root_pointers
+	struct. On subsequent uses, copy saved nextfree into real nextfree.
+	(pma_mpfr_check): Check using_persistent_malloc and return early if
+	not using it.
+	(pma_save_free_lists): New function to save nextfree.
+
+2022-12-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	Disallow using / not using -M across invocations of gawk with
+	a persistent heap.
+
+	* awk.h (pma_mpfr_check): Add declaration.
+	* symbol.c (pma_mpfr_check): New function. Enhance root pointer
+	structure.
+	* main.c (parse_args): Call pma_mpfr_check() if using persisent
+	malloc.
+
+2022-11-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* msg.c: Update to GPL 3.  Thanks to Corinna Vinschen for
+	noticing the GPL version issue.
+	* Makefile.am (install-exec-hook): Check for existence of the
+	gawk-x.y.z file before hard linking. Otherwise make in POSIX
+	mode is unhappy. Thanks to Tzvetelin Katchov <katchov@gnu.org>
+	for the report.
+
 2022-11-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.1: Release tar ball made.
@@ -127,7 +359,7 @@
 	Emanuel Attila Czirai <corre.a.buscar@gmail.com> for the report,
 	and to Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
 	for the fix.
-	
+
 2022-09-04         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.0: Release tar ball made.
@@ -605,7 +837,7 @@
 	* gawkapi.c (awk_value_to_node): Clear the GMP/MPFR values
 	returned from the C extension after setting the internal
 	variable.
-	
+
 2022-02-22         Arnold D. Robbins     <arnold@skeeve.com>
 
 	Enable interval expressions even for --traditional, as BWK
@@ -1373,7 +1605,7 @@
 	* NEWS: Updated.
 
 2020-07-10         Arnold D. Robbins     <arnold@skeeve.com>
-	
+
 	Fix printf issues. Thanks to Michal Jaegermann for the report.
 
 	* cint_array.c (cint_dump): Fix printf formats.
@@ -1729,7 +1961,7 @@
 
 2020-01-14         Andrew J. Schorr      <aschorr@telemetry-investments.com>
 
-	* cint_array.c (cint_array_init): Fix off-by-one error in array 
+	* cint_array.c (cint_array_init): Fix off-by-one error in array
 	bounds overflow check for an NHAT value set in the environment.
 	Thanks to Michael Builov <mbuilov@gmail.com> for the report.
 
@@ -2083,7 +2315,7 @@
 	* awkgram.y (errcount): No longer static.
 	* command.y (dbg_errcount): Renamed from errcount.
 	* main.c (catchsig, catchsegv): If errcount > 0, just exit,
-	don't abort.  
+	don't abort.
 
 2019-04-12         Arnold D. Robbins     <arnold@skeeve.com>
 

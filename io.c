@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2022,
+ * Copyright (C) 1986, 1988, 1989, 1991-2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -267,7 +267,7 @@ static RECVALUE rsrescan(IOBUF *iop, struct recmatch *recm, SCANSTATE *state);
 
 static RECVALUE (*matchrec)(IOBUF *iop, struct recmatch *recm, SCANSTATE *state) = rs1scan;
 
-static int get_a_record(char **out, IOBUF *iop, int *errcode, const awk_fieldwidth_info_t **field_width);
+static int get_a_record(char **out, size_t *len, IOBUF *iop, int *errcode, const awk_fieldwidth_info_t **field_width);
 
 static void free_rp(struct redirect *rp);
 
@@ -565,21 +565,19 @@ bool
 inrec(IOBUF *iop, int *errcode)
 {
 	char *begin;
-	int cnt;
-	bool retval = true;
+	size_t cnt;
+	bool retval;
 	const awk_fieldwidth_info_t *field_width = NULL;
 
 	if (at_eof(iop) && no_data_left(iop))
-		cnt = EOF;
-	else if ((iop->flag & IOP_CLOSED) != 0)
-		cnt = EOF;
-	else
-		cnt = get_a_record(& begin, iop, errcode, & field_width);
-
-	/* Note that get_a_record may return -2 when I/O would block */
-	if (cnt < 0) {
 		retval = false;
-	} else {
+	else if ((iop->flag & IOP_CLOSED) != 0)
+		retval = false;
+	else
+		/* Note that get_a_record may return -2 when I/O would block */
+		retval = (get_a_record(& begin, & cnt, iop, errcode, & field_width) == 0);
+
+	if (retval) {
 		INCREMENT_REC(NR);
 		INCREMENT_REC(FNR);
 		set_record(begin, cnt, field_width);
@@ -693,7 +691,7 @@ redflags2str(int flags)
 		{ RED_READ,	"RED_READ" },
 		{ RED_WRITE,	"RED_WRITE" },
 		{ RED_APPEND,	"RED_APPEND" },
-		{ RED_NOBUF,	"RED_NOBUF" },
+		{ RED_FLUSH,	"RED_FLUSH" },
 		{ RED_EOF,	"RED_EOF" },
 		{ RED_TWOWAY,	"RED_TWOWAY" },
 		{ RED_PTY,	"RED_PTY" },
@@ -745,8 +743,8 @@ check_duplicated_redirections(const char *name, size_t len,
 	};
 	int i = 0, j = sizeof(mixtures) / sizeof(mixtures[0]);
 
-	oldflags &= ~(RED_NOBUF|RED_EOF|RED_PTY);
-	newflags &= ~(RED_NOBUF|RED_EOF|RED_PTY);
+	oldflags &= ~(RED_FLUSH|RED_EOF|RED_PTY);
+	newflags &= ~(RED_FLUSH|RED_EOF|RED_PTY);
 
 	for (i = 0; i < j; i++) {
 		bool both_have_common = \
@@ -877,7 +875,7 @@ redirect_string(const char *str, size_t explen, bool not_string,
 						(redirect_flags_t) rp->flag, (redirect_flags_t) tflag);
 			}
 
-			if (((rp->flag & ~(RED_NOBUF|RED_EOF|RED_PTY)) == tflag
+			if (((rp->flag & ~(RED_FLUSH|RED_EOF|RED_PTY)) == tflag
 			    || (outflag != 0
 				&& (rp->flag & (RED_FILE|RED_WRITE)) == outflag))) {
 				break;
@@ -951,7 +949,7 @@ redirect_string(const char *str, size_t explen, bool not_string,
 
 			/* set close-on-exec */
 			os_close_on_exec(fileno(rp->output.fp), str, "pipe", "to");
-			rp->flag |= RED_NOBUF;
+			rp->flag |= RED_FLUSH;
 			break;
 		case redirect_pipein:
 			if (extfd >= 0) {
@@ -1032,7 +1030,7 @@ redirect_string(const char *str, size_t explen, bool not_string,
 						close(fd);
 				}
 				if (rp->output.fp != NULL && os_isatty(fd))
-					rp->flag |= RED_NOBUF;
+					rp->flag |= RED_FLUSH;
 
 				/* Move rp to the head of the list. */
 				if (! new_rp && red_head != rp) {
@@ -2808,7 +2806,8 @@ do_getline_redir(int into_variable, enum redirval redirtype)
 {
 	struct redirect *rp = NULL;
 	IOBUF *iop;
-	int cnt = EOF;
+	size_t cnt;
+	int retval = EOF;
 	char *s = NULL;
 	int errcode;
 	NODE *redir_exp = NULL;
@@ -2843,14 +2842,14 @@ do_getline_redir(int into_variable, enum redirval redirtype)
 		return make_number((AWKNUM) 0.0);
 
 	errcode = 0;
-	cnt = get_a_record(& s, iop, & errcode, (lhs ? NULL : & field_width));
+	retval = get_a_record(& s, & cnt, iop, & errcode, (lhs ? NULL : & field_width));
 	if (errcode != 0) {
 		if (! do_traditional && (errcode != -1))
 			update_ERRNO_int(errcode);
-		return make_number((AWKNUM) cnt);
+		return make_number((AWKNUM) retval);
 	}
 
-	if (cnt == EOF) {
+	if (retval == EOF) {
 		/*
 		 * Don't do iop_close() here if we are
 		 * reading from a pipe; otherwise
@@ -2868,7 +2867,9 @@ do_getline_redir(int into_variable, enum redirval redirtype)
 		set_record(s, cnt, field_width);
 	else {			/* assignment to variable */
 		unref(*lhs);
-		*lhs = make_string(s, cnt);
+		// s could be NULL if cnt == 0, avoid passing a null
+		// pointer to make_string().
+		*lhs = make_string(s != NULL ? s : "", cnt);
 		(*lhs)->flags |= USER_INPUT;
 	}
 
@@ -2880,7 +2881,8 @@ do_getline_redir(int into_variable, enum redirval redirtype)
 NODE *
 do_getline(int into_variable, IOBUF *iop)
 {
-	int cnt = EOF;
+	size_t cnt;
+	int retval = EOF;
 	char *s = NULL;
 	int errcode;
 	const awk_fieldwidth_info_t *field_width = NULL;
@@ -2892,16 +2894,16 @@ do_getline(int into_variable, IOBUF *iop)
 	}
 
 	errcode = 0;
-	cnt = get_a_record(& s, iop, & errcode, (into_variable ? NULL : & field_width));
+	retval = get_a_record(& s, & cnt, iop, & errcode, (into_variable ? NULL : & field_width));
 	if (errcode != 0) {
 		if (! do_traditional && (errcode != -1))
 			update_ERRNO_int(errcode);
 		if (into_variable)
 			(void) POP_ADDRESS();
-		return make_number((AWKNUM) cnt);
+		return make_number((AWKNUM) retval);
 	}
 
-	if (cnt == EOF)
+	if (retval == EOF)
 		return NULL;	/* try next file */
 	INCREMENT_REC(NR);
 	INCREMENT_REC(FNR);
@@ -2912,7 +2914,9 @@ do_getline(int into_variable, IOBUF *iop)
 		NODE **lhs;
 		lhs = POP_ADDRESS();
 		unref(*lhs);
-		*lhs = make_string(s, cnt);
+		// s could be NULL if cnt == 0, avoid passing a null
+		// pointer to make_string().
+		*lhs = make_string(s != NULL ? s : "", cnt);
 		(*lhs)->flags |= USER_INPUT;
 	}
 	return make_number((AWKNUM) 1.0);
@@ -3174,7 +3178,7 @@ find_input_parser(IOBUF *iop)
 	awk_input_parser_t *ip, *ip2;
 
 	/* if already associated with an input parser, bail out early */
-	if (iop->public.get_record != NULL)
+	if (iop->public.get_record != NULL || iop->public.read_func != read)
 		return;
 
 	ip = ip2 = NULL;
@@ -3373,12 +3377,19 @@ iop_alloc(int fd, const char *name, int errno_val)
 
 	if (fd != INVALID_HANDLE)
 		fstat(fd, & iop->public.sbuf);
-#if defined(__MINGW32__)
-	else if (errno_val == EISDIR) {
-		iop->public.sbuf.st_mode = (_S_IFDIR | _S_IRWXU);
-		iop->public.fd = FAKE_FD_VALUE;
-	}
+	else {
+#ifdef HAVE_LSTAT
+		int (*statf)(const char *, struct stat *) = lstat;
+#else
+		int (*statf)(const char *, struct stat *) = stat;
 #endif
+		/*
+		 * Try to fill in the stat struct. If it fails, zero
+		 * it out.
+		 */
+		if (statf(name, & iop->public.sbuf) < 0)
+			memset(& iop->public.sbuf, 0, sizeof(struct stat));
+	}
 
 	return iop;
 }
@@ -3840,13 +3851,14 @@ errno_io_retry(void)
 
 /*
  * get_a_record --- read a record from IOP into out,
- * return length of EOF, set RT.
+ * its length into len, and set RT.
+ * return 0 on success, EOF when out of data, and -2 if I/O would block.
  * Note that errcode is never NULL, and the caller initializes *errcode to 0.
- * If I/O would block, return -2.
  */
 
 static int
 get_a_record(char **out,        /* pointer to pointer to data */
+        size_t *len,            /* pointer to record length */
         IOBUF *iop,             /* input IOP */
         int *errcode,           /* pointer to error variable */
         const awk_fieldwidth_info_t **field_width)
@@ -3855,7 +3867,6 @@ get_a_record(char **out,        /* pointer to pointer to data */
 	struct recmatch recm;
 	SCANSTATE state;
 	RECVALUE ret;
-	int retval;
 	NODE *rtval = NULL;
 	static RECVALUE (*lastmatchrec)(IOBUF *iop, struct recmatch *recm, SCANSTATE *state) = NULL;
 
@@ -3874,6 +3885,9 @@ get_a_record(char **out,        /* pointer to pointer to data */
 		if (rc == EOF)
 			iop->flag |= IOP_AT_EOF;
 		else {
+			assert(rc >= 0);
+			*len = rc;
+			rc = 0;
 			if (rt_len != 0)
 				set_RT(rt_start, rt_len);
 			else
@@ -4033,11 +4047,11 @@ get_a_record(char **out,        /* pointer to pointer to data */
 
 	if (recm.len == 0) {
 		*out = NULL;
-		retval = 0;
+		*len = 0;
 	} else {
 		assert(recm.start != NULL);
 		*out = recm.start;
-		retval = recm.len;
+		*len = recm.len;
 	}
 
 	iop->off += recm.len + recm.rt_len;
@@ -4045,7 +4059,7 @@ get_a_record(char **out,        /* pointer to pointer to data */
 	if (recm.len == 0 && recm.rt_len == 0 && at_eof(iop))
 		return EOF;
 	else
-		return retval;
+		return 0;
 }
 
 /* set_RS --- update things as appropriate when RS is set */

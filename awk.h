@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2022 the Free Software Foundation, Inc.
+ * Copyright (C) 1986, 1988, 1989, 1991-2023 the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
  * AWK Programming Language.
@@ -623,6 +623,7 @@ typedef enum opcodeval {
 	Op_store_var,		/* simple variable assignment optimization */
 	Op_store_sub,		/* array[subscript] assignment optimization */
 	Op_store_field,  	/* $n assignment optimization */
+	Op_store_field_exp,  	/* $n assignment optimization in an expression */
 	Op_assign_times,
 	Op_assign_quotient,
 	Op_assign_mod,
@@ -972,7 +973,7 @@ struct redirect {
 		RED_READ	= 4,
 		RED_WRITE	= 8,
 		RED_APPEND	= 16,
-		RED_NOBUF	= 32,
+		RED_FLUSH	= 32,
 		RED_USED	= 64,	/* closed temporarily to reuse fd */
 		RED_EOF		= 128,
 		RED_TWOWAY	= 256,
@@ -1147,7 +1148,7 @@ extern const array_funcs_t int_array_func;
 /* special node used to indicate success in array routines (not NULL) */
 extern NODE *success_node;
 
-extern struct block_header nextfree[];
+extern struct block_header nextfree[BLOCK_MAX];
 extern bool field0_valid;
 
 extern bool do_itrace;	/* separate so can poke from a debugger */
@@ -1568,7 +1569,7 @@ extern NODE *get_actual_argument(NODE *, int, bool);
 #endif
 /* field.c */
 extern void init_fields(void);
-extern void set_record(const char *buf, int cnt, const awk_fieldwidth_info_t *);
+extern void set_record(const char *buf, size_t cnt, const awk_fieldwidth_info_t *);
 extern void reset_record(void);
 extern void rebuild_record(void);
 extern void set_NF(void);
@@ -1794,6 +1795,8 @@ extern NODE **function_list(bool sort);
 extern void print_vars(NODE **table, Func_print print_func, FILE *fp);
 extern bool check_param_names(void);
 extern bool is_all_upper(const char *name);
+extern void pma_mpfr_check(void);
+extern void pma_save_free_lists(void);
 
 /* floatcomp.c */
 #ifdef HAVE_UINTMAX_T
@@ -2029,6 +2032,9 @@ fixtype(NODE *n)
 static inline bool
 boolval(NODE *t)
 {
+	if (t->type == Node_var)	// could have come from converted Node_elem_new
+		t = t->var_value;
+
 	(void) fixtype(t);
 	if ((t->flags & NUMBER) != 0)
 		return ! is_zero(t);

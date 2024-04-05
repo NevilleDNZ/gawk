@@ -1,6 +1,6 @@
 # extension/Makefile for the MinGW build
 #
-# Copyright (C) 2013, 2015, 2017 Free Software Foundation, Inc.
+# Copyright (C) 2013, 2015, 2017, 2023 Free Software Foundation, Inc.
 
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -45,7 +45,7 @@ intdiv.$(SOEXT): intdiv.c
 readdir.$(SOEXT): readdir.c gawkdirfd.h
 	gcc -I.. -DHAVE_DIRENT_H -shared -gdwarf-2 -g3 -static-libgcc -o $@ readdir.c
 
-readdir_test.$(SOEXT): readdir.c gawkdirfd.h
+readdir_test.$(SOEXT): readdir_test.c gawkdirfd.h
 	gcc -I.. -DHAVE_DIRENT_H -shared -gdwarf-2 -g3 -static-libgcc -o $@ readdir_test.c
 
 rwarray.$(SOEXT): rwarray.c
