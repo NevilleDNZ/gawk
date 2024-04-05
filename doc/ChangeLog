@@ -1,3 +1,158 @@
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* 5.2.2: Release tar ball made.
+
+2023-05-07         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Other Versions): Add a note about cppawk.
+	* wordlist: Updated.
+
+2023-05-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* wordlist: Add some more words.
+
+2023-04-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* awkcard.in: Update copyright year, gawk version,
+	download information.
+	* gawktexi.in (Persistent Memory): Add a note about memory
+	leaks that happen over time.
+
+2023-04-14         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Makefile.am, gawkinet.texi: Update copyright year.
+	* texinfo.tex: Sync from GNULIB.
+
+2023-04-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Controlling Scanning): Fix the logic in the example.
+	Thanks to Walter Bächi <privor@xn--walter-bchi-s8a.ch>
+	for the report.
+
+2023-04-03         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Dynamic Typing): Small formatting fix.
+	Add an index entry.
+
+2023-03-29         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Sync from Texinfo.
+	* gawktexi.in (Dynamic Typing): Add a quote.
+	(Common Extensions): Sort the table entries, sort of.
+
+2023-03-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Sync from GNULIB.
+	* gawktexi.in (Dynamic Typing): Add more explanation and another
+	example.
+
+2023-03-09         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawkworkflow.texi (UPDATE-MONTH, EDITION): Updated.
+	Copyright, add current year.
+	(Submitting Your Changes): Add a note about diffs for generated
+	files also being in the output of `git diff'.  Thanks to Manual
+	Collado for the suggestion.
+	(New feature development): Fix the text of a command.
+
+	Unrelated:
+
+	* Makefile.am: Adjust things to get 'make distcheck' to pass.
+
+2023-03-09         Manuel Collado        <mcollado2011@gmail.com>
+
+	* gawktexi.in, gawkinet.texi, *.{png,jpg,eps,pdf,txt,fig}: rename
+	image file names to ensure a gawk_ prefix (except *flashlight*).
+	* Makefile.am: Ditto. And install image files for .info and .html
+	docs.
+
+2023-03-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Input Parsers): Clarify and improve some of the
+	prose, some more.
+	(Output Wrappers): Ditto.
+
+2023-02-27         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Include Files): Mention that -i and @include are
+	the same and that files are only included once, even if nested
+	in multiple include files.
+	(Input Parsers): Improve discussion of struct stat buf.
+
+2023-02-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* Multiple files: Remove trailing whitespace.
+
+2023-02-25         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Input Parsers): Clarify and improve some of the prose.
+
+2023-02-24         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Feature History): Add note about nonfatal I/O.
+
+2023-02-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Update from GNULIB. Only change is to remove
+	trailing whitespace.
+
+2023-02-02         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Getopt Function): Fix for parsing long
+	options; first option if it took an argument didn't work.
+	Thanks to Przemek Kitszel <przemyslaw.kitszel@intel.com>
+	for the report and fix.
+
+2023-01-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Persistent Memory): Document that root can't
+	use persistent memory and we recommend chmod 600 on the file.
+	Also, update the copyright year.
+	(Extension Sample Time): Undeprecate time extension. Add
+	strptime() doc.
+
+2023-01-03         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Updated to latest version from ftp.gnu.org.
+
+2022-12-23         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* texinfo.tex: Updated to latest version from GNULIB.
+
+2022-12-22         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in: Add LaTeX support. Make the sidebar on the return
+	value of close() into a subsection. And a few minor unrelated fixes
+	and cleanups.
+	* texinfo.tex: Updated from texinfo 7.0.1 distribution.
+
+2022-12-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Sample Debugging Session): End gawk invocation
+	with `--' and add some explanatory prose. Thanks to
+	Greg Minshall <minshall@umich.edu> for the suggestion.
+
+2022-12-18         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in: Switch git:// URLs to https:// URLs for Github.
+
+2022-12-11         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Auto-set): Document PROCINFO["pma"].
+	(Feature History): Ditto.
+	And per Antonio Colombo, make sample output of --version
+	consistent both places it's shown.
+
+2022-12-04         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Persistent Memory): Update version stuff in sample
+	output.
+
+2022-12-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* gawktexi.in (Persistent Memory): Document that using / not using
+	-M across invocations doesn't work and issues a fatal error message.
+
 2022-11-17         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* 5.2.1: Release tar ball made.

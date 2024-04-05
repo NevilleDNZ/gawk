@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 2004, 2010, 2011, 2014, 2016, 2017, 2019-2021,
+ * Copyright (C) 2004, 2010, 2011, 2014, 2016, 2017, 2019-2021, 2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335,
- * USA 
+ * USA
  */
 
 %{

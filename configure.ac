@@ -1,7 +1,7 @@
 dnl
 dnl configure.ac --- autoconf input file for gawk
 dnl
-dnl Copyright (C) 1995-2022 the Free Software Foundation, Inc.
+dnl Copyright (C) 1995-2023 the Free Software Foundation, Inc.
 dnl
 dnl This file is part of GAWK, the GNU implementation of the
 dnl AWK Programming Language.
@@ -23,7 +23,7 @@ dnl
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([GNU Awk],[5.2.1],[bug-gawk@gnu.org],[gawk])
+AC_INIT([GNU Awk],[5.2.2],[bug-gawk@gnu.org],[gawk])
 
 # This is a hack. Different versions of install on different systems
 # are just too different. Chuck it and use install-sh.
@@ -316,6 +316,7 @@ esac
 # Need the check for mkstemp and tmpfile for missing_d/snprintf.c.
 AC_CHECK_FUNCS(__etoa_l atexit btowc fmod fwrite_unlocked gai_strerror \
 	getgrent getgroups grantpt isascii isblank iswctype iswlower iswupper \
+	lstat \
 	mbrlen memcmp memcpy memmove memset \
 	mkstemp mtrace posix_openpt setenv setlocale setsid sigprocmask \
 	snprintf strcasecmp strchr strcoll strerror strftime strncasecmp \

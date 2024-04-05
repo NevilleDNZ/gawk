@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2014, 2016, 2018-2022,
+ * Copyright (C) 1986, 1988, 1989, 1991-2014, 2016, 2018-2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -748,10 +748,16 @@ assoc_info(NODE *subs, NODE *val, NODE *ndump, const char *aname)
 	fprintf(output_fp, "]\n");
 
 	indent(indent_level);
-	if (val->type == Node_val) {
+	switch (val->type) {
+	case Node_val:
 		fprintf(output_fp, "V: [scalar: ");
 		value_info(val);
-	} else {
+		break;
+	case Node_var:
+		fprintf(output_fp, "V: [scalar: ");
+		value_info(val->var_value);
+		break;
+	case Node_var_array:
 		fprintf(output_fp, "V: [");
 		ndump->alevel++;
 		ndump->adepth--;
@@ -759,6 +765,19 @@ assoc_info(NODE *subs, NODE *val, NODE *ndump, const char *aname)
 		ndump->adepth++;
 		ndump->alevel--;
 		indent(indent_level);
+		break;
+	case Node_func:
+		fprintf(output_fp, "V: [user_defined_function");
+		break;
+	case Node_ext_func:
+		fprintf(output_fp, "V: [external_function");
+		break;
+	case Node_builtin_func:
+		fprintf(output_fp, "V: [builtin_function");
+		break;
+	default:
+		cant_happen("unexpected node type %s", nodetype2str(val->type));
+		break;
 	}
 	fprintf(output_fp, "]\n");
 }
@@ -914,20 +933,30 @@ asort_actual(int nargs, sort_context_t ctxt)
 			/* value node */
 			r = *ptr++;
 
-			NODE *value;
+			NODE *value = NULL;
 
-			if (r->type == Node_val)
+			switch (r->type) {
+			case Node_val:
 				value = dupnode(r);
-			else if (r->type == Node_var)
+				break;
+			case Node_var:
 				/* SYMTAB ... */
 				value = dupnode(r->var_value);
-			else if (r->type == Node_builtin_func
-				 || r->type == Node_func
-				 || r->type == Node_ext_func) {
+				break;
+			case Node_var_new:
+			case Node_elem_new:
+				value = dupnode(Nnull_string);
+				break;
+			case Node_builtin_func:
+			case Node_func:
+			case Node_ext_func:
 				/* FUNCTAB ... */
 				value = make_string(r->vname, strlen(r->vname));
-			} else {
+				break;
+			case Node_var_array:
+			{
 				NODE *arr;
+
 				arr = make_array();
 				subs = force_string(subs);
 				arr->vname = subs->stptr;
@@ -937,6 +966,10 @@ asort_actual(int nargs, sort_context_t ctxt)
 				arr->parent_array = array; /* actual parent, not the temporary one. */
 
 				value = assoc_copy(r, arr);
+				break;
+			}
+			default:
+				cant_happen("asort_actual: got unexpected type %s", nodetype2str(r->type));
 			}
 			assoc_set(result, subs, value);
 		}

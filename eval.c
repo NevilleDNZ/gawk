@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2019, 2021, 2022,
+ * Copyright (C) 1986, 1988, 1989, 1991-2019, 2021, 2022, 2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -296,6 +296,7 @@ static struct optypetab {
 	{ "Op_store_var", " = " },
 	{ "Op_store_sub", " = " },
 	{ "Op_store_field", " = " },
+	{ "Op_store_field_exp", " = " },
 	{ "Op_assign_times", " *= " },
 	{ "Op_assign_quotient", " /= " },
 	{ "Op_assign_mod", " %= " },
@@ -1154,6 +1155,7 @@ r_get_lhs(NODE *n, bool reference)
 	case Node_var_array:
 		fatal(_("attempt to use array `%s' in a scalar context"),
 				array_vname(n));
+		return NULL;	// silence compiler warnings
 	case Node_array_ref:
 		if (n->orig_array->type == Node_var_array)
 			fatal(_("attempt to use array `%s' in a scalar context"),

@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 1986, 1988, 1989, 1991-2022,
+ * Copyright (C) 1986, 1988, 1989, 1991-2023,
  * the Free Software Foundation, Inc.
  *
  * This file is part of GAWK, the GNU implementation of the
@@ -25,7 +25,7 @@
  */
 
 /* FIX THIS BEFORE EVERY RELEASE: */
-#define UPDATE_YEAR	2022
+#define UPDATE_YEAR	2023
 
 #include "awk.h"
 #include "getopt.h"
@@ -70,6 +70,7 @@ static void init_fds(void);
 static void init_groupset(void);
 static void save_argv(int, char **);
 static const char *platform_name();
+static void check_pma_security(const char *pma_file);
 
 /* These nodes store all the special variables AWK uses */
 NODE *ARGC_node, *ARGIND_node, *ARGV_node, *BINMODE_node, *CONVFMT_node;
@@ -155,6 +156,9 @@ static int do_binary = false;		/* hands off my data! */
 static int do_version = false;		/* print version info */
 static const char *locale = "";		/* default value to setlocale */
 static const char *locale_dir = LOCALEDIR;	/* default locale dir */
+#ifdef USE_PERSISTENT_MALLOC
+const char *get_pma_version(void);
+#endif
 
 int use_lc_numeric = false;	/* obey locale for decimal point */
 
@@ -233,10 +237,11 @@ main(int argc, char **argv)
 
 	myname = gawk_name(argv[0]);
 
+	check_pma_security(persist_file);
+
 	int pma_result = pma_init(1, persist_file);
 	if (pma_result != 0) {
-		// don't use 'fatal' routine, it seems to need to
-		// allocate memory
+		// don't use 'fatal' routine, memory can't be allocated
 		fprintf(stderr, _("%s: fatal: persistent memory allocator failed to initialize: return value %d, pma.c line: %d.\n"),
 				myname, pma_result, pma_errno);
 		exit(EXIT_FATAL);
@@ -261,6 +266,7 @@ main(int argc, char **argv)
 		mtrace();
 #endif /* HAVE_MTRACE */
 #endif /* HAVE_MCHECK_H */
+
 	os_arg_fixup(&argc, &argv); /* emulate redirection, expand wildcards */
 
 	if (argc < 2)
@@ -461,6 +467,9 @@ main(int argc, char **argv)
 	if (os_isatty(fileno(stdout)))
 		output_is_tty = true;
 
+	/* arrange to save free lists if using PMA */
+	atexit(pma_save_free_lists);
+
 	/* initialize API before loading extension libraries */
 	init_ext_api();
 
@@ -607,6 +616,14 @@ add_preassign(enum assign_type type, char *val)
 static void
 usage(int exitval, FILE *fp)
 {
+	static const char gnu_url[] = "https://ftp.gnu.org/gnu/gawk";
+	static const char beta_url[] = "https://www.skeeve.com/gawk";
+	const char *url;
+	int major_version, minor_version, patchlevel;
+
+	major_version = minor_version = patchlevel = 0;
+	sscanf(PACKAGE_VERSION, "%d.%d.%d", & major_version, & minor_version, & patchlevel);
+
 	/* Not factoring out common stuff makes it easier to translate. */
 	fprintf(fp, _("Usage: %s [POSIX or GNU style options] -f progfile [--] file ...\n"),
 		myname);
@@ -669,6 +686,17 @@ printed version.  This same information may be found at\n\
 https://www.gnu.org/software/gawk/manual/html_node/Bugs.html.\n\
 PLEASE do NOT try to report bugs by posting in comp.lang.awk,\n\
 or by using a web forum such as Stack Overflow.\n\n"), fp);
+
+	// 5.2.60 is beta release on master, will become 5.3.0.
+	// 5.2.2a is beta release on stable, will become 5.2.3.
+	if (patchlevel >= 60 || isalpha((int) PACKAGE_VERSION[strlen(PACKAGE_VERSION)-1]))
+		url = beta_url;
+	else
+		url = gnu_url;
+
+	/* ditto */
+	fprintf(fp, _("Source code for gawk may be obtained from\n%s/gawk-%s.tar.gz\n\n"),
+		url, PACKAGE_VERSION);
 
 	/* ditto */
 	fputs(_("gawk is a pattern scanning and processing language.\n\
@@ -1096,6 +1124,11 @@ load_procinfo()
 		groupset = NULL;
 	}
 #endif
+
+#ifdef USE_PERSISTENT_MALLOC
+	update_PROCINFO_str("pma", get_pma_version());
+#endif /* USE_PERSISTENT_MALLOC */
+
 	load_procinfo_argv();
 	return PROCINFO_node;
 }
@@ -1374,7 +1407,7 @@ nostalgia()
 /* get_pma_version --- get a usable version string out of PMA */
 
 const char *
-get_pma_version()
+get_pma_version(void)
 {
 	static char buf[200];
 	const char *open, *close;
@@ -1854,6 +1887,8 @@ parse_args(int argc, char **argv)
 out:
 	do_optimize = (do_optimize && ! do_pretty_print);
 
+	pma_mpfr_check();
+
 	return;
 }
 
@@ -1924,4 +1959,32 @@ set_current_namespace(const char *new_namespace)
 		efree((void *) current_namespace);
 
 	current_namespace = new_namespace;
+}
+
+/* check_pma_security --- make some minimal security checks */
+
+static void
+check_pma_security(const char *pma_file)
+{
+#ifdef USE_PERSISTENT_MALLOC
+	struct stat sbuf;
+	int euid = geteuid();
+
+	// don't use 'fatal' routine, it seems to need to allocate memory
+	// and we haven't initialized PMA yet.
+
+	if (pma_file == NULL)
+		return;
+	else if (stat(pma_file, & sbuf) < 0) {
+		fprintf(stderr, _("%s: fatal: cannot stat %s: %s\n"),
+				myname, pma_file, strerror(errno));
+		exit(EXIT_FATAL);
+	} else if (euid == 0) {
+		fprintf(stderr, _("%s: fatal: using persistent memory is not allowed when running as root.\n"), myname);
+		exit(EXIT_FATAL);
+	} else if (sbuf.st_uid != euid) {
+		fprintf(stderr, _("%s: warning: %s is not owned by euid %d.\n"),
+				myname, pma_file, euid);
+	}
+#endif /* USE_PERSISTENT_MALLOC */
 }

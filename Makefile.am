@@ -1,7 +1,7 @@
 #
 # Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 2000-2022 the Free Software Foundation, Inc.
+# Copyright (C) 2000-2023 the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.
@@ -154,7 +154,9 @@ DEBUG = -gdwarf-4 -g3
 install-exec-hook:
 	(cd $(DESTDIR)$(bindir); \
 	name=`echo gawk | sed '$(transform)'` ; \
-	$(LN) $${name}$(EXEEXT) gawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
+	if [ ! -f gawk-$(VERSION)$(EXEEXT) ]; \
+	then	$(LN) $${name}$(EXEEXT) gawk-$(VERSION)$(EXEEXT) 2>/dev/null ; \
+	fi; \
 	if [ ! -f awk$(EXEEXT) ]; \
 	then	$(LN_S) $${name}$(EXEEXT) awk$(EXEEXT); \
 	fi; exit 0)

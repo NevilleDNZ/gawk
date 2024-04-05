@@ -1,7 +1,7 @@
 #
 # test/Makefile.am --- automake input file for gawk
 #
-# Copyright (C) 1988-2022 the Free Software Foundation, Inc.
+# Copyright (C) 1988-2023 the Free Software Foundation, Inc.
 #
 # This file is part of GAWK, the GNU implementation of the
 # AWK Programming Language.
@@ -127,15 +127,17 @@ EXTRA_DIST = \
 	asgext.ok \
 	asort.awk \
 	asort.ok \
+	asortbool.awk \
+	asortbool.ok \
 	asorti.awk \
 	asorti.ok \
+	asortsymtab.awk \
+	asortsymtab.ok \
 	assignnumfield.awk \
 	assignnumfield.in \
 	assignnumfield.ok \
 	assignnumfield2.awk \
 	assignnumfield2.ok \
-	asortbool.awk \
-	asortbool.ok \
 	awkpath.ok \
 	back89.awk \
 	back89.in \
@@ -287,6 +289,12 @@ EXTRA_DIST = \
 	dumpvars.ok \
 	dynlj.awk \
 	dynlj.ok \
+	elemnew1.awk \
+	elemnew1.ok \
+	elemnew2.awk \
+	elemnew2.ok \
+	elemnew3.awk \
+	elemnew3.ok \
 	escapebrace.awk \
 	escapebrace.in \
 	escapebrace.ok \
@@ -316,6 +324,9 @@ EXTRA_DIST = \
 	fcall_exit2.ok \
 	fflush.ok \
 	fflush.sh \
+	fieldassign.awk \
+	fieldassign.in \
+	fieldassign.ok \
 	fieldwdth.awk \
 	fieldwdth.in \
 	fieldwdth.ok \
@@ -1457,7 +1468,8 @@ BASIC_TESTS = \
 	delarprm delfunc dfacheck2 dfamb1 dfastress divzero divzero2 \
 	dynlj eofsplit \
 	eofsrc1 escapebrace exit2 exitval1 exitval2 exitval3 fcall_exit \
-	fcall_exit2 fldchg fldchgnf fldterm fnamedat fnarray fnarray2 \
+	fcall_exit2 \
+	fieldassign fldchg fldchgnf fldterm fnamedat fnarray fnarray2 \
 	fnaryscl fnasgnm fnmisc fordel forref forsimp fsbs fscaret fsnul1 \
 	fsrs fsspcoln fstabplus funsemnl funsmnam funstack getline \
 	getline2 getline3 getline4 getline5 getlnbuf getlnfa getnr2tb \
@@ -1492,11 +1504,12 @@ UNIX_TESTS = \
 GAWK_EXT_TESTS = \
 	aadelete1 aadelete2 aarray1 aasort aasorti argtest arraysort \
 	arraysort2 arraytype asortbool backw badargs beginfile1 beginfile2 \
+	asortsymtab \
 	binmode1 charasbytes clos1way clos1way2 clos1way3 clos1way4 \
 	clos1way5 clos1way6 colonwarn commas crlf dbugeval dbugeval2 \
 	dbugeval3 dbugeval4 dbugtypedre1 dbugtypedre2 delsub \
 	devfd devfd1 devfd2 dfacheck1 dumpvars \
-	errno exit fieldwdth forcenum fpat1 fpat2 \
+	elemnew1 elemnew2 elemnew3 errno exit fieldwdth forcenum fpat1 fpat2 \
 	fpat3 fpat4 fpat5 fpat6 fpat7 fpat8 fpat9 fpatnull fsfwfs functab1 \
 	functab2 functab3 functab6 funlen fwtest fwtest2 fwtest3 fwtest4 \
 	fwtest5 fwtest6 fwtest7 fwtest8 genpot gensub gensub2 gensub3 \
@@ -2385,7 +2398,7 @@ testext::
 	@echo $@
 	@-$(AWK) ' /^(@load|BEGIN|function)/,/^}/' "$(top_srcdir)"/extension/testext.c > testext.awk
 	@-$(AWK) -f ./testext.awk >_$@ 2>&1 || echo EXIT CODE: $$? >>_$@
-	@-if echo "$$GAWK_TEST_ARGS" | egrep -e '-M|--bignum' > /dev/null; \
+	@-if echo "$$GAWK_TEST_ARGS" | grep -E -e '-M|--bignum' > /dev/null; \
 	then $(CMP) "$(srcdir)"/$@-mpfr.ok _$@ && rm -f _$@ testext.awk testexttmp.txt ; \
 	else $(CMP) "$(srcdir)"/$@.ok _$@ && rm -f _$@ testext.awk testexttmp.txt ; fi
 
@@ -2532,7 +2545,7 @@ ignrcas3::
 arrdbg:
 	@echo $@
 	@-$(AWK) -v "okfile=./$@.ok" -v "mpfr_okfile=./$@-mpfr.ok" -f "$(srcdir)"/$@.awk | grep array_f >_$@ || echo EXIT CODE: $$? >> _$@
-	@-if echo "$$GAWK_TEST_ARGS" | egrep -e '-M|--bignum' > /dev/null; \
+	@-if echo "$$GAWK_TEST_ARGS" | grep -E -e '-M|--bignum' > /dev/null; \
 	then $(CMP) "."/$@-mpfr.ok _$@ && rm -f _$@ $@.ok $@-mpfr.ok ; \
 	else $(CMP) "."/$@.ok _$@ && rm -f _$@ $@.ok $@-mpfr.ok ; fi
 
@@ -2637,9 +2650,9 @@ diffout:
 		if [ "$$i" != "_*" ]; then \
 		echo ============== $$i ============= ; \
 		base=`echo $$i | sed 's/^_//'` ; \
-		if echo "$$GAWK_TEST_ARGS" | egrep -e '-M|--bignum' > /dev/null && [ -r $${base}-mpfr.ok ]; then \
+		if echo "$$GAWK_TEST_ARGS" | grep -E -e '-M|--bignum' > /dev/null && [ -r $${base}-mpfr.ok ]; then \
 		diff -u $${base}-mpfr.ok $$i ; \
-		elif echo "$$GAWK_TEST_ARGS" | egrep -e '-M|--bignum' > /dev/null && [ -r "$(srcdir)"/$${base}-mpfr.ok ]; then \
+		elif echo "$$GAWK_TEST_ARGS" | grep -E -e '-M|--bignum' > /dev/null && [ -r "$(srcdir)"/$${base}-mpfr.ok ]; then \
 		diff -u "$(srcdir)"/$${base}-mpfr.ok $$i ; \
 		elif [ -r $${base}.ok ]; then \
 		diff -u $${base}.ok $$i ; \
